@@ -5,5 +5,5 @@ declare module '@capacitor/core' {
 }
 
 export interface BrotherPrintPlugin {
-  echo(options: { value: string }): Promise<{ value: string }>;
+  echo(options: { encodedImage: string }): Promise<{ value: boolean }>;
 }

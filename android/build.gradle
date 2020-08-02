@@ -40,6 +40,9 @@ repositories {
     google()
     jcenter()
     mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 
@@ -49,4 +52,6 @@ dependencies {
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+
+    implementation project(":BrotherPrintLibrary")
 }

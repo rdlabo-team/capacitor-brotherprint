@@ -1,5 +1,14 @@
 
   <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="jp.rdlabo.capacitor.plugin.brotherprint.capacitorbrotherprint">
+    <!-- For Wi-Fi -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- For Bluetooth -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+    <!-- For Bluetooth Low Energy -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
   </manifest>
   

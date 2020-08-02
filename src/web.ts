@@ -9,9 +9,11 @@ export class BrotherPrintWeb extends WebPlugin implements BrotherPrintPlugin {
     });
   }
 
-  async echo(options: { value: string }): Promise<{ value: string }> {
+  async echo(options: { encodedImage: string }): Promise<{ value: boolean }> {
     console.log('ECHO', options);
-    return options;
+    return {
+      value: true,
+    };
   }
 }
 
