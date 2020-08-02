@@ -25,11 +25,12 @@ import java.util.List;
 @NativePlugin
 public class BrotherPrint extends Plugin {
 
-    @PluginMethod
+    @PluginMethod()
     public void echo(PluginCall call) {
         // object.encodedImageで値を入力
-        final String encodedImage       = call.getString("encodedImage");
-        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+        final String encodedImage = call.getString("encodedImage");
+        final String pureBase64Encoded = encodedImage.substring(encodedImage.indexOf(",")  + 1);
+        byte[] decodedString = Base64.decode(pureBase64Encoded, Base64.DEFAULT);
         final Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
         final Printer printer = new Printer();
@@ -50,6 +51,8 @@ public class BrotherPrint extends Plugin {
         settings.isAutoCut = true;
         printer.setPrinterInfo(settings);
 
+        Log.d(getLogTag(), "Start Printer Thread");
+
         try {
             new Thread(new Runnable() {
                 @Override
@@ -60,6 +63,8 @@ public class BrotherPrint extends Plugin {
                             Log.d("TAG", "ERROR - " + result.errorCode);
                         }
                         printer.endCommunication();
+                    } else {
+                        Log.d(getLogTag(), "Do not find Printer");
                     }
                 }
             }).start();
