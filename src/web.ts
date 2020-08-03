@@ -9,12 +9,29 @@ export class BrotherPrintWeb extends WebPlugin implements BrotherPrintPlugin {
     });
   }
 
-  async echo(options: { encodedImage: string }): Promise<{ value: boolean }> {
+  /**
+   * Print with Base64
+   * @param options
+   */
+  async print(options: {
+    encodedImage: string;
+    printerType: string;
+  }): Promise<{ value: boolean }> {
     console.log('ECHO', options);
     return {
       value: true,
     };
   }
+
+  /**
+   * Search Wifi Printer
+   */
+  async searchWiFiPrinter(): Promise<void> {}
+
+  /**
+   * search Bluetooth Printer
+   */
+  async searchBLEPrinter(): Promise<void> {}
 }
 
 const BrotherPrint = new BrotherPrintWeb();

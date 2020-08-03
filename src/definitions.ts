@@ -5,5 +5,12 @@ declare module '@capacitor/core' {
 }
 
 export interface BrotherPrintPlugin {
-  echo(options: { encodedImage: string }): Promise<{ value: boolean }>;
+  print(options: BrotherPrintOptions): Promise<{ value: boolean }>;
+  searchWiFiPrinter(): Promise<void>;
+  searchBLEPrinter(): Promise<void>;
+}
+
+export interface BrotherPrintOptions {
+  encodedImage: string;
+  printerType: 'QL-820NWB' | 'QL-800';
 }

@@ -26,7 +26,7 @@ import java.util.List;
 public class BrotherPrint extends Plugin {
 
     @PluginMethod()
-    public void echo(PluginCall call) {
+    public void print(PluginCall call) {
         // object.encodedImageで値を入力
         final String encodedImage = call.getString("encodedImage");
         final String pureBase64Encoded = encodedImage.substring(encodedImage.indexOf(",")  + 1);
@@ -37,23 +37,44 @@ public class BrotherPrint extends Plugin {
         PrinterInfo settings = printer.getPrinterInfo();
 
         // プリンタ設定
-        settings.printerModel = Model.QL_800;
+        final String printerType = call.getString("printerType");
 
-        // プリンタへの接続方法
-//        settings.port = PrinterInfo.Port.NET;
-//        settings.ipAddress = "your-printer-ip";
-//        settings.workPath = "Context.writable-dir-path";
-        settings.port = PrinterInfo.Port.USB;
+        switch (printerType) {
+            case "QL-800":
+                settings.printerModel = Model.QL_800;
+                settings.port = PrinterInfo.Port.USB;
+                break;
+            case "QL-820NW":
+                settings.printerModel = Model.QL_820NWB;
+                settings.port = PrinterInfo.Port.USB;
 
-        // 用紙サイズ
-        settings.labelNameIndex = LabelInfo.QL700.W62.ordinal();  // 800の62mm幅
+                // 検索からデバイス情報が得られた場合
+                final String localName = call.getString("localName");
+                final String ipAddress = call.getString("ipAddress");
+
+                if (localName != null) {
+                    settings.port = PrinterInfo.Port.NET;
+                    settings.setLocalName(localName);
+                } else if (ipAddress != null) {
+                    settings.port = PrinterInfo.Port.NET;
+                    settings.ipAddress = ipAddress;
+                } else {
+                    settings.port = PrinterInfo.Port.USB;
+                }
+
+                break;
+            default:
+                call.error("[ERROR] This printerType is not available");
+                return;
+        }
+
+        settings.labelNameIndex = LabelInfo.QL700.W62.ordinal();
         settings.printMode = PrinterInfo.PrintMode.FIT_TO_PAGE;
         settings.isAutoCut = true;
         printer.setPrinterInfo(settings);
 
-        Log.d(getLogTag(), "Start Printer Thread");
-
         try {
+            Log.d(getLogTag(), "Start Printer Thread");
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -62,9 +83,10 @@ public class BrotherPrint extends Plugin {
                         if (result.errorCode != PrinterInfo.ErrorCode.ERROR_NONE) {
                             Log.d("TAG", "ERROR - " + result.errorCode);
                         }
+                        notifyListeners("onPrint", new JSObject().put("value", true));
                         printer.endCommunication();
                     } else {
-                        Log.d(getLogTag(), "Do not find Printer");
+                        notifyListeners("onPrintFailedCommunication", new JSObject().put("value", ""));
                     }
                 }
             }).start();
@@ -74,29 +96,46 @@ public class BrotherPrint extends Plugin {
         }
     }
 
-//    void searchWiFiPrinter() {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Printer printer = new Printer();
-//                NetPrinter[] printerList = printer.getNetPrinters("QL-820NWB");
-//                for (NetPrinter device: printerList) {
-//                    Log.d("TAG", String.format("Model: %s, IP Address: %s", device.modelName, device.ipAddress));
-//                }
-//            }
-//        }).start();
-//    }
-//
-//    void searchBLEPrinter() {
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Printer printer = new Printer();
-//                List<BLEPrinter> printerList = printer.getBLEPrinters(BluetoothAdapter.getDefaultAdapter(), 30);
-//                for (BLEPrinter device: printerList) {
-//                    Log.d("TAG", "Local Name: " + device.localName);
-//                }
-//            }
-//        }).start();
-//    }
+    @PluginMethod()
+    public void searchWiFiPrinter(PluginCall call) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Printer printer = new Printer();
+                NetPrinter[] printerList = printer.getNetPrinters("QL-820NWB");
+
+                JSObject ipAddressList = new JSObject();
+                int i = 0;
+                for (NetPrinter device: printerList) {
+                    ipAddressList.put(i + "", device.ipAddress);
+                    Log.d("TAG", String.format("Model: %s, IP Address: %s", device.modelName, device.ipAddress));
+                    i++;
+                }
+                notifyListeners("onIpAddressAvailable", ipAddressList);
+            }
+        }).start();
+        call.success(new JSObject().put("value", true));
+    }
+
+    @PluginMethod()
+    public void searchBLEPrinter(PluginCall call) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Printer printer = new Printer();
+                List<BLEPrinter> printerList = printer.getBLEPrinters(BluetoothAdapter.getDefaultAdapter(), 30);
+
+
+                JSObject localNameList = new JSObject();
+                int i = 0;
+                for (BLEPrinter device: printerList) {
+                    Log.d("TAG", "Local Name: " + device.localName);
+                    localNameList.put(i + "", device.localName);
+                    i++;
+                }
+                notifyListeners("onBLEAvailable", localNameList);
+            }
+        }).start();
+        call.success(new JSObject().put("value", true));
+    }
 }
