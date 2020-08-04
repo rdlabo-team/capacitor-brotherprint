@@ -1,0 +1,91 @@
+;******************************************************
+;
+;	Brother RJ-4030 PTD Source File
+;
+;	Copyright (C) 2011 Brother Industries, Ltd.
+;
+;
+;******************************************************
+[Version]
+FormatVersion=1.02.00.00
+ModelVersion=1.00.00.00
+OutputFileName="bsr403ad.ptd"
+0
+
+[Model]
+bySeriesCode		= 0x37
+byModelCode		= 0x31
+dmDeviceName		= "Brother RJ-4030"
+dwHeadPinNum		= 832
+dwDeviceAbility01	= 0
+dwDeviceAbility02	= 0
+wMinCopies		= 1
+wMaxCopies		= 9999
+wMinCutEveryNum		= 1
+wMaxCutEveryNum		= 99
+nDefaultPaperSize	= 420
+nDefaultPaperLength	= 1524
+nDefaultPaperLengthRes	= 1218
+wResolutionNum		= 1
+wResolutions		= 203,203
+0
+
+[Paper00]
+szPaperName_mm		= "RD 102mm x 152mm"
+szPaperName_Inch	= "RD 4" x 6""
+szPaperWidthString_Inch = "4.00""
+szPaperLengthString_Inch = "6.00""
+nType			= 0x4b
+nPaperSize		= 420
+nPaperWidth		= 1016
+nImageAreaWidth		= 986
+nPaperWidthRes		= 812
+nImageAreaWidthRes	= 788
+nPaperLength		= 1524
+nImageAreaLength	= 1405
+nPaperLengthRes		= 1218
+nImageAreaLengthRes	= 1123
+nPhysicalOffsetX	= 12
+nPhysicalOffsetY	= 48
+wPinOffsetLeft		= 22
+wPinOffsetRight		= 22
+nMaxFeed		= 0
+nMaxLength		= 0
+nMinLength		= 0
+wSplit			= 0
+nClipInfoLeft		= 0
+nClipInfoTop		= 0
+nClipInfoRight		= 0
+nClipInfoBottom		= 0
+nVirtualOffsetX		= 0
+nVirtualOffsetY		= 0
+nCompatiblePaperSizes	= 0,0,0,0
+dwPaperAbility01	= 0x00000480
+dwPaperAbility02	= 0x00000000
+byReserved001		= 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+nSensorID		= 63
+byEnergyRank		= 6
+byRollWidMm		= 106
+byHeadDivide		= 0
+nDieStartPlus		= 0
+nDieStartRevPlus	= 0
+wDieStartFwdPlus	= 0
+nAfterFeedPlus		= 0
+wPafMediaID		= 420
+PresetBlkPos1_1		= 0,0,0,0,0
+PresetBlkPos2_1		= 0,0,0,0,0
+PresetBlkPos2_2		= 0,0,0,0,0
+PresetBlkPos3_1		= 0,0,0,0,0
+PresetBlkPos3_2		= 0,0,0,0,0
+PresetBlkPos3_3		= 0,0,0,0,0
+szSizeMM		= "102mm x 152mm"
+szSizeIN		= "4" x 6""
+MediaAtrInfo		= 0
+lblPitchDot		= 1270
+markNoChkValu		= 0
+reserved_12_		= 48,0,0,0,0,0,1,0,0,0,0,0
+0
+
+
+
+
