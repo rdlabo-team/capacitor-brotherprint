@@ -8,3 +8,7 @@ FOUNDATION_EXPORT const unsigned char PluginVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <Plugin/PublicHeader.h>
 
+/**
+ * うまくインポートできないです。 `Include of non-modular header inside framework module...` とエラーがでます
+ */
+// #import <BRLMPrinterKit/BRLMPrinterKit.h>
