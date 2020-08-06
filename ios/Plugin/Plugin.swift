@@ -15,16 +15,16 @@ import Capacitor
 public class BrotherPrint: CAPPlugin {
 
     @objc func echo(_ call: CAPPluginCall) {
-        let channel = BRLMChannel(wifiIPAddress: "IPAddress.of.your.printer")
-
-        let generateResult = BRLMPrinterDriverGenerator.open(channel)
-        guard generateResult.error.code == BRLMOpenChannelErrorCode.noError,
-            let printerDriver = generateResult.driver else {
-                print("Error - Open Channel: %d", generateResult.error.code)
-                return
-        }
-
-        print("Success - Open Channel")
+//        let channel = BRLMChannel(wifiIPAddress: "IPAddress.of.your.printer")
+//
+//        let generateResult = BRLMPrinterDriverGenerator.open(channel)
+//        guard generateResult.error.code == BRLMOpenChannelErrorCode.noError,
+//            let printerDriver = generateResult.driver else {
+//                print("Error - Open Channel: %d", generateResult.error.code)
+//                return
+//        }
+//
+//        print("Success - Open Channel")
         
 //        guard let ptp = BRPtouchPrinter(printerName: deviceName, interface: CONNECTION_TYPE.BLUETOOTH) else {
 //            print("*** Prepare Print Error ***")

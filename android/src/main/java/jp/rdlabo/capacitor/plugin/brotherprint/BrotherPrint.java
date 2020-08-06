@@ -1,6 +1,7 @@
 package jp.rdlabo.capacitor.plugin.brotherprint;
 
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
@@ -35,25 +36,29 @@ public class BrotherPrint extends Plugin {
 
         final Printer printer = new Printer();
         PrinterInfo settings = printer.getPrinterInfo();
+        settings.numberOfCopies = call.getInt("numberOfCopies");
+        final Integer labelNameIndex = call.getInt("labelNameIndex");
 
-        // プリンタ設定
-        final String printerType = call.getString("printerType");
+        if (labelNameIndex == 16) {
+            settings.labelNameIndex = LabelInfo.QL700.W62.ordinal();
+        } else {
+            settings.labelNameIndex = LabelInfo.QL700.W62RB.ordinal();
+        }
 
-        switch (printerType) {
+        switch (call.getString("printerType")) {
             case "QL-800":
                 settings.printerModel = Model.QL_800;
                 settings.port = PrinterInfo.Port.USB;
                 break;
-            case "QL-820NW":
+            case "QL-820NWB":
                 settings.printerModel = Model.QL_820NWB;
-                settings.port = PrinterInfo.Port.USB;
 
                 // 検索からデバイス情報が得られた場合
                 final String localName = call.getString("localName");
                 final String ipAddress = call.getString("ipAddress");
 
                 if (localName != null) {
-                    settings.port = PrinterInfo.Port.NET;
+                    settings.port = PrinterInfo.Port.BLUETOOTH;
                     settings.setLocalName(localName);
                 } else if (ipAddress != null) {
                     settings.port = PrinterInfo.Port.NET;
@@ -61,17 +66,29 @@ public class BrotherPrint extends Plugin {
                 } else {
                     settings.port = PrinterInfo.Port.USB;
                 }
-
                 break;
             default:
                 call.error("[ERROR] This printerType is not available");
                 return;
         }
 
-        settings.labelNameIndex = LabelInfo.QL700.W62.ordinal();
+        settings.paperSize = PrinterInfo.PaperSize.CUSTOM;
+        settings.align = PrinterInfo.Align.CENTER;
+        settings.valign = PrinterInfo.VAlign.MIDDLE;
+        settings.printMode = PrinterInfo.PrintMode.ORIGINAL;
+        settings.printQuality = PrinterInfo.PrintQuality.HIGH_RESOLUTION;
+
         settings.printMode = PrinterInfo.PrintMode.FIT_TO_PAGE;
         settings.isAutoCut = true;
-        printer.setPrinterInfo(settings);
+
+        Context c = bridge.getContext();
+        settings.workPath = c.getCacheDir().getPath();
+
+        boolean setPrinter = printer.setPrinterInfo(settings);
+        if (!setPrinter) {
+            PrinterStatus setResult = printer.getResult();
+            notifyListeners("onPrintError", new JSObject().put("value", setResult.errorCode));
+        }
 
         try {
             Log.d(getLogTag(), "Start Printer Thread");
@@ -80,10 +97,14 @@ public class BrotherPrint extends Plugin {
                 public void run() {
                     if (printer.startCommunication()) {
                         PrinterStatus result = printer.printImage(decodedByte);
-                        if (result.errorCode != PrinterInfo.ErrorCode.ERROR_NONE) {
+
+                        if (result.errorCode == PrinterInfo.ErrorCode.ERROR_NONE) {
+                            notifyListeners("onPrint", new JSObject().put("value", result));
+                        } else {
                             Log.d("TAG", "ERROR - " + result.errorCode);
+                            notifyListeners("onPrintError", new JSObject().put("value", result.errorCode));
                         }
-                        notifyListeners("onPrint", new JSObject().put("value", true));
+
                         printer.endCommunication();
                     } else {
                         notifyListeners("onPrintFailedCommunication", new JSObject().put("value", ""));
