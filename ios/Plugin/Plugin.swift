@@ -1,5 +1,6 @@
 import Foundation
 import Capacitor
+import BRLMPrinterKit
 
 /**
  *  こちらもインポートできないです。 `No such module 'BRLMPrinterKit'` とエラーがでます。
