@@ -10,14 +10,14 @@ import BRPtouchPrinterKit
 @objc(BrotherPrint)
 public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
     private var networkManager: BRPtouchNetworkManager?
-
+    
     @objc func printImage(_ call: CAPPluginCall) {
         let encodedImage: String = call.getString("encodedImage") ?? "";
         if (encodedImage == "") {
             call.error("Error - Image data is not found.");
             return;
         }
-
+        
         let newImageData = Data(base64Encoded: encodedImage, options: []);
         
         let printerType: String = call.getString("printerType") ?? "";
@@ -26,13 +26,13 @@ public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
             return;
         }
         
-        if (printerType != "QL-820NW") {
+        if (printerType != "QL-820NWB") {
             // iOS非対応
             call.error("Error - connection is not found.");
             return;
         }
-
-
+        
+        
         // 検索からデバイス情報が得られた場合
         let localName: String = call.getString("localName") ?? "";
         let ipAddress: String = call.getString("ipAddress") ?? "";
@@ -46,15 +46,17 @@ public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
                 channel = BRLMChannel(wifiIPAddress: ipAddress);
             } else {
                 // iOSは有線接続ができない
-                call.error("Error - connection is not found.");
+                self.notifyListeners("onPrintFailedCommunication", data: [
+                    "value": true
+                ]);
                 return;
             }
             
             let generateResult = BRLMPrinterDriverGenerator.open(channel);
             guard generateResult.error.code == BRLMOpenChannelErrorCode.noError,
                 let printerDriver = generateResult.driver else {
-                    self.notifyListeners("onPrintFailedCommunication", data: [
-                        "value": true
+                    self.notifyListeners("onPrintError", data: [
+                        "value": generateResult.error.code
                     ]);
                     NSLog("Error - Open Channel: \(generateResult.error.code)")
                     return
@@ -64,7 +66,9 @@ public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
                 let decodedByte = UIImage(data: newImageData! as Data),
                 let printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: BRLMPrinterModel.QL_820NWB)
                 else {
-                    NSLog("Error - Image file is not found.")
+                    self.notifyListeners("onPrintError", data: [
+                        "value": "Error - Image file is not found."
+                    ]);
                     return
             }
             
@@ -72,14 +76,13 @@ public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
             printSettings.labelSize = labelNameIndex == 16 ?
                 BRLMQLPrintSettingsLabelSize.rollW62 : BRLMQLPrintSettingsLabelSize.rollW62RB;
             printSettings.autoCut = true
-
             
             let printError = printerDriver.printImage(with: decodedByte.cgImage!, settings: printSettings);
-
-
+            
+            
             if printError.code != .noError {
-                self.notifyListeners("onPrintFailedCommunication", data: [
-                    "value": true
+                self.notifyListeners("onPrintError", data: [
+                    "value": printError.code
                 ]);
                 return;
             }
@@ -91,48 +94,62 @@ public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
             }
         }
     }
-
+    
     @objc func searchWiFiPrinter(_ call: CAPPluginCall) {
-        let manager = BRPtouchNetworkManager()
-        manager.delegate = self
-        manager.startSearch(5)
-        self.networkManager = manager
+        NSLog("Start searchWiFiPrinter");
+        DispatchQueue.main.async {
+            let manager = BRPtouchNetworkManager()
+            manager.delegate = self
+            manager.startSearch(5)
+            self.networkManager = manager
+        }
     }
-
+    
     // BRPtouchNetworkDelegate
     public func didFinishSearch(_ sender: Any!) {
-        guard let manager = sender as? BRPtouchNetworkManager else {
-            return
-        }
-        guard let devices = manager.getPrinterNetInfo() else {
-            return
-        }
-        var resultList: [String] = [];
-        for deviceInfo in devices {
-            if let deviceInfo = deviceInfo as? BRPtouchDeviceInfo {
-                resultList.append(deviceInfo.strIPAddress);
+        NSLog("Start didFinishSearch");
+        DispatchQueue.main.async {
+            guard let manager = sender as? BRPtouchNetworkManager else {
+                return
             }
+            guard let devices = manager.getPrinterNetInfo() else {
+                return
+            }
+            var resultList: [String] = [];
+            for deviceInfo in devices {
+                if let deviceInfo = deviceInfo as? BRPtouchDeviceInfo {
+                    resultList.append(deviceInfo.strIPAddress);
+                }
+            }
+            self.notifyListeners("onIpAddressAvailable", data: [
+                "ipAddressList": resultList,
+            ]);
         }
-        notifyListeners("onIpAddressAvailable", data: [
-            "ipAddressList": resultList,
-        ]);
     }
     
     @objc func searchBLEPrinter(_ call: CAPPluginCall) {
-            _ = BRPtouchBLEManager.shared().startSearch {
-                    (deviceInfo: BRPtouchDeviceInfo?) in
-                    if let deviceInfo = deviceInfo {
-                        var resultList: [String] = [];
-                        resultList.append(deviceInfo.strBLEAdvertiseLocalName);
-                        self.notifyListeners("onBLEAvailable", data: [
-                            "localName": resultList,
-                        ]);
-                    }
+        DispatchQueue.main.async {
+            NSLog("Start searchBLEPrinter");
+            BRPtouchBLEManager.shared().startSearch {
+                (deviceInfo: BRPtouchDeviceInfo?) in
+                if let deviceInfo = deviceInfo {
+                    var resultList: [String] = [];
+                    resultList.append(deviceInfo.strBLEAdvertiseLocalName);
+                    self.notifyListeners("onBLEAvailable", data: [
+                        "localNameList": resultList,
+                    ]);
                 }
+            }
+            self.notifyListeners("onBLEAvailable", data: [
+                "localNameList": [],
+            ]);
         }
-
+    }
+    
     @objc func stopSearchBLEPrinter(_ call: CAPPluginCall) {
-        BRPtouchBLEManager.shared().stopSearch()
+        DispatchQueue.main.async {
+            BRPtouchBLEManager.shared().stopSearch()
+        }
     }
 }
 
