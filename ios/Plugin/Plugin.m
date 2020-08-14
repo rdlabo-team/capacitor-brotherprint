@@ -7,4 +7,5 @@ CAP_PLUGIN(BrotherPrint, "BrotherPrint",
            CAP_PLUGIN_METHOD(printImage, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(searchWiFiPrinter, CAPPluginReturnPromise);
            CAP_PLUGIN_METHOD(searchBLEPrinter, CAPPluginReturnPromise);
+           CAP_PLUGIN_METHOD(stopSearchBLEPrinter, CAPPluginReturnPromise);
 )
