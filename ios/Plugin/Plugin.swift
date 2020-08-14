@@ -1,13 +1,15 @@
 import Foundation
 import Capacitor
 import BRLMPrinterKit
+import BRPtouchPrinterKit
 
 /**
  * Please read the Capacitor iOS Plugin Development Guide
  * here: https://capacitorjs.com/docs/plugins/ios
  */
 @objc(BrotherPrint)
-public class BrotherPrint: CAPPlugin {
+public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
+    private var networkManager: BRPtouchNetworkManager?
 
     @objc func printImage(_ call: CAPPluginCall) {
         let encodedImage: String = call.getString("encodedImage") ?? "";
@@ -35,7 +37,7 @@ public class BrotherPrint: CAPPlugin {
         let localName: String = call.getString("localName") ?? "";
         let ipAddress: String = call.getString("ipAddress") ?? "";
         
-        
+        // メインスレッドにて処理
         DispatchQueue.main.async {
             var channel: BRLMChannel;
             if (localName != "") {
@@ -88,6 +90,49 @@ public class BrotherPrint: CAPPlugin {
                 ]);
             }
         }
+    }
+
+    @objc func searchWiFiPrinter(_ call: CAPPluginCall) {
+        let manager = BRPtouchNetworkManager()
+        manager.delegate = self
+        manager.startSearch(5)
+        self.networkManager = manager
+    }
+
+    // BRPtouchNetworkDelegate
+    public func didFinishSearch(_ sender: Any!) {
+        guard let manager = sender as? BRPtouchNetworkManager else {
+            return
+        }
+        guard let devices = manager.getPrinterNetInfo() else {
+            return
+        }
+        var resultList: [String] = [];
+        for deviceInfo in devices {
+            if let deviceInfo = deviceInfo as? BRPtouchDeviceInfo {
+                resultList.append(deviceInfo.strIPAddress);
+            }
+        }
+        notifyListeners("onIpAddressAvailable", data: [
+            "ipAddressList": resultList,
+        ]);
+    }
+    
+    @objc func searchBLEPrinter(_ call: CAPPluginCall) {
+            _ = BRPtouchBLEManager.shared().startSearch {
+                    (deviceInfo: BRPtouchDeviceInfo?) in
+                    if let deviceInfo = deviceInfo {
+                        var resultList: [String] = [];
+                        resultList.append(deviceInfo.strBLEAdvertiseLocalName);
+                        self.notifyListeners("onBLEAvailable", data: [
+                            "localName": resultList,
+                        ]);
+                    }
+                }
+        }
+
+    @objc func stopSearchBLEPrinter(_ call: CAPPluginCall) {
+        BRPtouchBLEManager.shared().stopSearch()
     }
 }
 

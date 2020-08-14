@@ -10,6 +10,7 @@ import android.util.Log;
 import com.brother.ptouch.sdk.BLEPrinter;
 import com.brother.ptouch.sdk.NetPrinter;
 import com.brother.ptouch.sdk.PrinterStatus;
+import com.getcapacitor.JSArray;
 import com.getcapacitor.JSObject;
 import com.getcapacitor.NativePlugin;
 import com.getcapacitor.Plugin;
@@ -125,14 +126,12 @@ public class BrotherPrint extends Plugin {
                 Printer printer = new Printer();
                 NetPrinter[] printerList = printer.getNetPrinters("QL-820NWB");
 
-                JSObject ipAddressList = new JSObject();
-                int i = 0;
+                JSArray resultList = new JSArray();
                 for (NetPrinter device: printerList) {
-                    ipAddressList.put(i + "", device.ipAddress);
                     Log.d("TAG", String.format("Model: %s, IP Address: %s", device.modelName, device.ipAddress));
-                    i++;
+                    resultList.put(device.ipAddress);
                 }
-                notifyListeners("onIpAddressAvailable", ipAddressList);
+                notifyListeners("onIpAddressAvailable", new JSObject().put("ipAddressList", resultList));
             }
         }).start();
         call.success(new JSObject().put("value", true));
@@ -146,17 +145,19 @@ public class BrotherPrint extends Plugin {
                 Printer printer = new Printer();
                 List<BLEPrinter> printerList = printer.getBLEPrinters(BluetoothAdapter.getDefaultAdapter(), 30);
 
-
-                JSObject localNameList = new JSObject();
-                int i = 0;
+                JSArray resultList = new JSArray();
                 for (BLEPrinter device: printerList) {
-                    Log.d("TAG", "Local Name: " + device.localName);
-                    localNameList.put(i + "", device.localName);
-                    i++;
+                    resultList.put(device.localName);
                 }
-                notifyListeners("onBLEAvailable", localNameList);
+
+                notifyListeners("onBLEAvailable", new JSObject().put("localNameList", resultList));
             }
         }).start();
         call.success(new JSObject().put("value", true));
+    }
+
+    @PluginMethod()
+    public void stopSearchBLEPrinter(PluginCall call) {
+
     }
 }

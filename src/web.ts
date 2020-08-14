@@ -11,10 +11,8 @@ export class BrotherPrintWeb extends WebPlugin implements BrotherPrintPlugin {
 
   /**
    * Print with Base64
-   * @param options
    */
-  async printImage(options: BrotherPrintOptions): Promise<{ value: boolean }> {
-    console.log('ECHO', options);
+  async printImage(_options: BrotherPrintOptions): Promise<{ value: boolean }> {
     return {
       value: true,
     };
