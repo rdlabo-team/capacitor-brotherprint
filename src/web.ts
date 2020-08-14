@@ -1,5 +1,5 @@
 import { WebPlugin } from '@capacitor/core';
-import { BrotherPrintPlugin } from './definitions';
+import { BrotherPrintPlugin, BrotherPrintOptions } from './definitions';
 
 export class BrotherPrintWeb extends WebPlugin implements BrotherPrintPlugin {
   constructor() {
@@ -13,10 +13,7 @@ export class BrotherPrintWeb extends WebPlugin implements BrotherPrintPlugin {
    * Print with Base64
    * @param options
    */
-  async print(options: {
-    encodedImage: string;
-    printerType: string;
-  }): Promise<{ value: boolean }> {
+  async printImage(options: BrotherPrintOptions): Promise<{ value: boolean }> {
     console.log('ECHO', options);
     return {
       value: true,

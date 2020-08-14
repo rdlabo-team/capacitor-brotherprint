@@ -5,7 +5,7 @@ declare module '@capacitor/core' {
 }
 
 export interface BrotherPrintPlugin {
-  print(options: BrotherPrintOptions): Promise<{ value: boolean }>;
+  printImage(options: BrotherPrintOptions): Promise<{ value: boolean }>;
   searchWiFiPrinter(): Promise<void>;
   searchBLEPrinter(): Promise<void>;
 }

@@ -27,11 +27,10 @@ import java.util.List;
 public class BrotherPrint extends Plugin {
 
     @PluginMethod()
-    public void print(PluginCall call) {
+    public void printImage(PluginCall call) {
         // object.encodedImageで値を入力
         final String encodedImage = call.getString("encodedImage");
-        final String pureBase64Encoded = encodedImage.substring(encodedImage.indexOf(",")  + 1);
-        byte[] decodedString = Base64.decode(pureBase64Encoded, Base64.DEFAULT);
+        byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
         final Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
         final Printer printer = new Printer();
@@ -113,6 +112,7 @@ public class BrotherPrint extends Plugin {
             }).start();
             call.success(new JSObject().put("value", true));
         } catch (Exception ex) {
+            notifyListeners("onPrintFailedCommunication", new JSObject().put("value", ""));
             call.error(ex.getLocalizedMessage(), ex);
         }
     }
