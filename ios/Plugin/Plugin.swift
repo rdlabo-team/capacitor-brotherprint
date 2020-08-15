@@ -99,6 +99,7 @@ public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
         NSLog("Start searchWiFiPrinter");
         DispatchQueue.main.async {
             let manager = BRPtouchNetworkManager()
+            manager.setPrinterName("QL-820NWB")
             manager.delegate = self
             manager.startSearch(5)
             self.networkManager = manager

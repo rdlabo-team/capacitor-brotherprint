@@ -1,5 +1,4 @@
-
-module BRLMPrinterKit { 
+module BRLMPrinterKit {
     header "BRLMPrinterKit.framework/Headers/BRLMPrinterKit.h"
     link "BRLMPrinterKit"
 }
