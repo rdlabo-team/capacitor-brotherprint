@@ -80,10 +80,17 @@ this.init(savedInstanceState, new ArrayList<Class<? extends Plugin>>() {{
 }});
 ```
 
-and put `BrotherPrintLibrary.aar` in your android project:
+and download `BrotherPrintLibrary.aar` and put to your android project:
 https://support.brother.co.jp/j/s/support/html/mobilesdk/guide/getting-started/getting-started-android.html
 
 ### iOS configuration
-You should control this in Xcode Interface.
-- `Pods/Development Pods/RdlaboCapacitorBrotherprint/Frameworks/BRLMPrinterKit.framework` move into `Pods/Frameworks`
-- `Pods/Frameworks/BRLMPrinterKit.framework` add to Apps and Pods TARGETS RdlaboCapacitorBrotherPrint's `Frameworks, Libraries, and Embedded Content`
+Download `BRLMPrinterKit.framework` and put to `Frameworks, Libraries, and Embedded Content`.
+
+- App TARGETS APP
+![](assets/ios_app.png)
+
+
+- Pods TARGETS RdlaboCapacitorBrotherPrint
+![](assets/ios_plugin.png)
+
+You have to add Framework to RdlaboCapacitorBrotherPrint every time `npx cap update`.
