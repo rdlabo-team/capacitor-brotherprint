@@ -66,6 +66,7 @@ public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
                 let decodedByte = UIImage(data: newImageData! as Data),
                 let printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: BRLMPrinterModel.QL_820NWB)
                 else {
+                    printerDriver.closeChannel();
                     self.notifyListeners("onPrintError", data: [
                         "value": "Error - Image file is not found."
                     ]);
@@ -81,6 +82,7 @@ public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
             
             
             if printError.code != .noError {
+                printerDriver.closeChannel();
                 self.notifyListeners("onPrintError", data: [
                     "value": printError.code
                 ]);
@@ -88,6 +90,7 @@ public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
             }
             else {
                 NSLog("Success - Print Image")
+                printerDriver.closeChannel();
                 call.success([
                     "value": true
                 ]);
