@@ -15,7 +15,7 @@
 		50ADFFA42020D75100D50D53 /* Capacitor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50ADFFA52020D75100D50D53 /* Capacitor.framework */; };
 		50ADFFA82020EE4F00D50D53 /* Plugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 50ADFFA72020EE4F00D50D53 /* Plugin.m */; };
 		50E1A94820377CB70090CE1A /* Plugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50E1A94720377CB70090CE1A /* Plugin.swift */; };
-		DBF69CA424D95942002522CD /* BRLMPrinterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBF69CA324D95942002522CD /* BRLMPrinterKit.framework */; };
+		DBC2859724E770FD009A8FF7 /* BRLMPrinterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBC2859624E770FD009A8FF7 /* BRLMPrinterKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,7 +43,7 @@
 		91781294A431A2A7CC6EB714 /* Pods-Plugin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Plugin.release.xcconfig"; path = "Pods/Target Support Files/Pods-Plugin/Pods-Plugin.release.xcconfig"; sourceTree = "<group>"; };
 		96ED1B6440D6672E406C8D19 /* Pods-PluginTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PluginTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PluginTests/Pods-PluginTests.debug.xcconfig"; sourceTree = "<group>"; };
 		DB53A08324E1617C00B83A31 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
-		DBF69CA324D95942002522CD /* BRLMPrinterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BRLMPrinterKit.framework; sourceTree = "<group>"; };
+		DBC2859624E770FD009A8FF7 /* BRLMPrinterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = BRLMPrinterKit.framework; sourceTree = "<group>"; };
 		F65BB2953ECE002E1EF3E424 /* Pods-PluginTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PluginTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PluginTests/Pods-PluginTests.release.xcconfig"; sourceTree = "<group>"; };
 		F6753A823D3815DB436415E3 /* Pods_PluginTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PluginTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -53,7 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DBF69CA424D95942002522CD /* BRLMPrinterKit.framework in Frameworks */,
+				DBC2859724E770FD009A8FF7 /* BRLMPrinterKit.framework in Frameworks */,
 				50ADFFA42020D75100D50D53 /* Capacitor.framework in Frameworks */,
 				03FC29A292ACC40490383A1F /* Pods_Plugin.framework in Frameworks */,
 			);
@@ -74,7 +74,7 @@
 		50ADFF7E201F53D600D50D53 = {
 			isa = PBXGroup;
 			children = (
-				DBF69CA224D95906002522CD /* libs */,
+				DBF69CA224D95906002522CD /* Frameworks */,
 				50ADFF8A201F53D600D50D53 /* Plugin */,
 				50ADFF95201F53D600D50D53 /* PluginTests */,
 				50ADFF89201F53D600D50D53 /* Products */,
@@ -126,8 +126,6 @@
 		A797B9EFA3DCEFEA1FBB66A9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DB53A08324E1617C00B83A31 /* module.modulemap */,
-				DBF69CA324D95942002522CD /* BRLMPrinterKit.framework */,
 				50ADFFA52020D75100D50D53 /* Capacitor.framework */,
 				3B2A61DA5A1F2DD4F959604D /* Pods_Plugin.framework */,
 				F6753A823D3815DB436415E3 /* Pods_PluginTests.framework */,
@@ -135,11 +133,13 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		DBF69CA224D95906002522CD /* libs */ = {
+		DBF69CA224D95906002522CD /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DBC2859624E770FD009A8FF7 /* BRLMPrinterKit.framework */,
+				DB53A08324E1617C00B83A31 /* module.modulemap */,
 			);
-			path = libs;
+			path = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

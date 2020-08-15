@@ -20,14 +20,18 @@ export class BrotherComponent {
       console.log("onPrint");
     });
     // Failed to communication with printer
+    BrotherPrint.addListener('onPrintError', (info) => {
+      console.log("onPrintError");
+    });
+    // Failed to communication with printer
     BrotherPrint.addListener('onPrintFailedCommunication', (info) => {
       console.log("onPrintFailedCommunication");
     });
   }
   print() {
-    BrotherPrint.print({
+    BrotherPrint.printImage({
       printerType: 'QL-820NW',
-      encodedImage: 'data:image/png...', // base64
+      encodedImage: 'base64 removed mime-type', // base64
     } as BrotherPrintOptions)
   }
   printWithNetWork() {
@@ -75,3 +79,6 @@ and put `BrotherPrintLibrary.aar` in your android project:
 https://support.brother.co.jp/j/s/support/html/mobilesdk/guide/getting-started/getting-started-android.html
 
 ### iOS configuration
+You should control this in Xcode Interface.
+- `Pods/Development Pods/RdlaboCapacitorBrotherprint/Frameworks/BRLMPrinterKit.framework` move into `Pods/Frameworks`
+- `Pods/Frameworks/BRLMPrinterKit.framework` add to Apps and Pods TARGETS RdlaboCapacitorBrotherPrint's `Frameworks, Libraries, and Embedded Content`
