@@ -1,6 +1,11 @@
 # @rdlabo/capacitor-brotherprint
 Capacitor Brother Print is a native Brother Print SDK implementation for iOS & Android. This plugin can use in `QL-820NW` and `QL-800`.
 
+## How to install
+```
+% npm install @rdlabo/capacitor-brotherprint@git@github.com:rdlabo-team/capacitor-brotherprint.git
+```
+
 ## How to use
 
 ```typescript
