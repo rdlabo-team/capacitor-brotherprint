@@ -77,6 +77,7 @@ public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
             printSettings.labelSize = labelNameIndex == 16 ?
                 BRLMQLPrintSettingsLabelSize.rollW62 : BRLMQLPrintSettingsLabelSize.rollW62RB;
             printSettings.autoCut = true
+            printSettings.numCopies = UInt(call.getInt("numberOfCopies") ?? 1);
             
             let printError = printerDriver.printImage(with: decodedByte.cgImage!, settings: printSettings);
             
