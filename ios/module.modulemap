@@ -1,9 +1,0 @@
-module BRLMPrinterKit {
-    header "BRLMPrinterKit.framework/Headers/BRLMPrinterKit.h"
-    link "BRLMPrinterKit"
-}
-
-module BRPtouchPrinterKit {
-    header "BRLMPrinterKit.framework/Headers/BRPtouchPrinterKit.h"
-    link "BRPtouchPrinterKit"
-}

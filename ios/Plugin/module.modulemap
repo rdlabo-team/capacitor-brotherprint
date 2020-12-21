@@ -1,0 +1,9 @@
+module BRLMPrinterKit {
+    header "../Pods/BRLMPrinterKit/BRLMPrinterKit/BRLMPrinterKit.framework/Headers/BRLMPrinterKit.h"
+    link "BRLMPrinterKit"
+}
+
+module BRPtouchPrinterKit {
+    header "../Pods/BRLMPrinterKit/BRLMPrinterKit/BRLMPrinterKit.framework/Headers/BRPtouchPrinterKit.h"
+    link "BRPtouchPrinterKit"
+}

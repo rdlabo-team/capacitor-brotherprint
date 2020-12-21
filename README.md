@@ -86,6 +86,8 @@ https://support.brother.co.jp/j/s/support/html/mobilesdk/guide/getting-started/g
 ### iOS configuration
 Download `BRLMPrinterKit.framework` and put to `Frameworks, Libraries, and Embedded Content`.
 
+
+
 - App TARGETS APP
 ![](assets/ios_app.png)
 
