@@ -84,15 +84,13 @@ and download `BrotherPrintLibrary.aar` and put to your android project:
 https://support.brother.co.jp/j/s/support/html/mobilesdk/guide/getting-started/getting-started-android.html
 
 ### iOS configuration
-Download `BRLMPrinterKit.framework` and put to `Frameworks, Libraries, and Embedded Content`.
+comming...
 
-
-
-- App TARGETS APP
-![](assets/ios_app.png)
-
-
-- Pods TARGETS RdlaboCapacitorBrotherPrint
-![](assets/ios_plugin.png)
-
-You have to add Framework to RdlaboCapacitorBrotherPrint every time `npx cap update`.
+## Run Demo
+以下デモの動かし方です。
+```
+% cd demo/angular
+% npm install && npm run build
+% npx cap copy
+% npx cap open ios
+```
