@@ -15,12 +15,9 @@ Pod::Spec.new do |s|
   s.dependency 'Capacitor'
   s.dependency 'BRLMPrinterKit'
   s.swift_version = '5.1'
-  # s.preserve_path = 'ios/Plugin/module.modulemap'
+  s.preserve_path = 'ios/Plugin/module.modulemap'
 
-   s.preserve_path = 'ios/Plugin/module.modulemap'
-  #  s.module_map = 'ios/Plugin/module.modulemap'
-  
-#   s.xcconfig = {
-#   "SWIFT_INCLUDE_PATHS" => "$(PODS_TARGET_SRCROOT)/ios/Plugin/"
-#   }
+  s.xcconfig = {
+    "SWIFT_INCLUDE_PATHS" => "$(PODS_TARGET_SRCROOT)/ios/Plugin/"
+  }
 end

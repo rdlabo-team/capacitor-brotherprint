@@ -1,9 +1,9 @@
 module BRLMPrinterKit {
-    header "../../../BRLMPrinterKit/BRLMPrinterKit/BRLMPrinterKit.framework/Headers/BRLMPrinterKit.h"
+    header "../../../../../ios/App/Pods/BRLMPrinterKit/BRLMPrinterKit/BRLMPrinterKit.framework/Headers/BRLMPrinterKit.h"
     link "BRLMPrinterKit"
 }
 
 module BRPtouchPrinterKit {
-    header "../../../BRLMPrinterKit/BRLMPrinterKit/BRLMPrinterKit.framework/Headers/BRPtouchPrinterKit.h"
+    header "../../../../../ios/App/Pods/BRLMPrinterKit/BRLMPrinterKit/BRLMPrinterKit.framework/Headers/BRPtouchPrinterKit.h"
     link "BRPtouchPrinterKit"
 }
