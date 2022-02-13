@@ -28,10 +28,3 @@ export class BrotherPrintWeb extends WebPlugin implements BrotherPrintPlugin {
    */
   async searchBLEPrinter(): Promise<void> {}
 }
-
-const BrotherPrint = new BrotherPrintWeb();
-
-export { BrotherPrint };
-
-import { registerWebPlugin } from '@capacitor/core';
-registerWebPlugin(BrotherPrint);

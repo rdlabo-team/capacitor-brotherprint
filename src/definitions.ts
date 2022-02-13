@@ -1,9 +1,3 @@
-declare module '@capacitor/core' {
-  interface PluginRegistry {
-    BrotherPrint: BrotherPrintPlugin;
-  }
-}
-
 export interface BrotherPrintPlugin {
   printImage(options: BrotherPrintOptions): Promise<{ value: boolean }>;
   searchWiFiPrinter(): Promise<void>;
