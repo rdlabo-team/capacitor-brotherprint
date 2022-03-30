@@ -21,18 +21,18 @@ export interface BrotherPrintPlugin {
   ): PluginListenerHandle;
 
   addListener(
-    eventName: 'onPrintFailedCommunication',
+    eventName: 'onIpAddressAvailable',
     listenerFunc: () => void,
+  ): PluginListenerHandle;
+
+  addListener(
+    eventName: 'onPrintFailedCommunication',
+    listenerFunc: (info: { value: string }) => void,
   ): PluginListenerHandle;
 
   addListener(
     eventName: 'onPrintError',
-    listenerFunc: () => void,
-  ): PluginListenerHandle;
-
-  addListener(
-    eventName: 'onIpAddressAvailable',
-    listenerFunc: () => void,
+    listenerFunc: (info: { value: string }) => void,
   ): PluginListenerHandle;
 }
 
