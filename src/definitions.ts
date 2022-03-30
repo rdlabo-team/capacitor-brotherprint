@@ -1,7 +1,39 @@
+import { PluginListenerHandle } from '@capacitor/core';
+
 export interface BrotherPrintPlugin {
   printImage(options: BrotherPrintOptions): Promise<{ value: boolean }>;
   searchWiFiPrinter(): Promise<void>;
   searchBLEPrinter(): Promise<void>;
+
+  addListener(
+    eventName: 'onPrint',
+    listenerFunc: () => void,
+  ): PluginListenerHandle;
+
+  addListener(
+    eventName: 'onBLEAvailable',
+    listenerFunc: () => void,
+  ): PluginListenerHandle;
+
+  addListener(
+    eventName: 'onBLEAvailable',
+    listenerFunc: () => void,
+  ): PluginListenerHandle;
+
+  addListener(
+    eventName: 'onPrintFailedCommunication',
+    listenerFunc: () => void,
+  ): PluginListenerHandle;
+
+  addListener(
+    eventName: 'onPrintError',
+    listenerFunc: () => void,
+  ): PluginListenerHandle;
+
+  addListener(
+    eventName: 'onIpAddressAvailable',
+    listenerFunc: () => void,
+  ): PluginListenerHandle;
 }
 
 export interface BrotherPrintOptions {
