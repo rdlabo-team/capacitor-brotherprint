@@ -22,7 +22,7 @@ export interface BrotherPrintPlugin {
 
   addListener(
     eventName: 'onIpAddressAvailable',
-    listenerFunc: () => void,
+    listenerFunc: (info: { ipAddressList: string[] }) => void,
   ): PluginListenerHandle;
 
   addListener(
