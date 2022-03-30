@@ -1,6 +1,6 @@
 {
   "name": "@rdlabo/capacitor-brotherprint",
-  "version": "2.0.0-2",
+  "version": "2.0.0-3",
   "description": "Capacitor plugin for Brother Print SDK",
   "main": "dist/plugin.js",
   "module": "dist/esm/index.js",
