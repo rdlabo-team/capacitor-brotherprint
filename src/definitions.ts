@@ -8,32 +8,32 @@ export interface BrotherPrintPlugin {
   addListener(
     eventName: 'onPrint',
     listenerFunc: () => void,
-  ): PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   addListener(
     eventName: 'onBLEAvailable',
     listenerFunc: () => void,
-  ): PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   addListener(
     eventName: 'onBLEAvailable',
     listenerFunc: () => void,
-  ): PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   addListener(
     eventName: 'onIpAddressAvailable',
     listenerFunc: (info: { ipAddressList: string[] }) => void,
-  ): PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   addListener(
     eventName: 'onPrintFailedCommunication',
     listenerFunc: (info: { value: string }) => void,
-  ): PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 
   addListener(
     eventName: 'onPrintError',
     listenerFunc: (info: { value: string }) => void,
-  ): PluginListenerHandle;
+  ): Promise<PluginListenerHandle>;
 }
 
 export interface BrotherPrintOptions {
