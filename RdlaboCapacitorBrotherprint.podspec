@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.source_files = ['ios/Plugin/**/*.{swift,h,m,c,cc,mm,cpp}']
   s.ios.deployment_target  = '13.0'
   s.dependency 'Capacitor'
-  s.dependency 'BRLMPrinterKit'
+  s.dependency 'BRLMPrinterKit_v4'
   s.swift_version = '5.1'
   s.preserve_path = 'ios/Plugin/module.modulemap'
 
