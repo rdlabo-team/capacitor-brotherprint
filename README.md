@@ -92,14 +92,3 @@ https://support.brother.co.jp/j/s/support/html/mobilesdk/guide/getting-started/g
 ### iOS configuration
 
 No configuration required.
-
-## Run Demo
-
-以下デモの動かし方です。
-
-```
-% cd demo/angular
-% npm install && npm run build
-% npx cap copy
-% npx cap open ios
-```
