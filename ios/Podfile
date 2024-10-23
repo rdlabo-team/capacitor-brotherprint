@@ -5,7 +5,7 @@ def capacitor_pods
   use_frameworks!
   pod 'Capacitor', :path => '../node_modules/@capacitor/ios'
   pod 'CapacitorCordova', :path => '../node_modules/@capacitor/ios'
-  pod 'BRLMPrinterKit_v4'
+  pod 'BRLMPrinterKit_v4', :git => 'https://github.com/rdlabo/BRLMPrinterKit.git', :branch => 'feat/update_4_9_1'
 end
 
 target 'Plugin' do
