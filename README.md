@@ -74,20 +74,27 @@ $ npm install --save @rdlabo/capacitor-brotherprint
 
 ### Android configuration
 
-In file `android/app/src/main/java/**/**/MainActivity.java`, add the plugin to the initialization list:
+1. prepare the following files under the android folder of Capacitor
 
-```java
-import jp.rdlabo.capacitor.plugin.brotherprint.BrotherPrint;
+- android/BrotherPrintLibrary/BrotherPrintLibrary.aar
+- android/BrotherPrintLibrary/build.gradle
 
-this.init(savedInstanceState, new ArrayList<Class<? extends Plugin>>() {{
-    [...]
-  add(BrotherPrint.class);
-    [...]
-}});
+`BrotherPrintLibrary.aar` is the Brother Print SDK library. You can get it from the Brother website: https://support.brother.co.jp/j/s/es/dev/ja/mobilesdk/android/index.html?c=jp&lang=ja&navi=offall&comple=on&redirect=on#ver4
+
+The contents of `android/BrotherPrintLibrary/build.gradle` is this.
+
+```
+configurations.maybeCreate(“default”)
+artifacts.add(“default”, file('BrotherPrintLibrary.aar'))
 ```
 
-and download `BrotherPrintLibrary.aar` and put to your android project:
-https://support.brother.co.jp/j/s/support/html/mobilesdk/guide/getting-started/getting-started-android.html
+Add the following to android/settings.gradle.
+
+```
+include ':BrotherPrintLibrary.aar''
+include ':BrotherPrintLibrary'.
+project(':BrotherPrintLibrary').projectDir = new File('. /BrotherPrintLibrary/')
+```
 
 ### iOS configuration
 
