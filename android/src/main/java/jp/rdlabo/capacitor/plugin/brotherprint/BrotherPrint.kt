@@ -7,6 +7,10 @@ import android.util.Log
 import com.brother.ptouch.sdk.LabelInfo
 import com.brother.ptouch.sdk.Printer
 import com.brother.ptouch.sdk.PrinterInfo
+import com.brother.sdk.lmprinter.BLESearchOption
+import com.brother.sdk.lmprinter.Channel
+import com.brother.sdk.lmprinter.NetworkSearchOption
+import com.brother.sdk.lmprinter.PrinterSearcher
 import com.getcapacitor.JSArray
 import com.getcapacitor.JSObject
 import com.getcapacitor.Plugin
@@ -111,46 +115,72 @@ class BrotherPrint : Plugin() {
     }
 
     @PluginMethod
-    fun searchWiFiPrinter(call: PluginCall) {
-        Thread {
-            val printer = Printer()
-            val printerList = printer.getNetPrinters("QL-820NWB")
-
-            val resultList = JSArray()
-            for (device in printerList) {
-                Log.d(
-                    "TAG",
-                    String.format("Model: %s, IP Address: %s", device.modelName, device.ipAddress)
-                )
-                resultList.put(device.ipAddress)
-            }
-            notifyListeners("onIpAddressAvailable", JSObject().put("ipAddressList", resultList))
+    fun search(call: PluginCall) {
+        when(call.getString("connectType", "wifi")) {
+            "wifi" -> this.searchWiFiPrinter(call)
+            "bluetooth" -> this.checkBLEChannel(call)
+            "bluetoothLowEnergy" -> this.searchBLEPrinter(call)
+            else -> call.reject("connectType is not 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'")
         }
-            .start()
-        call.resolve()
     }
 
-    @PluginMethod
-    fun searchBLEPrinter(call: PluginCall) {
+    private fun searchWiFiPrinter(call: PluginCall) {
+        val resultList = JSArray()
         Thread {
-            val printer = Printer()
-            val printerList = printer.getBLEPrinters(BluetoothAdapter.getDefaultAdapter(), 30)
+            val intDuration: Int = call.getInt("searchDuration") ?: 15 ;
+            val option = NetworkSearchOption(intDuration.toDouble(), false);
+            val result = PrinterSearcher.startNetworkSearch(context, option){ channel ->
+                val modelName = channel.extraInfo[Channel.ExtraInfoKey.ModelName] ?: ""
+                val ipaddress = channel.channelInfo
+                Log.d("TAG", "Model : $modelName, ipaddress: $ipaddress")
 
-            val resultList = JSArray()
-            for (device in printerList) {
-                resultList.put(device.localName)
+                resultList.put(JSObject().put("model", modelName).put("ipAddress", ipaddress))
             }
-            notifyListeners("onBLEAvailable", JSObject().put("localNameList", resultList))
-        }
-            .start()
-        call.resolve()
+            call.resolve(JSObject().put("printers", resultList))
+        }.start()
+    }
+
+    private fun checkBLEChannel(call: PluginCall) {
+        val resultList = JSArray()
+        Thread {
+            for (channel in PrinterSearcher.startBluetoothSearch(context).channels){
+                val modelName = channel.extraInfo[Channel.ExtraInfoKey.ModelName] ?: ""
+                val serialNumber = channel.extraInfo[Channel.ExtraInfoKey.SerialNubmer] ?: ""
+                Log.d("TAG", "Model : $modelName, serialNumber: $serialNumber")
+
+                resultList.put(JSObject().put("model", modelName).put("serialNumber", serialNumber))
+            }
+            call.resolve(JSObject().put("printers", resultList))
+        }.start()
+    }
+
+    private fun searchBLEPrinter(call: PluginCall) {
+        val resultList = JSArray()
+        Thread {
+            val intDuration: Int = call.getInt("searchDuration") ?: 15 ;
+            val option = BLESearchOption(intDuration.toDouble())
+            val result = PrinterSearcher.startBLESearch(context, option){ channel ->
+                val modelName = channel.extraInfo[Channel.ExtraInfoKey.ModelName] ?: ""
+                val localName = channel.channelInfo
+                Log.d("TAG", "Model : $modelName, Local Name: $localName")
+
+                resultList.put(JSObject().put("model", modelName).put("localName", localName))
+            }
+            call.resolve(JSObject().put("printers", resultList))
+        }.start()
     }
 
     @PluginMethod
     fun cancelSearchWiFiPrinter(call: PluginCall?) {
+        Thread {
+            PrinterSearcher.cancelNetworkSearch();
+        }.start()
     }
 
     @PluginMethod
     fun cancelSearchBluetoothPrinter(call: PluginCall?) {
+        Thread {
+            PrinterSearcher.cancelBLESearch();
+        }.start()
     }
 }

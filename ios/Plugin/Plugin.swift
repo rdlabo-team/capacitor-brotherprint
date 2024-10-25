@@ -8,7 +8,7 @@ import BRPtouchPrinterKit
  * here: https://capacitorjs.com/docs/plugins/ios
  */
 @objc(BrotherPrint)
-public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
+public class BrotherPrint: CAPPlugin {
     private var networkManager: BRPtouchNetworkManager?
     
     @objc func printImage(_ call: CAPPluginCall) {
@@ -97,59 +97,86 @@ public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
         }
     }
     
-    @objc func searchWiFiPrinter(_ call: CAPPluginCall) {
-        DispatchQueue.main.async {
-            let manager = BRPtouchNetworkManager()
-            manager.setPrinterName("QL-820NWB")
-            manager.delegate = self
-            manager.startSearch(15)
-            self.networkManager = manager
+    @objc func search(_ call: CAPPluginCall) {
+        switch call.getString("connectType", "wifi") {
+        case "wifi":
+            self.searchWiFiPrinter(call);
+        case "bluetooth":
+            self.checkBLEChannel(call);
+        case "bluetoothLowEnergy":
+            self.searchBLEPrinter(call);
+        default:
+            call.reject("connectType is not 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'")
         }
     }
     
     // BRPtouchNetworkDelegate
-    public func didFinishSearch(_ sender: Any!) {
+    private func searchWiFiPrinter(_ call: CAPPluginCall) {
+        var printersJSObject: JSArray = []
         DispatchQueue.main.async {
-            guard let manager = sender as? BRPtouchNetworkManager else {
-                return
+            let option = BRLMNetworkSearchOption()
+            option.searchDuration = TimeInterval(call.getInt("searchDuration", 15));
+            let result = BRLMPrinterSearcher.startNetworkSearch(option) { channel in
+                let modelName = channel.extraInfo?.value(forKey: BRLMChannelExtraInfoKeyModelName) as? String ?? ""
+                let ipaddress = channel.channelInfo
+                print("Model : \(modelName), IP Address: \(ipaddress)")
+                printersJSObject.append([
+                    "modelName": modelName,
+                    "ipAddress": ipaddress,
+                ]);
             }
-            guard let devices = manager.getPrinterNetInfo() else {
-                return
-            }
-            var resultList: [String] = [];
-            for deviceInfo in devices {
-                if let deviceInfo = deviceInfo as? BRPtouchDeviceInfo {
-                    resultList.append(deviceInfo.strIPAddress);
-                }
-            }
-            self.notifyListeners("onIpAddressAvailable", data: [
-                "ipAddressList": resultList,
-            ]);
+            call.resolve([
+                "printers": printersJSObject,
+            ])
         }
     }
     
-    @objc func searchBLEPrinter(_ call: CAPPluginCall) {
+    private func checkBLEChannel(_ call: CAPPluginCall) {
+        var printersJSObject: JSArray = []
         DispatchQueue.main.async {
-            NSLog("Start searchBLEPrinter");
-            BRPtouchBLEManager.shared().startSearch {
-                (deviceInfo: BRPtouchDeviceInfo?) in
-                if let deviceInfo = deviceInfo {
-                    var resultList: [String] = [];
-                    resultList.append(deviceInfo.strBLEAdvertiseLocalName);
-                    self.notifyListeners("onBLEAvailable", data: [
-                        "localNameList": resultList,
-                    ]);
-                }
+            let channels = BRLMPrinterSearcher.startBluetoothSearch().channels;
+            for channel in channels {
+                let modelName = channel.extraInfo?.value(forKey: BRLMChannelExtraInfoKeyModelName) as? String ?? ""
+                let serialNumber = channel.extraInfo?.value(forKey: BRLMChannelExtraInfoKeySerialNumber) as? String ?? ""
+                printersJSObject.append([
+                    "modelName": modelName,
+                    "serialNumber": serialNumber,
+                ]);
             }
-            self.notifyListeners("onBLEAvailable", data: [
-                "localNameList": [],
-            ]);
+            call.resolve([
+                "printers": printersJSObject,
+            ])
         }
     }
     
-    @objc func stopSearchBLEPrinter(_ call: CAPPluginCall) {
+    private func searchBLEPrinter(_ call: CAPPluginCall) {
+        var printersJSObject: JSArray = []
         DispatchQueue.main.async {
-            BRPtouchBLEManager.shared().stopSearch()
+            let option = BRLMBLESearchOption()
+            option.searchDuration = TimeInterval(call.getInt("searchDuration", 15));
+            let result = BRLMPrinterSearcher.startBLESearch(option) { channel in
+                let modelName = channel.extraInfo?.value(forKey: BRLMChannelExtraInfoKeyModelName) as? String ?? ""
+                let advertiseLocalName = channel.channelInfo
+                printersJSObject.append([
+                    "modelName": modelName,
+                    "localName": advertiseLocalName,
+                ]);
+            }
+            call.resolve([
+                "printers": printersJSObject,
+            ])
+        }
+    }
+    
+    @objc func cancelSearchWiFiPrinter(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            BRLMPrinterSearcher.cancelNetworkSearch()
+        }
+    }
+    
+    @objc func cancelSearchBluetoothPrinter(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            BRLMPrinterSearcher.cancelBLESearch()
         }
     }
 }
