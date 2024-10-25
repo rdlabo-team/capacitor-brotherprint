@@ -116,11 +116,11 @@ class BrotherPrint : Plugin() {
 
     @PluginMethod
     fun search(call: PluginCall) {
-        when(call.getString("connectType", "wifi")) {
+        when(call.getString("port", "wifi")) {
             "wifi" -> this.searchWiFiPrinter(call)
             "bluetooth" -> this.checkBLEChannel(call)
             "bluetoothLowEnergy" -> this.searchBLEPrinter(call)
-            else -> call.reject("connectType is not 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'")
+            else -> call.reject("port is not 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'")
         }
     }
 

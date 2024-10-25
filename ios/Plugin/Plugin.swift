@@ -10,33 +10,33 @@ import BRPtouchPrinterKit
 @objc(BrotherPrint)
 public class BrotherPrint: CAPPlugin {
     private var networkManager: BRPtouchNetworkManager?
-    
+
     @objc func printImage(_ call: CAPPluginCall) {
         let encodedImage: String = call.getString("encodedImage") ?? "";
         if (encodedImage == "") {
             call.reject("Error - Image data is not found.");
             return;
         }
-        
+
         let newImageData = Data(base64Encoded: encodedImage, options: []);
-        
+
         let printerType: String = call.getString("printerType") ?? "";
         if (printerType == "") {
             call.reject("Error - printerType is not found.");
             return;
         }
-        
+
         if (printerType != "QL-820NWB") {
             // iOS非対応
             call.reject("Error - connection is not found.");
             return;
         }
-        
-        
+
+
         // 検索からデバイス情報が得られた場合
         let localName: String = call.getString("localName") ?? "";
         let ipAddress: String = call.getString("ipAddress") ?? "";
-        
+
         // メインスレッドにて処理
         DispatchQueue.main.async {
             var channel: BRLMChannel;
@@ -51,7 +51,7 @@ public class BrotherPrint: CAPPlugin {
                 ]);
                 return;
             }
-            
+
             let generateResult = BRLMPrinterDriverGenerator.open(channel);
             guard generateResult.error.code == BRLMOpenChannelErrorCode.noError,
                 let printerDriver = generateResult.driver else {
@@ -61,7 +61,7 @@ public class BrotherPrint: CAPPlugin {
                     NSLog("Error - Open Channel: \(generateResult.error.code)")
                     return
             }
-            
+
             guard
                 let decodedByte = UIImage(data: newImageData! as Data),
                 let printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: BRLMPrinterModel.QL_820NWB)
@@ -72,16 +72,16 @@ public class BrotherPrint: CAPPlugin {
                     ]);
                     return
             }
-            
+
             let labelNameIndex = call.getInt("labelNameIndex") ?? 16;
             printSettings.labelSize = labelNameIndex == 16 ?
                 BRLMQLPrintSettingsLabelSize.rollW62 : BRLMQLPrintSettingsLabelSize.rollW62RB;
             printSettings.autoCut = true
             printSettings.numCopies = UInt(call.getInt("numberOfCopies") ?? 1);
-            
+
             let printError = printerDriver.printImage(with: decodedByte.cgImage!, settings: printSettings);
-            
-            
+
+
             if printError.code != .noError {
                 printerDriver.closeChannel();
                 self.notifyListeners("onPrintError", data: [
@@ -96,9 +96,9 @@ public class BrotherPrint: CAPPlugin {
             }
         }
     }
-    
+
     @objc func search(_ call: CAPPluginCall) {
-        switch call.getString("connectType", "wifi") {
+        switch call.getString("port", "wifi") {
         case "wifi":
             self.searchWiFiPrinter(call);
         case "bluetooth":
@@ -106,10 +106,10 @@ public class BrotherPrint: CAPPlugin {
         case "bluetoothLowEnergy":
             self.searchBLEPrinter(call);
         default:
-            call.reject("connectType is not 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'")
+            call.reject("port is not 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'")
         }
     }
-    
+
     // BRPtouchNetworkDelegate
     private func searchWiFiPrinter(_ call: CAPPluginCall) {
         var printersJSObject: JSArray = []
@@ -130,7 +130,7 @@ public class BrotherPrint: CAPPlugin {
             ])
         }
     }
-    
+
     private func checkBLEChannel(_ call: CAPPluginCall) {
         var printersJSObject: JSArray = []
         DispatchQueue.main.async {
@@ -148,7 +148,7 @@ public class BrotherPrint: CAPPlugin {
             ])
         }
     }
-    
+
     private func searchBLEPrinter(_ call: CAPPluginCall) {
         var printersJSObject: JSArray = []
         DispatchQueue.main.async {
@@ -167,13 +167,13 @@ public class BrotherPrint: CAPPlugin {
             ])
         }
     }
-    
+
     @objc func cancelSearchWiFiPrinter(_ call: CAPPluginCall) {
         DispatchQueue.main.async {
             BRLMPrinterSearcher.cancelNetworkSearch()
         }
     }
-    
+
     @objc func cancelSearchBluetoothPrinter(_ call: CAPPluginCall) {
         DispatchQueue.main.async {
             BRLMPrinterSearcher.cancelBLESearch()

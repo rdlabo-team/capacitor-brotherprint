@@ -30,11 +30,11 @@ export type printOptions = {
 };
 
 export type searchOption = {
-  connectType: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy';
+  port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy';
   /**
    * searchDuration is the time to end search for devices.
    * default is 15 seconds.
-   * use only connectType is 'wifi' or 'bluetoothLowEnergy'.
+   * use only port is 'wifi' or 'bluetoothLowEnergy'.
    */
   searchDuration: number;
 };
