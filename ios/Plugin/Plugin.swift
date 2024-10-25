@@ -92,9 +92,7 @@ public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
             else {
                 NSLog("Success - Print Image")
                 printerDriver.closeChannel();
-                call.resolve([
-                    "value": true
-                ]);
+                call.resolve();
             }
         }
     }
@@ -104,7 +102,7 @@ public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
             let manager = BRPtouchNetworkManager()
             manager.setPrinterName("QL-820NWB")
             manager.delegate = self
-            manager.startSearch(5)
+            manager.startSearch(15)
             self.networkManager = manager
         }
     }

@@ -1,37 +1,33 @@
 import { PluginListenerHandle } from '@capacitor/core';
+import { BrotherPrintEventsEnum } from './events.enum';
 
 export interface BrotherPrintPlugin {
-  printImage(options: BrotherPrintOptions): Promise<{ value: boolean }>;
+  printImage(options: BrotherPrintOptions): Promise<void>;
   searchWiFiPrinter(): Promise<void>;
   searchBLEPrinter(): Promise<void>;
 
   addListener(
-    eventName: 'onPrint',
+    eventName: BrotherPrintEventsEnum.onPrint,
     listenerFunc: () => void,
   ): Promise<PluginListenerHandle>;
 
   addListener(
-    eventName: 'onBLEAvailable',
+    eventName: BrotherPrintEventsEnum.onBLEAvailable,
     listenerFunc: () => void,
   ): Promise<PluginListenerHandle>;
 
   addListener(
-    eventName: 'onBLEAvailable',
-    listenerFunc: () => void,
-  ): Promise<PluginListenerHandle>;
-
-  addListener(
-    eventName: 'onIpAddressAvailable',
+    eventName: BrotherPrintEventsEnum.onIpAddressAvailable,
     listenerFunc: (info: { ipAddressList: string[] }) => void,
   ): Promise<PluginListenerHandle>;
 
   addListener(
-    eventName: 'onPrintFailedCommunication',
+    eventName: BrotherPrintEventsEnum.onPrintFailedCommunication,
     listenerFunc: (info: { value: string }) => void,
   ): Promise<PluginListenerHandle>;
 
   addListener(
-    eventName: 'onPrintError',
+    eventName: BrotherPrintEventsEnum.onPrintError,
     listenerFunc: (info: { value: string }) => void,
   ): Promise<PluginListenerHandle>;
 }
