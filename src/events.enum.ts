@@ -1,7 +1,6 @@
 export enum BrotherPrintEventsEnum {
+  onPrinterAvailable = 'onPrinterAvailable',
   onPrint = 'onPrint',
-  onBLEAvailable = 'onBLEAvailable',
-  onIpAddressAvailable = 'onIpAddressAvailable',
   onPrintFailedCommunication = 'onPrintFailedCommunication',
   onPrintError = 'onPrintError',
 }

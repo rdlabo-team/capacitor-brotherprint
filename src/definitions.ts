@@ -1,35 +1,41 @@
 import { PluginListenerHandle } from '@capacitor/core';
 import { BrotherPrintEventsEnum } from './events.enum';
 
-type BRLMChannelResult = {
+export type BRLMChannelResult = {
+  port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy';
   modelName: string;
   serialNumber: string;
   macAddress: string;
   nodeName: string;
   location: string;
   ipAddress: string;
-  localName: string;
 };
 
-export type IpAddress = Pick<BRLMChannelResult, 'modelName' | 'ipAddress'>;
-export type BluetoothLowEnergy = Pick<
-  BRLMChannelResult,
-  'modelName' | 'localName'
->;
-
-// TODO: Confirm if this is the correct type
-export type Bluetooth = Pick<BRLMChannelResult, 'serialNumber' | 'ipAddress'>;
-
-export type printOptions = {
+export type BRLMPrintOptions = {
   encodedImage: string;
-  printerType: 'QL-820NWB' | 'QL-800';
   numberOfCopies: number;
-  labelNameIndex: 16 | 38;
+  autoCut: boolean;
+
+  port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy';
+
+  /**
+   * Should use getPlatformName.label function.
+   * ex: getPlatformName.label('android', 'BRLMQLPrintSettingsLabelSizeRollW62')
+   */
+  labelName: string;
+
+  /**
+   * Should use getPlatformName.model function.
+   * ex: getPlatformName.model('android', 'BRLMPrinterModelQL_820NWB')
+   */
+  modelName: string;
+
   ipAddress?: string;
   localName?: string;
+  serialNumber?: string;
 };
 
-export type searchOption = {
+export type BRLMSearchOption = {
   port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy';
   /**
    * searchDuration is the time to end search for devices.
@@ -40,10 +46,12 @@ export type searchOption = {
 };
 
 export interface BrotherPrintPlugin {
-  printImage(options: printOptions): Promise<void>;
-  search(option: searchOption): Promise<{
-    printers: (IpAddress | Bluetooth | BluetoothLowEnergy)[];
-  }>;
+  printImage(options: BRLMPrintOptions): Promise<void>;
+
+  /**
+   * Search for printers. If not found, it will return an empty array.(not error)
+   */
+  search(option: BRLMSearchOption): Promise<void>;
 
   /**
    * Basically, it times out, so there is no need to use it. Use it when you want to run multiple connectType searches at the same time and time out any of them manually.
@@ -56,18 +64,13 @@ export interface BrotherPrintPlugin {
   cancelSearchBluetoothPrinter(): Promise<void>;
 
   addListener(
+    eventName: BrotherPrintEventsEnum.onPrinterAvailable,
+    listenerFunc: (printers: BRLMChannelResult) => void,
+  ): Promise<PluginListenerHandle>;
+
+  addListener(
     eventName: BrotherPrintEventsEnum.onPrint,
     listenerFunc: () => void,
-  ): Promise<PluginListenerHandle>;
-
-  addListener(
-    eventName: BrotherPrintEventsEnum.onBLEAvailable,
-    listenerFunc: () => void,
-  ): Promise<PluginListenerHandle>;
-
-  addListener(
-    eventName: BrotherPrintEventsEnum.onIpAddressAvailable,
-    listenerFunc: (info: { ipAddressList: string[] }) => void,
   ): Promise<PluginListenerHandle>;
 
   addListener(

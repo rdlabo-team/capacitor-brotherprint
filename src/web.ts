@@ -1,19 +1,13 @@
 import { WebPlugin } from '@capacitor/core';
-import { BrotherPrintPlugin, printOptions } from './definitions';
+import {
+  BrotherPrintPlugin,
+  BRLMPrintOptions,
+  BRLMSearchOption,
+} from './definitions';
 
 export class BrotherPrintWeb extends WebPlugin implements BrotherPrintPlugin {
-  /**
-   * Print with Base64
-   */
-  async printImage(_options: printOptions): Promise<void> {}
-
-  /**
-   * Search Wifi Printer
-   */
-  async searchWiFiPrinter(): Promise<void> {}
-
-  /**
-   * search Bluetooth Printer
-   */
-  async searchBLEPrinter(): Promise<void> {}
+  async printImage(_options: BRLMPrintOptions): Promise<void> {}
+  async search(_options: BRLMSearchOption): Promise<void> {}
+  async cancelSearchWiFiPrinter(): Promise<void> {}
+  async cancelSearchBluetoothPrinter(): Promise<void> {}
 }
