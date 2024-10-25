@@ -14,7 +14,7 @@ public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
     @objc func printImage(_ call: CAPPluginCall) {
         let encodedImage: String = call.getString("encodedImage") ?? "";
         if (encodedImage == "") {
-            call.error("Error - Image data is not found.");
+            call.reject("Error - Image data is not found.");
             return;
         }
         
@@ -22,13 +22,13 @@ public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
         
         let printerType: String = call.getString("printerType") ?? "";
         if (printerType == "") {
-            call.error("Error - printerType is not found.");
+            call.reject("Error - printerType is not found.");
             return;
         }
         
         if (printerType != "QL-820NWB") {
             // iOS非対応
-            call.error("Error - connection is not found.");
+            call.reject("Error - connection is not found.");
             return;
         }
         
@@ -92,7 +92,7 @@ public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
             else {
                 NSLog("Success - Print Image")
                 printerDriver.closeChannel();
-                call.success([
+                call.resolve([
                     "value": true
                 ]);
             }
@@ -100,7 +100,6 @@ public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
     }
     
     @objc func searchWiFiPrinter(_ call: CAPPluginCall) {
-        NSLog("Start searchWiFiPrinter");
         DispatchQueue.main.async {
             let manager = BRPtouchNetworkManager()
             manager.setPrinterName("QL-820NWB")
@@ -112,7 +111,6 @@ public class BrotherPrint: CAPPlugin, BRPtouchNetworkDelegate {
     
     // BRPtouchNetworkDelegate
     public func didFinishSearch(_ sender: Any!) {
-        NSLog("Start didFinishSearch");
         DispatchQueue.main.async {
             guard let manager = sender as? BRPtouchNetworkManager else {
                 return
