@@ -1,9 +1,17 @@
 module BRLMPrinterKit {
-    header "../../../../../ios/App/Pods/BRLMPrinterKit_v4/BRLMPrinterKit/BRLMPrinterKit.xcframework/ios-arm64/BRLMPrinterKit.framework/Headers/BRLMPrinterKit.h"
+//    header "../../../../../ios/App/Pods/BRLMPrinterKit_v4/BRLMPrinterKit/BRLMPrinterKit.xcframework/ios-arm64/BRLMPrinterKit.framework/Headers/BRLMPrinterKit.h"
+    header "../Pods/BRLMPrinterKit_v4/BRLMPrinterKit/BRLMPrinterKit.xcframework/ios-arm64_x86_64-simulator/BRLMPrinterKit.framework/Headers/BRLMPrinterKit.h"
     link "BRLMPrinterKit"
 }
 
 module BRPtouchPrinterKit {
-    header "../../../../../ios/App/Pods/BRLMPrinterKit_v4/BRLMPrinterKit/BRLMPrinterKit.xcframework/ios-arm64/BRLMPrinterKit.framework/Headers/BRPtouchPrinterKit.h"
+//    header "../../../../../ios/App/Pods/BRLMPrinterKit_v4/BRLMPrinterKit/BRLMPrinterKit.xcframework/ios-arm64/BRLMPrinterKit.framework/Headers/BRPtouchPrinterKit.h"
+    header "../Pods/BRLMPrinterKit_v4/BRLMPrinterKit/BRLMPrinterKit.xcframework/ios-arm64_x86_64-simulator/BRLMPrinterKit.framework/Headers/BRPtouchPrinterKit.h"
     link "BRPtouchPrinterKit"
+}
+
+module BMSPrinterKit {
+//    header "../../../../../ios/App/Pods/BRLMPrinterKit_v4/BRLMPrinterKit/BRLMPrinterKit.xcframework/ios-arm64/BRLMPrinterKit.framework/Headers/BRPtouchPrinterKit.h"
+    header "../Pods/BRLMPrinterKit_v4/BRLMPrinterKit/BRLMPrinterKit.xcframework/ios-arm64_x86_64-simulator/BRLMPrinterKit.framework/Headers/BMSPrinterKit.h"
+    link "BMSPrinterKit"
 }
