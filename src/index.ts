@@ -1,10 +1,10 @@
 import { registerPlugin } from '@capacitor/core';
 
-import type { BrotherPrintPlugin } from './definitions';
 import {
   BRLMPrinterModelName,
   BRLMPrinterLabelName,
 } from './brother-printer.enum';
+import type { BrotherPrintPlugin } from './definitions';
 
 /**
  * platform can select web, but this plugin is not work.
