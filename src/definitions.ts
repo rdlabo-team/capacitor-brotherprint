@@ -62,6 +62,11 @@ export type BRLMSearchOption = {
   searchDuration: number;
 };
 
+export type ErrorInfo = {
+  message: string;
+  code: number;
+};
+
 export interface BrotherPrintPlugin {
   printImage(options: BRLMPrintOptions): Promise<void>;
 
@@ -92,11 +97,11 @@ export interface BrotherPrintPlugin {
 
   addListener(
     eventName: BrotherPrintEventsEnum.onPrintFailedCommunication,
-    listenerFunc: (info: { value: string }) => void,
+    listenerFunc: (info: ErrorInfo) => void,
   ): Promise<PluginListenerHandle>;
 
   addListener(
     eventName: BrotherPrintEventsEnum.onPrintError,
-    listenerFunc: (info: { value: string }) => void,
+    listenerFunc: (info: ErrorInfo) => void,
   ): Promise<PluginListenerHandle>;
 }
