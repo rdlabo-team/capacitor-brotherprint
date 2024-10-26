@@ -1,6 +1,10 @@
 import type { PluginListenerHandle } from '@capacitor/core';
 
 import type { BrotherPrintEventsEnum } from './events.enum';
+import {
+  BRLMPrinterLabelName,
+  BRLMPrinterModelName,
+} from './brother-printer.enum';
 
 export type BRLMChannelResult = {
   port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy';
@@ -17,20 +21,32 @@ export type BRLMPrintOptions = {
   numberOfCopies: number;
   autoCut: boolean;
 
-  port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy' | 'usb';
-
   /**
    * Should use getPlatformName.label function.
    * ex: getPlatformName.label('android', 'BRLMQLPrintSettingsLabelSizeRollW62')
    */
-  labelName: string;
+  labelName: BRLMPrinterLabelName;
 
   /**
    * Should use getPlatformName.model function.
    * ex: getPlatformName.model('android', 'BRLMPrinterModelQL_820NWB')
    */
-  modelName: string;
+  modelName: BRLMPrinterModelName;
 
+  /**
+   * These are get from search result. mostly, it is like below.
+   * BrotherPrint.printImage({
+   *       ...defaultPrintSettings,
+   *       ...{
+   *         port: selectPrinter.port,
+   *         ipAddress: selectPrinter.ipAddress,
+   *         localName: selectPrinter.nodeName,
+   *         macAddress: selectPrinter.macAddress,
+   *         serialNumber: selectPrinter.serialNumber,
+   *       },
+   *  })
+   */
+  port?: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy' | 'usb';
   ipAddress?: string;
   localName?: string;
   serialNumber?: string;

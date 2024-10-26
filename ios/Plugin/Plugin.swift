@@ -28,8 +28,8 @@ public class BrotherPrint: CAPPlugin {
         let serialNumber: String = call.getString("serialNumber", "")
         let autoCut: Bool = call.getBool("autoCut", true)
 
-        let modelName = self.getModelName(from: call.getString("modelName", "QL-820NWB"))
-        let labelSize = self.getLabelSize(from: call.getString("labelName", "rollW62"))
+        let modelName = PrinterModel.getModelName(from: call.getString("modelName", "QL-820NWB"))
+        let labelSize = PrinterModel.getLabelSize(from: call.getString("labelName", "rollW62"))
 
         NSLog(call.getString("modelName", "not set"))
         NSLog(call.getString("labelName", "not set"))
@@ -200,30 +200,6 @@ public class BrotherPrint: CAPPlugin {
         DispatchQueue.global().async {
             self.cancelRoutineBluetooth?()
             self.cancelRoutineBluetooth = nil
-        }
-    }
-
-    private func getModelName(from: String) -> BRLMPrinterModel {
-        switch from {
-        case "QL-810W":
-            return BRLMPrinterModel.QL_810W
-        case "QL-820NWB":
-            return BRLMPrinterModel.QL_820NWB
-        default:
-            return BRLMPrinterModel.unknown
-        }
-    }
-
-    private func getLabelSize(from: String) -> BRLMQLPrintSettingsLabelSize {
-        switch from {
-        case "dieCutW29H90":
-            return BRLMQLPrintSettingsLabelSize.dieCutW29H90
-        case "rollW62":
-            return BRLMQLPrintSettingsLabelSize.rollW62
-        case "rollW62RB":
-            return BRLMQLPrintSettingsLabelSize.rollW62RB
-        default:
-            return BRLMQLPrintSettingsLabelSize.rollW62
         }
     }
 }

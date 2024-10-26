@@ -2,6 +2,32 @@ import Foundation
 import BRLMPrinterKit
 import BRPtouchPrinterKit
 
+class PrinterModel {
+    static func getModelName(from: String) -> BRLMPrinterModel {
+        switch from {
+        case "QL_810W":
+            return BRLMPrinterModel.QL_810W
+        case "QL_820NWB":
+            return BRLMPrinterModel.QL_820NWB
+        default:
+            return BRLMPrinterModel.unknown
+        }
+    }
+
+    static func getLabelSize(from: String) -> BRLMQLPrintSettingsLabelSize {
+        switch from {
+        case "W29H90":
+            return BRLMQLPrintSettingsLabelSize.dieCutW29H90
+        case "W62":
+            return BRLMQLPrintSettingsLabelSize.rollW62
+        case "W62RB":
+            return BRLMQLPrintSettingsLabelSize.rollW62RB
+        default:
+            return BRLMQLPrintSettingsLabelSize.rollW62
+        }
+    }
+}
+
 enum PrinterModel: String, CaseIterable {
     //    case PJ_673 = "PJ-673" // swiftlint:disable:this identifier_name
     //    case PJ_763MFi = "PJ-763" // swiftlint:disable:this identifier_name
