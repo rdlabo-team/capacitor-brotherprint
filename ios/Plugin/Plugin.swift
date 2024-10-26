@@ -9,7 +9,8 @@ import BRPtouchPrinterKit
  */
 @objc(BrotherPrint)
 public class BrotherPrint: CAPPlugin {
-    private var networkManager: BRPtouchNetworkManager?
+    private var cancelRoutine: (() -> Void)?
+    
     @objc func printImage(_ call: CAPPluginCall) {
         let encodedImage: String = call.getString("encodedImage") ?? ""
         if encodedImage == "" {
@@ -101,74 +102,67 @@ public class BrotherPrint: CAPPlugin {
 
     private func searchWiFiPrinter(_ call: CAPPluginCall) {
         DispatchQueue.main.async {
+            self.cancelRoutine = {
+                BRLMPrinterSearcher.cancelNetworkSearch()
+            }
+            
             let option = BRLMNetworkSearchOption()
             option.printerList = PrinterModel.allCases.map { $0.searchModelName }
             option.searchDuration = TimeInterval(call.getInt("searchDuration", 15))
 
             let result = BRLMPrinterSearcher.startNetworkSearch(option) { channel in
-                let modelName = channel.extraInfo?.value(forKey: BRLMChannelExtraInfoKeyModelName) as? String ?? ""
-                let serialNumber = channel.extraInfo?.value(forKey: BRLMChannelExtraInfoKeySerialNumber) as? String ?? ""
-                let macAddress = channel.extraInfo?.value(forKey: BRLMChannelExtraInfoKeyMacAddress) as? String ?? ""
-                let nodeName = channel.extraInfo?.value(forKey: BRLMChannelExtraInfoKeyNodeName) as? String ?? ""
-                let location = channel.extraInfo?.value(forKey: BRLMChannelExtraInfoKeyLocation) as? String ?? ""
-                let ipaddress = channel.channelInfo
+                self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "wifi", channel: channel))
+            }
+            self.cancelRoutine = nil
+            call.resolve()
+        }
+    }
+    
 
-                self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: [
-                    "port": "wifi",
-                    "modelName": modelName,
-                    "serialNumber": serialNumber,
-                    "macAddress": macAddress,
-                    "nodeName": nodeName,
-                    "location": location,
-                    "ipAddress": ipaddress
-                ])
+    private func checkBLEChannel(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            let channels = BRLMPrinterSearcher.startBluetoothSearch().channels
+            for channel in channels {
+                self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "wifi", channel: channel))
             }
             call.resolve()
         }
     }
 
-    private func checkBLEChannel(_ call: CAPPluginCall) {
-        var printersJSObject: JSArray = []
-        DispatchQueue.main.async {
-            let channels = BRLMPrinterSearcher.startBluetoothSearch().channels
-            for channel in channels {
-                let modelName = channel.extraInfo?.value(forKey: BRLMChannelExtraInfoKeyModelName) as? String ?? ""
-                let serialNumber = channel.extraInfo?.value(forKey: BRLMChannelExtraInfoKeySerialNumber) as? String ?? ""
-                printersJSObject.append([
-                    "modelName": modelName,
-                    "serialNumber": serialNumber
-                ])
-            }
-            call.resolve([
-                "port": "bluetooth",
-                "printers": printersJSObject
-            ])
-        }
-    }
-
     private func searchBLEPrinter(_ call: CAPPluginCall) {
-        var printersJSObject: JSArray = []
         DispatchQueue.main.async {
             let option = BRLMBLESearchOption()
             option.searchDuration = TimeInterval(call.getInt("searchDuration", 15))
             let result = BRLMPrinterSearcher.startBLESearch(option) { channel in
-                let modelName = channel.extraInfo?.value(forKey: BRLMChannelExtraInfoKeyModelName) as? String ?? ""
-                let advertiseLocalName = channel.channelInfo
-                printersJSObject.append([
-                    "modelName": modelName,
-                    "localName": advertiseLocalName
-                ])
+                self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "wifi", channel: channel))
             }
-            call.resolve([
-                "port": "bluetoothLowEnergy",
-                "printers": printersJSObject
-            ])
+            call.resolve()
         }
+    }
+    
+    private func chanelToPrinter(port: String, channel: BRLMChannel) -> [String: String] {
+        let modelName = channel.extraInfo?.value(forKey: BRLMChannelExtraInfoKeyModelName) as? String ?? ""
+        let serialNumber = channel.extraInfo?.value(forKey: BRLMChannelExtraInfoKeySerialNumber) as? String ?? ""
+        let macAddress = channel.extraInfo?.value(forKey: BRLMChannelExtraInfoKeyMacAddress) as? String ?? ""
+        let nodeName = channel.extraInfo?.value(forKey: BRLMChannelExtraInfoKeyNodeName) as? String ?? ""
+        let location = channel.extraInfo?.value(forKey: BRLMChannelExtraInfoKeyLocation) as? String ?? ""
+        let ipaddress = channel.channelInfo
+        
+        return [
+            "port": port,
+            "modelName": modelName,
+            "serialNumber": serialNumber,
+            "macAddress": macAddress,
+            "nodeName": nodeName,
+            "location": location,
+            "ipAddress": ipaddress
+        ]
     }
 
     @objc func cancelSearchWiFiPrinter(_ call: CAPPluginCall) {
-        DispatchQueue.main.async {
-            BRLMPrinterSearcher.cancelNetworkSearch()
+        DispatchQueue.global().async {
+            self.cancelRoutine?()
+            self.cancelRoutine = nil
         }
     }
 
@@ -181,20 +175,20 @@ public class BrotherPrint: CAPPlugin {
     private func getModelName(from: String) -> BRLMPrinterModel {
         switch from {
         case "QL-810W":
-            return BRLMPrinterModel.QL_810W
+            return .QL_810W
         case "QL-820NWB":
-            return BRLMPrinterModel.QL_820NWB
+            return .QL_820NWB
         default:
-            return BRLMPrinterModel.unknown
+            return .unknown
         }
     }
 
     private func getLabelSize(from: String) -> BRLMQLPrintSettingsLabelSize {
         switch from {
         case "rollW62":
-            return BRLMQLPrintSettingsLabelSize.rollW62
+            return .rollW62
         case "rollW62RB":
-            return BRLMQLPrintSettingsLabelSize.rollW62RB
+            return .rollW62RB
         default:
             return BRLMQLPrintSettingsLabelSize.rollW62
         }
