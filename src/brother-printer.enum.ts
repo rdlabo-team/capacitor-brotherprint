@@ -4,6 +4,7 @@ export enum BRLMPrinterModelName {
 }
 
 export enum BRLMPrinterLabelName {
+  rollW29 = 'rollW29',
   rollW62 = 'rollW62',
   rollW62RB = 'rollW62RB',
 }

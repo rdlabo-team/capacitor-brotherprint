@@ -1,8 +1,8 @@
 import { registerPlugin } from '@capacitor/core';
 
 import {
-  BRLMPrinterModelName,
   BRLMPrinterLabelName,
+  BRLMPrinterModelName,
 } from './brother-printer.enum';
 import type { BrotherPrintPlugin } from './definitions';
 
@@ -34,9 +34,11 @@ const BRLMPlatformName = {
       return label;
     }
     switch (label) {
-      case BRLMPrinterLabelName.BRLMQLPrintSettingsLabelSizeRollW62:
+      case BRLMPrinterLabelName.rollW29:
+        return 'W29';
+      case BRLMPrinterLabelName.rollW62:
         return 'W62';
-      case BRLMPrinterLabelName.BRLMQLPrintSettingsLabelSizeRollW62RB:
+      case BRLMPrinterLabelName.rollW62RB:
         return 'W62RB';
       default:
         throw new Error('Invalid labelName. Please check support Label Name.');

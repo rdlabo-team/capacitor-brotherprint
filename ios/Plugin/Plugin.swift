@@ -29,6 +29,9 @@ public class BrotherPrint: CAPPlugin {
 
         let modelName = self.getModelName(from: call.getString("modelName", "QL-820NWB"))
         let labelSize = self.getLabelSize(from: call.getString("labelName", "rollW62"))
+        
+        NSLog(call.getString("modelName", "not set"));
+        NSLog(call.getString("labelName", "not set"));
 
         // メインスレッドにて処理
         DispatchQueue.main.async {
@@ -110,7 +113,9 @@ public class BrotherPrint: CAPPlugin {
             option.printerList = PrinterModel.allCases.map { $0.searchModelName }
             option.searchDuration = TimeInterval(call.getInt("searchDuration", 15))
 
-            let result = BRLMPrinterSearcher.startNetworkSearch(option) { channel in
+            NSLog("BRLMPrinterSearcher.startNetworkSearch")
+            BRLMPrinterSearcher.startNetworkSearch(option) { channel in
+                NSLog(channel.channelInfo)
                 self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "wifi", channel: channel))
             }
             self.cancelRoutine = nil
@@ -175,20 +180,22 @@ public class BrotherPrint: CAPPlugin {
     private func getModelName(from: String) -> BRLMPrinterModel {
         switch from {
         case "QL-810W":
-            return .QL_810W
+            return BRLMPrinterModel.QL_810W
         case "QL-820NWB":
-            return .QL_820NWB
+            return BRLMPrinterModel.QL_820NWB
         default:
-            return .unknown
+            return BRLMPrinterModel.unknown
         }
     }
 
     private func getLabelSize(from: String) -> BRLMQLPrintSettingsLabelSize {
         switch from {
+        case "rollW29":
+            return BRLMQLPrintSettingsLabelSize.rollW29
         case "rollW62":
-            return .rollW62
+            return BRLMQLPrintSettingsLabelSize.rollW62
         case "rollW62RB":
-            return .rollW62RB
+            return BRLMQLPrintSettingsLabelSize.rollW62RB
         default:
             return BRLMQLPrintSettingsLabelSize.rollW62
         }
