@@ -1,10 +1,10 @@
 import type { PluginListenerHandle } from '@capacitor/core';
 
-import type { BrotherPrintEventsEnum } from './events.enum';
-import {
+import type {
   BRLMPrinterLabelName,
   BRLMPrinterModelName,
 } from './brother-printer.enum';
+import type { BrotherPrintEventsEnum } from './events.enum';
 
 export type BRLMChannelResult = {
   port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy';
