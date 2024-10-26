@@ -13,7 +13,7 @@ public class BrotherPrint: CAPPlugin {
     private var cancelRoutineBluetooth: (() -> Void)?
 
     @objc func printImage(_ call: CAPPluginCall) {
-        let encodedImage: String = call.getString("encodedImage") ?? ""
+        let encodedImage: String = call.getString("encodedImage", "") 
         if encodedImage == "" {
             call.reject("Error - Image data is not found.")
             return
