@@ -34,7 +34,7 @@ const BRLMPlatformName = {
       return label;
     }
     switch (label) {
-      case BRLMPrinterLabelName.rollW29:
+      case BRLMPrinterLabelName.dieCutW29H90:
         return 'W29';
       case BRLMPrinterLabelName.rollW62:
         return 'W62';
