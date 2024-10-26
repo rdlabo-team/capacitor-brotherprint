@@ -20,5 +20,17 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>NSPrincipalClass</key>
 	<string></string>
+    <key>NSBluetoothAlwaysUsageDescription</key>
+    <string>Use Bluetooth for label printer search.</string>
+    <key>NSBluetoothPeripheralUsageDescription</key>
+    <string>Use Bluetooth for label printer search.</string>
+    <key>NSBonjourServices</key>
+    <array>
+        <string>_pdl-datastream._tcp</string>
+        <string>_printer._tcp</string>
+        <string>_ipp._tcp</string>
+    </array>
+    <key>UISupportedExternalAccessoryProtocols</key>
+    <string>com.brother.ptcbp</string>
 </dict>
 </plist>

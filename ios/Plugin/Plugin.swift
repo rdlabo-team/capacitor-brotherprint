@@ -9,7 +9,8 @@ import BRPtouchPrinterKit
  */
 @objc(BrotherPrint)
 public class BrotherPrint: CAPPlugin {
-    private var cancelRoutine: (() -> Void)?
+    private var cancelRoutineWiFi: (() -> Void)?
+    private var cancelRoutineBluetooth: (() -> Void)?
 
     @objc func printImage(_ call: CAPPluginCall) {
         let encodedImage: String = call.getString("encodedImage") ?? ""
@@ -121,8 +122,8 @@ public class BrotherPrint: CAPPlugin {
     }
 
     private func searchWiFiPrinter(_ call: CAPPluginCall) {
-        DispatchQueue.main.async {
-            self.cancelRoutine = {
+        DispatchQueue.global().async {
+            self.cancelRoutineWiFi = {
                 BRLMPrinterSearcher.cancelNetworkSearch()
             }
 
@@ -136,13 +137,13 @@ public class BrotherPrint: CAPPlugin {
                 let printer = self.chanelToPrinter(port: "wifi", channel: channel)
                 self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: printer)
             }
-            self.cancelRoutine = nil
+            self.cancelRoutineWiFi = nil
             call.resolve()
         }
     }
 
     private func checkBLEChannel(_ call: CAPPluginCall) {
-        DispatchQueue.main.async {
+        DispatchQueue.global().async {
             NSLog("BRLMPrinterSearcher.startBluetoothSearch")
             let searcher = BRLMPrinterSearcher.startBluetoothSearch()
             for channel in searcher.channels {
@@ -154,13 +155,17 @@ public class BrotherPrint: CAPPlugin {
     }
 
     private func searchBLEPrinter(_ call: CAPPluginCall) {
-        DispatchQueue.main.async {
+        DispatchQueue.global().async {
+            self.cancelRoutineBluetooth = {
+                BRLMPrinterSearcher.cancelBLESearch()
+            }
             let option = BRLMBLESearchOption()
             option.searchDuration = TimeInterval(call.getInt("searchDuration", 15))
             NSLog("BRLMPrinterSearcher.startBLESearch")
             BRLMPrinterSearcher.startBLESearch(option) { channel in
                 self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetoothLowEnergy", channel: channel))
             }
+            self.cancelRoutineBluetooth = nil
             call.resolve()
         }
     }
@@ -186,14 +191,15 @@ public class BrotherPrint: CAPPlugin {
 
     @objc func cancelSearchWiFiPrinter(_ call: CAPPluginCall) {
         DispatchQueue.global().async {
-            self.cancelRoutine?()
-            self.cancelRoutine = nil
+            self.cancelRoutineWiFi?()
+            self.cancelRoutineWiFi = nil
         }
     }
 
     @objc func cancelSearchBluetoothPrinter(_ call: CAPPluginCall) {
-        DispatchQueue.main.async {
-            BRLMPrinterSearcher.cancelBLESearch()
+        DispatchQueue.global().async {
+            self.cancelRoutineBluetooth?()
+            self.cancelRoutineBluetooth = nil
         }
     }
 
