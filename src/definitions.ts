@@ -17,7 +17,7 @@ export type BRLMPrintOptions = {
   numberOfCopies: number;
   autoCut: boolean;
 
-  port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy';
+  port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy' | 'usb';
 
   /**
    * Should use getPlatformName.label function.
