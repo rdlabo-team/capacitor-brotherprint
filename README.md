@@ -1,16 +1,17 @@
 # @rdlabo/capacitor-brotherprint
 
-Capacitor Brother Print is a native Brother Print SDK implementation for iOS & Android.
+Capacitor Brother Print is a native Brother Print SDK implementation for iOS & Android. Support These models.
+Each product link is an Amazon affiliate link. If you choose to make a purchase through these links, it would be greatly appreciated and **would help** support development costs. Thank you!
 
-| Product    | Model        | iOS/WiFi | iOS/BT | iOS/BLE | Android/USB | Android/WiFi | Android/BT | Android/BLE |
-| ---------- | ------------ | -------- | ------ | ------- | ----------- | ------------ | ---------- | ----------- |
-| QL-810W    | QL_810W      | ✗        | ✗      | ✗       | △           | ✗            | ✗          | ✗           |
-| QL-820NWB  | QL_820NWB    | ◯        | ✗      | ✗       | △           | ◯            | △          | ✗           |
-| QL-820NWBc | QL_820NWB    | ◯        | ※1     | ✗       | ✗           | ◯            | ◯          | ✗           |
-| TD-2320D   | TD_2320D_203 | ✗        | ✗      | ✗       | △           | ✗            | ✗          | ✗           |
-| TD-2350D   | TD_2350D_203 | △        | △      | △       | △           | △            | △          | △           |
+| Product                               | Model        | iOS/WiFi | iOS/BT | iOS/BLE | Android/USB | Android/WiFi | Android/BT | Android/BLE |
+| ------------------------------------- | ------------ | -------- | ------ | ------- | ----------- | ------------ | ---------- | ----------- |
+| QL-810W                               | QL_810W      | ✗        | ✗      | ✗       | △           | ✗            | ✗          | ✗           |
+| [QL-820NWB](https://amzn.to/3BXQ1aj)  | QL_820NWB    | ◯        | ✗      | ✗       | △           | ◯            | △          | ✗           |
+| [QL-820NWBc](https://amzn.to/4fjhUIe) | QL_820NWB    | ◯        | ※1     | ✗       | ✗           | ◯            | ◯          | ✗           |
+| [TD-2320D](https://amzn.to/48EFCN3)   | TD_2320D_203 | ✗        | ✗      | ✗       | △           | ✗            | ✗          | ✗           |
+| [TD-2350D](https://amzn.to/48ma6TK)   | TD_2350D_203 | △        | △      | △       | △           | △            | △          | △           |
 
-**supplement**
+**Supplement**
 
 |     | description                |
 | --- | -------------------------- |
