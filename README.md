@@ -11,6 +11,8 @@ Each product link is an Amazon affiliate link. If you choose to make a purchase 
 | [TD-2320D](https://amzn.to/48EFCN3)   | TD_2320D_203 | ✗        | ✗      | ✗       | △           | ✗            | ✗          | ✗           |
 | [TD-2350D](https://amzn.to/48ma6TK)   | TD_2350D_203 | △        | △      | △       | △           | △            | △          | △           |
 
+Amazon Affiliate Links:　**https://amzn.to/3AiiOFT**
+
 **Supplement**
 
 |     | description                |
