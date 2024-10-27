@@ -2,7 +2,7 @@ import Foundation
 import BRLMPrinterKit
 import BRPtouchPrinterKit
 
-class PrinterModel {
+class BrotherModel {
     static func getModelName(from: String) -> BRLMPrinterModel {
         switch from {
         case "QL_810W":

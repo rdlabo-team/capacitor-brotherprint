@@ -28,8 +28,8 @@ public class BrotherPrint: CAPPlugin {
         let serialNumber: String = call.getString("serialNumber", "")
         let autoCut: Bool = call.getBool("autoCut", true)
 
-        let modelName = PrinterModel.getModelName(from: call.getString("modelName", "QL-820NWB"))
-        let labelSize = PrinterModel.getLabelSize(from: call.getString("labelName", "rollW62"))
+        let modelName = BrotherModel.getModelName(from: call.getString("modelName", "QL-820NWB"))
+        let labelSize = BrotherModel.getLabelSize(from: call.getString("labelName", "rollW62"))
 
         NSLog(call.getString("modelName", "not set"))
         NSLog(call.getString("labelName", "not set"))
