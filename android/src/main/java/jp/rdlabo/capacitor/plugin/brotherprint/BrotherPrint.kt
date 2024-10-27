@@ -44,8 +44,10 @@ class BrotherPrint : Plugin() {
         val serialNumber: String? = call.getString("serialNumber", "")
         val autoCut: Boolean? = call.getBoolean("autoCut", true)
 
-        val printerModel = PrinterInfo.Model.entries.find { it.name == call.getString("modelName", "QL_820NWB") }
-        val labelName = LabelInfo.QL700.entries.find { it.name == call.getString("labelName", "W62") }
+        val printerModel =
+            PrinterInfo.Model.entries.find { it.name == call.getString("modelName", "QL_820NWB") }
+        val labelName =
+            LabelInfo.QL700.entries.find { it.name == call.getString("labelName", "W62") }
 
         val printer = Printer()
         val settings = printer.printerInfo
@@ -60,12 +62,14 @@ class BrotherPrint : Plugin() {
             settings.port = PrinterInfo.Port.NET
             settings.ipAddress = ipAddress
         } else if (port == "bluetooth") {
-            val manager = bridge.context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+            val manager =
+                bridge.context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
             printer.setBluetooth(manager.adapter)
             settings.port = PrinterInfo.Port.BLUETOOTH
             settings.macAddress = serialNumber
         } else {
-            val manager = bridge.context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+            val manager =
+                bridge.context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
             printer.setBluetooth(manager.adapter)
             settings.port = PrinterInfo.Port.BLE
             settings.localName = localName
@@ -84,9 +88,14 @@ class BrotherPrint : Plugin() {
         Log.d("brother", settings.toString())
 
         val setPrinter = printer.setPrinterInfo(settings)
+
         if (!setPrinter) {
             val setResult = Printer.getResult()
-            notifyListeners(BrotherPrintEvent.onPrintError.webEventName, JSObject().put("value", setResult.errorCode))
+            notifyListeners(
+                BrotherPrintEvent.onPrintError.webEventName,
+                JSObject().put("code", setResult.errorCode)
+                    .put("message", setResult.toString())
+            )
         }
 
         try {
@@ -96,28 +105,42 @@ class BrotherPrint : Plugin() {
                     val result = printer.printImage(decodedByte)
 
                     if (result.errorCode == PrinterInfo.ErrorCode.ERROR_NONE) {
-                        notifyListeners(BrotherPrintEvent.onPrint.webEventName, JSObject().put("value", result))
+                        notifyListeners(
+                            BrotherPrintEvent.onPrint.webEventName,
+                            JSObject().put("code", result.errorCode)
+                                .put("message", result.toString())
+                        )
                     } else {
                         Log.d("TAG", "ERROR - " + result.errorCode)
-                        notifyListeners(BrotherPrintEvent.onPrintError.webEventName, JSObject().put("value", result.errorCode))
+                        notifyListeners(
+                            BrotherPrintEvent.onPrintError.webEventName,
+                            JSObject().put("code", result.errorCode)
+                                .put("message", result.toString())
+                        )
                     }
 
                     printer.endCommunication()
                 } else {
-                    notifyListeners(BrotherPrintEvent.onPrintFailedCommunication.webEventName, JSObject().put("value", ""))
+                    notifyListeners(
+                        BrotherPrintEvent.onPrintFailedCommunication.webEventName,
+                        JSObject().put("code", "0")
+                    )
                 }
             }
                 .start()
             call.resolve()
         } catch (e: Exception) {
-            notifyListeners(BrotherPrintEvent.onPrintFailedCommunication.webEventName, JSObject().put("message", e.localizedMessage))
+            notifyListeners(
+                BrotherPrintEvent.onPrintFailedCommunication.webEventName, JSObject().put("code", 0)
+                    .put("message", e.localizedMessage)
+            )
             call.reject(e.localizedMessage, e)
         }
     }
 
     @PluginMethod
     fun search(call: PluginCall) {
-        when(call.getString("port", "wifi")) {
+        when (call.getString("port", "wifi")) {
             "wifi" -> this.searchWiFiPrinter(call)
             "bluetooth" -> this.checkBLEChannel(call)
             "bluetoothLowEnergy" -> this.searchBLEPrinter(call)
@@ -130,9 +153,9 @@ class BrotherPrint : Plugin() {
             this.cancelRoutineWiFi = {
                 cancelNetworkSearch()
             }
-            val intDuration: Int = call.getInt("searchDuration") ?: 15 ;
+            val intDuration: Int = call.getInt("searchDuration") ?: 15;
             val option = NetworkSearchOption(intDuration.toDouble(), false);
-            PrinterSearcher.startNetworkSearch(bridge.context, option){ channel ->
+            PrinterSearcher.startNetworkSearch(bridge.context, option) { channel ->
                 run {
                     Log.d("brother", this.chanelToPrinter("wifi", channel).toString())
                     this.notifyListeners(
@@ -148,8 +171,11 @@ class BrotherPrint : Plugin() {
 
     private fun checkBLEChannel(call: PluginCall) {
         Thread {
-            for (channel in PrinterSearcher.startBluetoothSearch(bridge.context).channels){
-                this.notifyListeners(BrotherPrintEvent.onPrinterAvailable.webEventName, this.chanelToPrinter("bluetooth", channel));
+            for (channel in PrinterSearcher.startBluetoothSearch(bridge.context).channels) {
+                this.notifyListeners(
+                    BrotherPrintEvent.onPrinterAvailable.webEventName,
+                    this.chanelToPrinter("bluetooth", channel)
+                );
             }
         }.start()
         call.resolve();
@@ -160,10 +186,13 @@ class BrotherPrint : Plugin() {
             this.cancelRoutineBluetooth = {
                 cancelNetworkSearch()
             }
-            val intDuration: Int = call.getInt("searchDuration") ?: 15 ;
+            val intDuration: Int = call.getInt("searchDuration") ?: 15;
             val option = BLESearchOption(intDuration.toDouble())
-            val result = PrinterSearcher.startBLESearch(bridge.context, option){ channel ->
-                this.notifyListeners(BrotherPrintEvent.onPrinterAvailable.webEventName, this.chanelToPrinter("bluetoothLowEnergy", channel));
+            val result = PrinterSearcher.startBLESearch(bridge.context, option) { channel ->
+                this.notifyListeners(
+                    BrotherPrintEvent.onPrinterAvailable.webEventName,
+                    this.chanelToPrinter("bluetoothLowEnergy", channel)
+                );
             }
             this.cancelRoutineBluetooth = null;
         }.start()
