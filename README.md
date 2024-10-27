@@ -184,7 +184,7 @@ export class BrotherComponent implements OnInit, OnDestroy {
 
   async searchPrinter(port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy') {
     // This method return void. Get the printer list by listening to the event.
-    await BrotherPrint.searchPrinter({
+    await BrotherPrint.search({
       port,
       searchDuration: 15, // seconds
     });
@@ -197,7 +197,7 @@ export class BrotherComponent implements OnInit, OnDestroy {
     }
 
     const defaultPrintSettings: BRLMPrintOptions = {
-      modelName: BRLMPrinterModelName.QL_820NW,
+      modelName: BRLMPrinterModelName.QL_820NWB,
       labelName: BRLMPrinterLabelName.W62,
       encodedImage: 'base64 removed mime-type', // base64
       numberOfCopies: 1, // default 1
