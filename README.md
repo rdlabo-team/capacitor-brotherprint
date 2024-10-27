@@ -107,20 +107,20 @@ More information is here: https://support.brother.co.jp/j/s/support/html/mobiles
 Update `Info.plist` to include the following permissions:
 
 ```diff
-    <key>NSBluetoothAlwaysUsageDescription</key>
-	<string>【Why use Bluetooth for your app.】</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>【Why use Bluetooth for your app.】</string>
-	<key>NSBonjourServices</key>
-	<array>
-		<string>_pdl-datastream._tcp</string>
-		<string>_printer._tcp</string>
-		<string>_ipp._tcp</string>
-	</array>
-	<key>NSLocalNetworkUsageDescription</key>
-	<string>【Why use WiFi for your app.】</string>
-	<key>UISupportedExternalAccessoryProtocols</key>
-	<string>com.brother.ptcbp</string>
++ <key>NSBluetoothAlwaysUsageDescription</key>
++ <string>【Why use Bluetooth for your app.】</string>
++ <key>NSBluetoothPeripheralUsageDescription</key>
++ <string>【Why use Bluetooth for your app.】</string>
++ <key>NSBonjourServices</key>
++ <array>
++ 	<string>_pdl-datastream._tcp</string>
++ 	<string>_printer._tcp</string>
++ 	<string>_ipp._tcp</string>
++ </array>
++ <key>NSLocalNetworkUsageDescription</key>
++ <string>【Why use WiFi for your app.】</string>
++ <key>UISupportedExternalAccessoryProtocols</key>
++ <string>com.brother.ptcbp</string>
 ```
 
 More information is here: https://support.brother.co.jp/j/s/support/html/mobilesdk/guide/getting-started/getting-started-ios.html
