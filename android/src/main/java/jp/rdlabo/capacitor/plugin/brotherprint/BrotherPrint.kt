@@ -17,14 +17,40 @@ import com.brother.sdk.lmprinter.PrinterSearcher.cancelNetworkSearch
 import com.getcapacitor.JSArray
 import com.getcapacitor.JSObject
 import com.getcapacitor.Plugin
+import android.Manifest;
+import com.getcapacitor.PermissionState
 import com.getcapacitor.PluginCall
 import com.getcapacitor.PluginMethod
 import com.getcapacitor.annotation.CapacitorPlugin
+import com.getcapacitor.annotation.Permission
+import com.getcapacitor.annotation.PermissionCallback
 
-@CapacitorPlugin
+@CapacitorPlugin(
+    name = "BrotherPrint",
+    permissions = [
+        Permission(
+            alias = "bluetooth",
+            strings = [
+                Manifest.permission.BLUETOOTH,
+                Manifest.permission.BLUETOOTH_ADMIN,
+                Manifest.permission.BLUETOOTH_CONNECT,
+                Manifest.permission.BLUETOOTH_SCAN,
+            ],
+        ),
+        Permission(
+            alias = "location",
+            strings = [
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+            ],
+        ),
+    ],
+)
 class BrotherPrint : Plugin() {
     private var cancelRoutineWiFi: (() -> Unit)? = null
     private var cancelRoutineBluetooth: (() -> Unit)? = null
+    private val PERMISSION_DENIED_ERROR =
+        "Unable to do call operation, user denied permission request"
 
     @PluginMethod
     fun printImage(call: PluginCall) {
@@ -42,12 +68,11 @@ class BrotherPrint : Plugin() {
         val localName: String? = call.getString("localName", "")
         val ipAddress: String? = call.getString("ipAddress", "")
         val serialNumber: String? = call.getString("serialNumber", "")
+        val macAddress: String? = call.getString("macAddress", "")
         val autoCut: Boolean? = call.getBoolean("autoCut", true)
 
-        val printerModel =
-            PrinterInfo.Model.entries.find { it.name == call.getString("modelName", "QL_820NWB") }
-        val labelName =
-            LabelInfo.QL700.entries.find { it.name == call.getString("labelName", "W62") }
+        val printerModel = PrinterInfo.Model.entries.find { it.name == call.getString("modelName", "QL_820NWB") }
+        val labelName = LabelInfo.QL700.entries.find { it.name == call.getString("labelName", "W62") }
 
         val printer = Printer()
         val settings = printer.printerInfo
@@ -56,6 +81,10 @@ class BrotherPrint : Plugin() {
         settings.labelNameIndex = labelName!!.ordinal;
         settings.printerModel = printerModel;
 
+        Log.d("brother", "========================")
+        Log.d("brother", port!!)
+        Log.d("brother", labelName.name)
+        Log.d("brother", printerModel!!.name)
         if (port == "usb") {
             settings.port = PrinterInfo.Port.USB
         } else if (port == "wifi") {
@@ -74,6 +103,10 @@ class BrotherPrint : Plugin() {
             settings.port = PrinterInfo.Port.BLE
             settings.localName = localName
         }
+
+        settings.ipAddress = ipAddress
+        settings.macAddress = macAddress
+        settings.localName = localName
 
         settings.paperSize = PrinterInfo.PaperSize.CUSTOM
         settings.align = PrinterInfo.Align.CENTER
@@ -103,7 +136,6 @@ class BrotherPrint : Plugin() {
             Thread {
                 if (printer.startCommunication()) {
                     val result = printer.printImage(decodedByte)
-
                     if (result.errorCode == PrinterInfo.ErrorCode.ERROR_NONE) {
                         notifyListeners(
                             BrotherPrintEvent.onPrint.webEventName,
@@ -140,7 +172,7 @@ class BrotherPrint : Plugin() {
 
     @PluginMethod
     fun search(call: PluginCall) {
-        when (call.getString("port", "wifi")) {
+        when(call.getString("port", "wifi")) {
             "wifi" -> this.searchWiFiPrinter(call)
             "bluetooth" -> this.checkBLEChannel(call)
             "bluetoothLowEnergy" -> this.searchBLEPrinter(call)
@@ -154,9 +186,9 @@ class BrotherPrint : Plugin() {
             this.cancelRoutineWiFi = {
                 cancelNetworkSearch()
             }
-            val intDuration: Int = call.getInt("searchDuration") ?: 15;
+            val intDuration: Int = call.getInt("searchDuration") ?: 15 ;
             val option = NetworkSearchOption(intDuration.toDouble(), false);
-            PrinterSearcher.startNetworkSearch(bridge.context, option) { channel ->
+            PrinterSearcher.startNetworkSearch(bridge.context, option){ channel ->
                 run {
                     Log.d("brother", this.chanelToPrinter("wifi", channel).toString())
                     this.notifyListeners(
@@ -171,34 +203,44 @@ class BrotherPrint : Plugin() {
     }
 
     private fun checkBLEChannel(call: PluginCall) {
-        Log.d("brother", "checkBLEChannel")
-        Thread {
-            for (channel in PrinterSearcher.startBluetoothSearch(bridge.context).channels) {
-                this.notifyListeners(
-                    BrotherPrintEvent.onPrinterAvailable.webEventName,
-                    this.chanelToPrinter("bluetooth", channel)
-                );
-            }
-        }.start()
-        call.resolve();
+        if (!isBluetoothPermissionGranted()) {
+            requestAllPermissions(call, "permissionCallback");
+        } else {
+            Thread {
+                for (channel in PrinterSearcher.startBluetoothSearch(bridge.context).channels){
+                    Log.d("brother", this.chanelToPrinter("bluetooth", channel).toString())
+                    this.notifyListeners(BrotherPrintEvent.onPrinterAvailable.webEventName, this.chanelToPrinter("bluetooth", channel));
+                }
+            }.start()
+            call.resolve();
+        }
     }
 
     private fun searchBLEPrinter(call: PluginCall) {
-        Thread {
-            this.cancelRoutineBluetooth = {
-                cancelNetworkSearch()
-            }
-            val intDuration: Int = call.getInt("searchDuration") ?: 15;
-            val option = BLESearchOption(intDuration.toDouble())
-            val result = PrinterSearcher.startBLESearch(bridge.context, option) { channel ->
-                this.notifyListeners(
-                    BrotherPrintEvent.onPrinterAvailable.webEventName,
-                    this.chanelToPrinter("bluetoothLowEnergy", channel)
-                );
-            }
-            this.cancelRoutineBluetooth = null;
-        }.start()
-        call.resolve();
+        if (!isBluetoothPermissionGranted()) {
+            requestAllPermissions(call, "permissionCallback");
+            return;
+        } else {
+            Thread {
+                Log.d("brother", "はじまってはいる")
+                this.cancelRoutineBluetooth = {
+                    cancelNetworkSearch()
+                }
+                val intDuration: Int = call.getInt("searchDuration") ?: 15 ;
+                val option = BLESearchOption(intDuration.toDouble())
+                PrinterSearcher.startBLESearch(bridge.context, option){ channel ->
+                    run {
+                        Log.d("brother", this.chanelToPrinter("bluetoothLowEnergy", channel).toString())
+                        this.notifyListeners(
+                            BrotherPrintEvent.onPrinterAvailable.webEventName,
+                            this.chanelToPrinter("bluetoothLowEnergy", channel)
+                        );
+                    }
+                }
+                this.cancelRoutineBluetooth = null;
+            }.start()
+            call.resolve();
+        }
     }
 
     private fun chanelToPrinter(port: String, channel: Channel): JSObject? {
@@ -233,5 +275,31 @@ class BrotherPrint : Plugin() {
             this.cancelRoutineBluetooth?.invoke()
             this.cancelRoutineBluetooth = null
         }.start()
+    }
+
+    @PermissionCallback
+    private fun permissionCallback(call: PluginCall) {
+        if (!isBluetoothPermissionGranted()) {
+            Log.d("brother", "!isBluetoothPermissionGranted()")
+            call.reject(PERMISSION_DENIED_ERROR)
+            return
+        }
+        if (!isLocationPermissionGranted()) {
+            Log.d("brother", "!isLocationPermissionGranted()")
+            call.reject(PERMISSION_DENIED_ERROR)
+            return
+        }
+        when (call.methodName) {
+            "checkBLEChannel" -> checkBLEChannel(call)
+            "searchBLEPrinter" -> searchBLEPrinter(call)
+        }
+    }
+
+    private fun isBluetoothPermissionGranted(): Boolean {
+        return getPermissionState("bluetooth") == PermissionState.GRANTED
+    }
+
+    private fun isLocationPermissionGranted(): Boolean {
+        return getPermissionState("location") == PermissionState.GRANTED
     }
 }
