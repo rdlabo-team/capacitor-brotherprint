@@ -4,8 +4,8 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-list>
+<ion-content color="light">
+  <ion-list inset="true">
     <ion-item-group>
       <ion-item button="true" (click)="searchPrinter('wifi')"
         ><ion-label>Search WiFi</ion-label></ion-item
@@ -19,12 +19,10 @@
     </ion-item-group>
   </ion-list>
 
-  <ion-list>
-    @for (channel of printers(); track channel.serialNumber;) {
+  @if (printers().length > 0) { @for (channel of printers(); track
+  channel.serialNumber;) {
+  <ion-list inset="true">
     <ion-item-group>
-      <ion-item button="true" (click)="print(channel)"
-        ><ion-label>Print demo label</ion-label></ion-item
-      >
       <ion-item
         ><ion-label>port</ion-label
         ><ion-text>{{channel.port}}</ion-text></ion-item
@@ -53,7 +51,10 @@
         ><ion-label>ipAddress</ion-label
         ><ion-text>{{channel.ipAddress}}</ion-text></ion-item
       >
+      <ion-item button="true" color="primary" (click)="print(channel)"
+        ><ion-label>Print demo label</ion-label></ion-item
+      >
     </ion-item-group>
-    }
   </ion-list>
+  } }
 </ion-content>

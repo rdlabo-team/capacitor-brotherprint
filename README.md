@@ -55,8 +55,7 @@ artifacts.add(“default”, file('BrotherPrintLibrary.aar'))
 3. Open `android/settings.gradle` and add the following lines:
 
 ```
-include ':BrotherPrintLibrary.aar''
-include ':BrotherPrintLibrary'.
+include ':BrotherPrintLibrary'
 project(':BrotherPrintLibrary').projectDir = new File('./BrotherPrintLibrary/')
 ```
 

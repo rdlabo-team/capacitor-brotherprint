@@ -149,6 +149,7 @@ class BrotherPrint : Plugin() {
     }
 
     private fun searchWiFiPrinter(call: PluginCall) {
+        Log.d("brother", "searchWiFiPrinter")
         Thread {
             this.cancelRoutineWiFi = {
                 cancelNetworkSearch()
@@ -170,6 +171,7 @@ class BrotherPrint : Plugin() {
     }
 
     private fun checkBLEChannel(call: PluginCall) {
+        Log.d("brother", "checkBLEChannel")
         Thread {
             for (channel in PrinterSearcher.startBluetoothSearch(bridge.context).channels) {
                 this.notifyListeners(

@@ -89,13 +89,18 @@ export class HomePage implements OnInit, OnDestroy {
 
   print(channel: BRLMChannelResult) {
     if (this.printers().length === 0) {
-      console.error('No printer found');
+      alert('No printer found');
+      return;
+    }
+
+    const result = confirm('Do you want to print?');
+    if (!result) {
       return;
     }
 
     const defaultPrintSettings: BRLMPrintOptions = {
       modelName: BRLMPrinterModelName.QL_820NWB,
-      labelName: BRLMPrinterLabelName.W62,
+      labelName: BRLMPrinterLabelName.W29H90,
       encodedImage: this.base64.slice(this.base64.indexOf(',') + 1),
       numberOfCopies: 1, // default 1
       autoCut: true, // default true
