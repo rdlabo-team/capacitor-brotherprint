@@ -64,7 +64,7 @@ These steps will integrate the Brother Print SDK with your Capacitor Android pro
 
 ### iOS configuration
 
-Update the `ios/App/Podfile` file at your project.https://github.com/BernardRadman/BRLMPrinterKit 's SDK is version 4.7.2. This is old. So should link to direct own repository.
+Update the `ios/App/Podfile` file at your project. https://github.com/BernardRadman/BRLMPrinterKit 's SDK is version 4.7.2. This is old. So should link to direct own repository.
 
 ```diff
   target 'App' do
