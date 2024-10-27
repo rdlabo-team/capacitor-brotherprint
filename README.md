@@ -73,6 +73,8 @@ Update the `ios/App/Podfile` file at your project. https://github.com/BernardRad
   end
 ```
 
+After set, run `pod update` in the `ios` directory.
+
 ## Permission configuration
 
 ### Android configuration
@@ -356,7 +358,7 @@ addListener(eventName: BrotherPrintEventsEnum.onPrintError, listenerFunc: (info:
 
 #### BRLMPrintOptions
 
-<code>{ encodedImage: string; numberOfCopies: number; autoCut: boolean; /** _ Should use getPlatformName.label function. _ ex: getPlatformName.label('android', 'BRLMQLPrintSettingsLabelSizeRollW62') \*/ labelName: <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a>; /** _ Should use getPlatformName.model function. _ ex: getPlatformName.model('android', 'BRLMPrinterModelQL_820NWB') _/ modelName: <a href="#brlmprintermodelname">BRLMPrinterModelName</a>; /\*\* _ These are get from search result. mostly, it is like below. _ BrotherPrint.printImage({ _ ...defaultPrintSettings, _ ...{ _ port: selectPrinter.port, _ ipAddress: selectPrinter.ipAddress, _ localName: selectPrinter.nodeName, _ macAddress: selectPrinter.macAddress, _ serialNumber: selectPrinter.serialNumber, _ }, _ }) \*/ port?: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy' | 'usb'; ipAddress?: string; localName?: string; serialNumber?: string; }</code>
+<code>{ encodedImage: string; numberOfCopies: number; autoCut: boolean; /** _ Should use getPlatformName.label function. _ ex: getPlatformName.label('android', 'BRLMQLPrintSettingsLabelSizeRollW62') \*/ labelName: <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a>; /** _ Should use getPlatformName.model function. _ ex: getPlatformName.model('android', 'BRLMPrinterModelQL*820NWB') */ modelName: <a href="#brlmprintermodelname">BRLMPrinterModelName</a>; /\*\* _ These are get from search result. mostly, it is like below. _ BrotherPrint.printImage({ _ ...defaultPrintSettings, _ ...{ _ port: selectPrinter.port, _ ipAddress: selectPrinter.ipAddress, _ localName: selectPrinter.nodeName, _ macAddress: selectPrinter.macAddress, _ serialNumber: selectPrinter.serialNumber, _ }, \_ }) \*/ port?: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy' | 'usb'; ipAddress?: string; localName?: string; serialNumber?: string; }</code>
 
 #### BRLMSearchOption
 
