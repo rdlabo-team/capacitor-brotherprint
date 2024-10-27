@@ -1,5 +1,5 @@
 PODS:
-  - BRLMPrinterKit_v4 (4.7.2)
+  - BRLMPrinterKit_v4 (4.9.1)
   - Capacitor (6.0.0):
     - CapacitorCordova
   - CapacitorApp (6.0.1):
@@ -16,6 +16,7 @@ PODS:
     - Capacitor
 
 DEPENDENCIES:
+  - BRLMPrinterKit_v4 (from `https://github.com/rdlabo/BRLMPrinterKit`, branch `feat/update_4_9_1`)
   - "Capacitor (from `../../../node_modules/@capacitor/ios`)"
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
   - "CapacitorCordova (from `../../../node_modules/@capacitor/ios`)"
@@ -24,11 +25,10 @@ DEPENDENCIES:
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
   - RdlaboCapacitorBrotherprint (from `../../..`)
 
-SPEC REPOS:
-  trunk:
-    - BRLMPrinterKit_v4
-
 EXTERNAL SOURCES:
+  BRLMPrinterKit_v4:
+    :branch: feat/update_4_9_1
+    :git: https://github.com/rdlabo/BRLMPrinterKit
   Capacitor:
     :path: "../../../node_modules/@capacitor/ios"
   CapacitorApp:
@@ -44,8 +44,13 @@ EXTERNAL SOURCES:
   RdlaboCapacitorBrotherprint:
     :path: "../../.."
 
+CHECKOUT OPTIONS:
+  BRLMPrinterKit_v4:
+    :commit: 7fb27cda1dbbf7849d5eb24b3464bbb6a38ee0f6
+    :git: https://github.com/rdlabo/BRLMPrinterKit
+
 SPEC CHECKSUMS:
-  BRLMPrinterKit_v4: 46b277a21816768a06a20ee41021fef463c147f5
+  BRLMPrinterKit_v4: 897535d1daabef525bee65c2cd3d8d6aebb79c90
   Capacitor: 559d073c4ca6c27f8e7002c807eea94c3ba435a9
   CapacitorApp: 0bc633b4eae40a1f32cd2834788fad3bc42da6a1
   CapacitorCordova: 8c4bfdf69368512e85b1d8b724dd7546abeb30af
@@ -54,6 +59,6 @@ SPEC CHECKSUMS:
   CapacitorStatusBar: b81d4fb5d4e0064c712018071b3ab4b810b39a63
   RdlaboCapacitorBrotherprint: e51b20a4ad66c12a22302648a659341aa520b7b9
 
-PODFILE CHECKSUM: 3865d4a2ea2a3d57a198f8f3f3e03707e13253e2
+PODFILE CHECKSUM: 84a628d98f5a0dfbea4f8351da8dd6b8b95a3ad8
 
 COCOAPODS: 1.15.2

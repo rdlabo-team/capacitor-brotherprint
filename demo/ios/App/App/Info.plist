@@ -45,5 +45,19 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+  <key>NSBluetoothAlwaysUsageDescription</key>
+  <string>【Why use Bluetooth for your app.】</string>
+  <key>NSBluetoothPeripheralUsageDescription</key>
+  <string>【Why use Bluetooth for your app.】</string>
+  <key>NSBonjourServices</key>
+  <array>
+    <string>_pdl-datastream._tcp</string>
+    <string>_printer._tcp</string>
+    <string>_ipp._tcp</string>
+  </array>
+  <key>NSLocalNetworkUsageDescription</key>
+  <string>【Why use WiFi for your app.】</string>
+  <key>UISupportedExternalAccessoryProtocols</key>
+  <string>com.brother.ptcbp</string>
 </dict>
 </plist>

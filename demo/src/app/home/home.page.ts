@@ -87,7 +87,7 @@ export class HomePage implements OnInit, OnDestroy {
     });
   }
 
-  print() {
+  print(channel: BRLMChannelResult) {
     if (this.printers().length === 0) {
       console.error('No printer found');
       return;
@@ -104,11 +104,11 @@ export class HomePage implements OnInit, OnDestroy {
     BrotherPrint.printImage({
       ...defaultPrintSettings,
       ...{
-        ipAddress: this.printers()[0].ipAddress,
-        localName: this.printers()[0].nodeName,
-        macAddress: this.printers()[0].macAddress,
-        serialNumber: this.printers()[0].serialNumber,
-        port: this.printers()[0].port,
+        ipAddress: channel.ipAddress,
+        localName: channel.nodeName,
+        macAddress: channel.macAddress,
+        serialNumber: channel.serialNumber,
+        port: channel.port,
       },
     });
   }
