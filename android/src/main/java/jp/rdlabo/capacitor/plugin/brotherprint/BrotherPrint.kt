@@ -54,7 +54,6 @@ class BrotherPrint : Plugin() {
 
     @PluginMethod
     fun printImage(call: PluginCall) {
-        // object.encodedImageで値を入力
         val encodedImage = call.getString("encodedImage", "")
         if (encodedImage == "") {
             call.reject("Error - Image data is not found.")
@@ -81,10 +80,6 @@ class BrotherPrint : Plugin() {
         settings.labelNameIndex = labelName!!.ordinal;
         settings.printerModel = printerModel;
 
-        Log.d("brother", "========================")
-        Log.d("brother", port!!)
-        Log.d("brother", labelName.name)
-        Log.d("brother", printerModel!!.name)
         if (port == "usb") {
             settings.port = PrinterInfo.Port.USB
         } else if (port == "wifi") {
@@ -206,6 +201,7 @@ class BrotherPrint : Plugin() {
         if (!isBluetoothPermissionGranted()) {
             requestAllPermissions(call, "permissionCallback");
         } else {
+            Log.d("brother", "checkBLEChannel")
             Thread {
                 for (channel in PrinterSearcher.startBluetoothSearch(bridge.context).channels){
                     Log.d("brother", this.chanelToPrinter("bluetooth", channel).toString())
@@ -221,8 +217,8 @@ class BrotherPrint : Plugin() {
             requestAllPermissions(call, "permissionCallback");
             return;
         } else {
+            Log.d("brother", "searchBLEPrinter")
             Thread {
-                Log.d("brother", "はじまってはいる")
                 this.cancelRoutineBluetooth = {
                     cancelNetworkSearch()
                 }
