@@ -54,10 +54,6 @@ class BrotherPrint : Plugin() {
         settings.labelNameIndex = labelName!!.ordinal;
         settings.printerModel = printerModel;
 
-        Log.d("brother", "========================")
-        Log.d("brother", labelName.name)
-        Log.d("brother", printerModel!!.name)
-
         if (port == "usb") {
             settings.port = PrinterInfo.Port.USB
         } else if (port == "wifi") {
@@ -114,7 +110,6 @@ class BrotherPrint : Plugin() {
                 .start()
             call.resolve()
         } catch (e: Exception) {
-            Log.d("brother", e.toString());
             notifyListeners(BrotherPrintEvent.onPrintFailedCommunication.webEventName, JSObject().put("message", e.localizedMessage))
             call.reject(e.localizedMessage, e)
         }
@@ -122,8 +117,6 @@ class BrotherPrint : Plugin() {
 
     @PluginMethod
     fun search(call: PluginCall) {
-        Log.d("brother", "=======================読み込んだよ");
-        Log.d("brother", call.getString("port", "wifi")!!);
         when(call.getString("port", "wifi")) {
             "wifi" -> this.searchWiFiPrinter(call)
             "bluetooth" -> this.checkBLEChannel(call)
