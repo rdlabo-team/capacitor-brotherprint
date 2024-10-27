@@ -9,6 +9,12 @@ class PrinterModel {
             return BRLMPrinterModel.QL_810W
         case "QL_820NWB":
             return BRLMPrinterModel.QL_820NWB
+        case "TD_2320D_203":
+            return BRLMPrinterModel.TD_2320D_203
+        case "TD_2030AD":
+            return BRLMPrinterModel.TD_2030A
+        case "TD_2350D_203":
+            return BRLMPrinterModel.TD_2350D_203
         default:
             return BRLMPrinterModel.unknown
         }
@@ -16,12 +22,52 @@ class PrinterModel {
 
     static func getLabelSize(from: String) -> BRLMQLPrintSettingsLabelSize {
         switch from {
+        case "W17H54":
+            return BRLMQLPrintSettingsLabelSize.dieCutW17H54
+        case "W17H87":
+            return BRLMQLPrintSettingsLabelSize.dieCutW17H87
+        case "W23H23":
+            return BRLMQLPrintSettingsLabelSize.dieCutW23H23
+        case "W29H42":
+            return BRLMQLPrintSettingsLabelSize.dieCutW29H42
         case "W29H90":
             return BRLMQLPrintSettingsLabelSize.dieCutW29H90
+        case "W38H90":
+            return BRLMQLPrintSettingsLabelSize.dieCutW38H90
+        case "W39H48":
+            return BRLMQLPrintSettingsLabelSize.dieCutW39H48
+        case "W52H29":
+            return BRLMQLPrintSettingsLabelSize.dieCutW52H29
+        case "W62H29":
+            return BRLMQLPrintSettingsLabelSize.dieCutW62H29
+        case "W62H100":
+            return BRLMQLPrintSettingsLabelSize.dieCutW62H100
+        case "W12":
+            return BRLMQLPrintSettingsLabelSize.rollW12
+        case "W38":
+            return BRLMQLPrintSettingsLabelSize.rollW38
+        case "W50":
+            return BRLMQLPrintSettingsLabelSize.rollW50
+        case "W54":
+            return BRLMQLPrintSettingsLabelSize.rollW54
         case "W62":
             return BRLMQLPrintSettingsLabelSize.rollW62
+        case "W60H86":
+            return BRLMQLPrintSettingsLabelSize.dieCutW60H86
         case "W62RB":
             return BRLMQLPrintSettingsLabelSize.rollW62RB
+        case "W54H29":
+            return BRLMQLPrintSettingsLabelSize.dieCutW54H29
+        case "W12DIA":
+            return BRLMQLPrintSettingsLabelSize.roundW12DIA
+        case "W24DIA":
+            return BRLMQLPrintSettingsLabelSize.roundW24DIA
+        case "W58DIA":
+            return BRLMQLPrintSettingsLabelSize.roundW58DIA
+        case "W62H60":
+            return BRLMQLPrintSettingsLabelSize.dieCutW62H60
+        case "W62H75":
+            return BRLMQLPrintSettingsLabelSize.dieCutW62H75
         default:
             return BRLMQLPrintSettingsLabelSize.rollW62
         }
@@ -80,7 +126,7 @@ enum PrinterModel: String, CaseIterable {
     //    case PJ_862 = "PJ-862" // swiftlint:disable:this identifier_name
     //    case PJ_863 = "PJ-863" // swiftlint:disable:this identifier_name
     //    case PJ_883 = "PJ-883" // swiftlint:disable:this identifier_name
-    //    case TD_2030A = "TD-2030A" // swiftlint:disable:this identifier_name
+        case TD_2030A = "TD-2030A" // swiftlint:disable:this identifier_name
     //    case TD_2125N = "TD-2125N" // swiftlint:disable:this identifier_name
     //    case TD_2125NWB = "TD-2125NWB" // swiftlint:disable:this identifier_name
     //    case TD_2135N = "TD-2135N" // swiftlint:disable:this identifier_name
@@ -90,13 +136,13 @@ enum PrinterModel: String, CaseIterable {
     //    case PT_E560BT = "PT-E560BT" // swiftlint:disable:this identifier_name
     //    case TD_2310D_203 = "TD-2310D_203" // swiftlint:disable:this identifier_name
     //    case TD_2310D_300 = "TD-2310D_300" // swiftlint:disable:this identifier_name
-    //    case TD_2320D_203 = "TD-2320D_203" // swiftlint:disable:this identifier_name
+        case TD_2320D_203 = "TD-2320D_203" // swiftlint:disable:this identifier_name
     //    case TD_2320D_300 = "TD-2320D_300" // swiftlint:disable:this identifier_name
     //    case TD_2320DF_203 = "TD-2320DF_203" // swiftlint:disable:this identifier_name
     //    case TD_2320DF_300 = "TD-2320DF_300" // swiftlint:disable:this identifier_name
     //    case TD_2320DSA_203 = "TD-2320DSA_203" // swiftlint:disable:this identifier_name
     //    case TD_2320DSA_300 = "TD-2320DSA_300" // swiftlint:disable:this identifier_name
-    //    case TD_2350D_203 = "TD-2350D_203" // swiftlint:disable:this identifier_name
+        case TD_2350D_203 = "TD-2350D_203" // swiftlint:disable:this identifier_name
     //    case TD_2350D_300 = "TD-2350D_300" // swiftlint:disable:this identifier_name
     //    case TD_2350DF_203 = "TD-2350DF_203" // swiftlint:disable:this identifier_name
     //    case TD_2350DF_300 = "TD-2350DF_300" // swiftlint:disable:this identifier_name
@@ -189,7 +235,7 @@ enum PrinterModel: String, CaseIterable {
         //        case .PJ_862: return .PJ_862
         //        case .PJ_863: return .PJ_863
         //        case .PJ_883: return .PJ_883
-        //        case .TD_2030A: return .TD_2030A
+                case .TD_2030A: return .TD_2030A
         //        case .TD_2125N: return .TD_2125N
         //        case .TD_2125NWB: return .TD_2125NWB
         //        case .TD_2135N: return .TD_2135N
@@ -199,13 +245,13 @@ enum PrinterModel: String, CaseIterable {
         //        case .PT_E560BT: return .PT_E560BT
         //        case .TD_2310D_203: return .TD_2310D_203
         //        case .TD_2310D_300: return .TD_2310D_300
-        //        case .TD_2320D_203: return .TD_2320D_203
+                case .TD_2320D_203: return .TD_2320D_203
         //        case .TD_2320D_300: return .TD_2320D_300
         //        case .TD_2320DF_203: return .TD_2320DF_203
         //        case .TD_2320DF_300: return .TD_2320DF_300
         //        case .TD_2320DSA_203: return .TD_2320DSA_203
         //        case .TD_2320DSA_300: return .TD_2320DSA_300
-        //        case .TD_2350D_203: return .TD_2350D_203
+                case .TD_2350D_203: return .TD_2350D_203
         //        case .TD_2350D_300: return .TD_2350D_300
         //        case .TD_2350DF_203: return .TD_2350DF_203
         //        case .TD_2350DF_300: return .TD_2350DF_300

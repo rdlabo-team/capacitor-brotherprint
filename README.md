@@ -1,6 +1,23 @@
 # @rdlabo/capacitor-brotherprint
 
-Capacitor Brother Print is a native Brother Print SDK implementation for iOS & Android. This plugin can use in `QL-820NW` and `QL-800`.
+Capacitor Brother Print is a native Brother Print SDK implementation for iOS & Android.
+
+| Product    | Model        | iOS/WiFi | iOS/BT | iOS/BLE | Android/USB | Android/WiFi | Android/BT | Android/BLE |
+| ---------- | ------------ | -------- | ------ | ------- | ----------- | ------------ | ---------- | ----------- |
+| QL-810W    | QL_810W      | ✗        | ✗      | ✗       | △           | ✗            | ✗          | ✗           |
+| QL-820NWB  | QL_820NWB    | ◯        | ✗      | ✗       | △           | ◯            | △          | ✗           |
+| QL-820NWBc | QL_820NWB    | ◯        | ?      | ✗       | ✗           | ◯            | ◯          | ✗           |
+| TD-2320D   | TD_2320D_203 | ✗        | ✗      | ✗       | △           | ✗            | ✗          | ✗           |
+| TD-2350D   | TD_2350D_203 | △        | △      | △       | △           | △            | △          | △           |
+
+- ◯: Supported and tested
+- △: Supported but not tested
+- ✗: Not supported
+- ?: Not sure
+- BT: Bluetooth
+- BLE: Bluetooth Low Energy
+
+Note: The iOS/BT implementation for the QL-820NWBc is in place, but it’s uncertain if it functions correctly. It’s unclear whether this is an implementation issue, as Brother’s official app also doesn’t work well.
 
 ## How to install
 
