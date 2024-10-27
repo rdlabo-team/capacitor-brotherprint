@@ -216,3 +216,208 @@ export class BrotherComponent implements OnInit, OnDestroy {
   }
 }
 ```
+
+## API
+
+<docgen-index>
+
+- [`printImage(...)`](#printimage)
+- [`search(...)`](#search)
+- [`cancelSearchWiFiPrinter()`](#cancelsearchwifiprinter)
+- [`cancelSearchBluetoothPrinter()`](#cancelsearchbluetoothprinter)
+- [`addListener(BrotherPrintEventsEnum.onPrinterAvailable, ...)`](#addlistenerbrotherprinteventsenumonprinteravailable)
+- [`addListener(BrotherPrintEventsEnum.onPrint, ...)`](#addlistenerbrotherprinteventsenumonprint)
+- [`addListener(BrotherPrintEventsEnum.onPrintFailedCommunication, ...)`](#addlistenerbrotherprinteventsenumonprintfailedcommunication)
+- [`addListener(BrotherPrintEventsEnum.onPrintError, ...)`](#addlistenerbrotherprinteventsenumonprinterror)
+- [Interfaces](#interfaces)
+- [Type Aliases](#type-aliases)
+- [Enums](#enums)
+
+</docgen-index>
+
+<docgen-api>
+<!--Update the source file JSDoc comments and rerun docgen to update the docs below-->
+
+### printImage(...)
+
+```typescript
+printImage(options: BRLMPrintOptions) => Promise<void>
+```
+
+| Param         | Type                                                          |
+| ------------- | ------------------------------------------------------------- |
+| **`options`** | <code><a href="#brlmprintoptions">BRLMPrintOptions</a></code> |
+
+---
+
+### search(...)
+
+```typescript
+search(option: BRLMSearchOption) => Promise<void>
+```
+
+Search for printers. If not found, it will return an empty array.(not error)
+
+| Param        | Type                                                          |
+| ------------ | ------------------------------------------------------------- |
+| **`option`** | <code><a href="#brlmsearchoption">BRLMSearchOption</a></code> |
+
+---
+
+### cancelSearchWiFiPrinter()
+
+```typescript
+cancelSearchWiFiPrinter() => Promise<void>
+```
+
+Basically, it times out, so there is no need to use it. Use it when you want to run multiple connectType searches at the same time and time out any of them manually.
+
+---
+
+### cancelSearchBluetoothPrinter()
+
+```typescript
+cancelSearchBluetoothPrinter() => Promise<void>
+```
+
+Basically, it times out, so there is no need to use it. Use it when you want to run multiple connectType searches at the same time and time out any of them manually.
+
+---
+
+### addListener(BrotherPrintEventsEnum.onPrinterAvailable, ...)
+
+```typescript
+addListener(eventName: BrotherPrintEventsEnum.onPrinterAvailable, listenerFunc: (printers: BRLMChannelResult) => void) => Promise<PluginListenerHandle>
+```
+
+| Param              | Type                                                                                         |
+| ------------------ | -------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code><a href="#brotherprinteventsenum">BrotherPrintEventsEnum.onPrinterAvailable</a></code> |
+| **`listenerFunc`** | <code>(printers: <a href="#brlmchannelresult">BRLMChannelResult</a>) =&gt; void</code>       |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+---
+
+### addListener(BrotherPrintEventsEnum.onPrint, ...)
+
+```typescript
+addListener(eventName: BrotherPrintEventsEnum.onPrint, listenerFunc: () => void) => Promise<PluginListenerHandle>
+```
+
+| Param              | Type                                                                              |
+| ------------------ | --------------------------------------------------------------------------------- |
+| **`eventName`**    | <code><a href="#brotherprinteventsenum">BrotherPrintEventsEnum.onPrint</a></code> |
+| **`listenerFunc`** | <code>() =&gt; void</code>                                                        |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+---
+
+### addListener(BrotherPrintEventsEnum.onPrintFailedCommunication, ...)
+
+```typescript
+addListener(eventName: BrotherPrintEventsEnum.onPrintFailedCommunication, listenerFunc: (info: ErrorInfo) => void) => Promise<PluginListenerHandle>
+```
+
+| Param              | Type                                                                                                 |
+| ------------------ | ---------------------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code><a href="#brotherprinteventsenum">BrotherPrintEventsEnum.onPrintFailedCommunication</a></code> |
+| **`listenerFunc`** | <code>(info: <a href="#errorinfo">ErrorInfo</a>) =&gt; void</code>                                   |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+---
+
+### addListener(BrotherPrintEventsEnum.onPrintError, ...)
+
+```typescript
+addListener(eventName: BrotherPrintEventsEnum.onPrintError, listenerFunc: (info: ErrorInfo) => void) => Promise<PluginListenerHandle>
+```
+
+| Param              | Type                                                                                   |
+| ------------------ | -------------------------------------------------------------------------------------- |
+| **`eventName`**    | <code><a href="#brotherprinteventsenum">BrotherPrintEventsEnum.onPrintError</a></code> |
+| **`listenerFunc`** | <code>(info: <a href="#errorinfo">ErrorInfo</a>) =&gt; void</code>                     |
+
+**Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
+
+---
+
+### Interfaces
+
+#### PluginListenerHandle
+
+| Prop         | Type                                      |
+| ------------ | ----------------------------------------- |
+| **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
+
+### Type Aliases
+
+#### BRLMPrintOptions
+
+<code>{ encodedImage: string; numberOfCopies: number; autoCut: boolean; /** _ Should use getPlatformName.label function. _ ex: getPlatformName.label('android', 'BRLMQLPrintSettingsLabelSizeRollW62') \*/ labelName: <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a>; /** _ Should use getPlatformName.model function. _ ex: getPlatformName.model('android', 'BRLMPrinterModelQL_820NWB') _/ modelName: <a href="#brlmprintermodelname">BRLMPrinterModelName</a>; /\*\* _ These are get from search result. mostly, it is like below. _ BrotherPrint.printImage({ _ ...defaultPrintSettings, _ ...{ _ port: selectPrinter.port, _ ipAddress: selectPrinter.ipAddress, _ localName: selectPrinter.nodeName, _ macAddress: selectPrinter.macAddress, _ serialNumber: selectPrinter.serialNumber, _ }, _ }) \*/ port?: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy' | 'usb'; ipAddress?: string; localName?: string; serialNumber?: string; }</code>
+
+#### BRLMSearchOption
+
+<code>{ port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'; /\*\* _ searchDuration is the time to end search for devices. _ default is 15 seconds. _ use only port is 'wifi' or 'bluetoothLowEnergy'. _/ searchDuration: number; }</code>
+
+#### BRLMChannelResult
+
+<code>{ port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'; modelName: string; serialNumber: string; macAddress: string; nodeName: string; location: string; ipAddress: string; }</code>
+
+#### ErrorInfo
+
+<code>{ message: string; code: number; }</code>
+
+### Enums
+
+#### BRLMPrinterLabelName
+
+| Members       | Value                  |
+| ------------- | ---------------------- |
+| **`W17H54`**  | <code>'W17H54'</code>  |
+| **`W17H87`**  | <code>'W17H87'</code>  |
+| **`W23H23`**  | <code>'W23H23'</code>  |
+| **`W29H42`**  | <code>'W29H42'</code>  |
+| **`W29H90`**  | <code>'W29H90'</code>  |
+| **`W38H90`**  | <code>'W38H90'</code>  |
+| **`W39H48`**  | <code>'W39H48'</code>  |
+| **`W52H29`**  | <code>'W52H29'</code>  |
+| **`W62H29`**  | <code>'W62H29'</code>  |
+| **`W62H100`** | <code>'W62H100'</code> |
+| **`W12`**     | <code>'W12'</code>     |
+| **`W29`**     | <code>'W29'</code>     |
+| **`W38`**     | <code>'W38'</code>     |
+| **`W50`**     | <code>'W50'</code>     |
+| **`W54`**     | <code>'W54'</code>     |
+| **`W62`**     | <code>'W62'</code>     |
+| **`W60H86`**  | <code>'W60H86'</code>  |
+| **`W62RB`**   | <code>'W62RB'</code>   |
+| **`W54H29`**  | <code>'W54H29'</code>  |
+| **`W12DIA`**  | <code>'W12DIA'</code>  |
+| **`W24DIA`**  | <code>'W24DIA'</code>  |
+| **`W58DIA`**  | <code>'W58DIA'</code>  |
+| **`W62H60`**  | <code>'W62H60'</code>  |
+| **`W62H75`**  | <code>'W62H75'</code>  |
+
+#### BRLMPrinterModelName
+
+| Members            | Value                       |
+| ------------------ | --------------------------- |
+| **`QL_810W`**      | <code>'QL_810W'</code>      |
+| **`QL_820NWB`**    | <code>'QL_820NWB'</code>    |
+| **`TD_2320D_203`** | <code>'TD_2320D_203'</code> |
+| **`TD_2030AD`**    | <code>'TD_2030AD'</code>    |
+| **`TD_2350D_203`** | <code>'TD_2350D_203'</code> |
+
+#### BrotherPrintEventsEnum
+
+| Members                          | Value                                     |
+| -------------------------------- | ----------------------------------------- |
+| **`onPrinterAvailable`**         | <code>'onPrinterAvailable'</code>         |
+| **`onPrint`**                    | <code>'onPrint'</code>                    |
+| **`onPrintFailedCommunication`** | <code>'onPrintFailedCommunication'</code> |
+| **`onPrintError`**               | <code>'onPrintError'</code>               |
+
+</docgen-api>
