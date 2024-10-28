@@ -26,10 +26,8 @@ public class BrotherPrint: CAPPlugin {
         let localName: String = call.getString("localName", "")
         let ipAddress: String = call.getString("ipAddress", "")
         let serialNumber: String = call.getString("serialNumber", "")
-        let autoCut: Bool = call.getBool("autoCut", true)
 
         let modelName = BrotherModel.getModelName(from: call.getString("modelName", "QL-820NWB"))
-        let labelSize = BrotherModel.getLabelSize(from: call.getString("labelName", "rollW62"))
 
         NSLog(call.getString("modelName", "not set"))
         NSLog(call.getString("labelName", "not set"))
@@ -75,7 +73,7 @@ public class BrotherPrint: CAPPlugin {
             }
 
             guard
-                let printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: modelName)
+                let _printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: modelName)
             else {
                 printerDriver.closeChannel()
                 self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: [
@@ -85,11 +83,8 @@ public class BrotherPrint: CAPPlugin {
                 call.reject("Error - Create BRLMQLPrintSettings is failed.")
                 return
             }
-
-            printSettings.labelSize = labelSize
-            printSettings.autoCut = autoCut
-            printSettings.numCopies = UInt(call.getInt("numberOfCopies", 1))
-
+            
+            let printSettings = PrinterSettingsModel.initialize(call, printSettings: _printSettings)
             let printError = printerDriver.printImage(with: decodedByte.cgImage!, settings: printSettings)
 
             if printError.code != .noError {

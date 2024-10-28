@@ -70,19 +70,19 @@ export type BRLMPrinterSettings = {
   scaleValue?: BRLMPrinterScaleValueType;
 
   /**
-   * A threshold value. This is effective when the Halftone is Threshold.
-   */
-  halftoneThreshold?: BRLMPrinterHalftoneThresholdType;
-
-  /**
    * A way to rasterize your data.
    */
   halftone?: BRLMPrinterHalftone;
 
   /**
+   * A threshold value. This is effective when the Halftone is Threshold.
+   */
+  halftoneThreshold?: BRLMPrinterHalftoneThresholdType;
+
+  /**
    * An image rotation that specifies the angle in which your data is placed in the print area. Rotation direction is clockwise.
    */
-  ImageRotation?: BRLMPrinterImageRotation;
+  imageRotation?: BRLMPrinterImageRotation;
 
   /**
    * A vertical alignment that specifies how your data is placed in the printable area.
