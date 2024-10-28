@@ -24,7 +24,7 @@ class PrinterSettingsModel {
             case "ScaleValue":
                 printSettings.scaleMode = BRLMPrintSettingsScaleMode.scaleValue
                 if call.getInt("scaleValue") != nil {
-                    printSettings.scaleValue = CGFloat(call.getInt("scaleValue")!)
+                    printSettings.scaleValue = CGFloat(call.getFloat("scaleValue")!)
                 }
             default: break
             }
