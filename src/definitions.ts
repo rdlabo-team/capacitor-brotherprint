@@ -96,6 +96,7 @@ export type BRLMPrinterSettings = {
 
   /**
    * A compress mode that specifies how to compress your data.
+   * note: This is ios only.
    */
   compressMode?: BRLMPrinterCompressMode;
 
@@ -106,6 +107,7 @@ export type BRLMPrinterSettings = {
 
   /**
    * A priority that is print speed or print quality. Whether or not this has an effect is depend on your printer.
+   * note: This is ios only.
    */
   resolution?: BRLMPrinterPrintResolution;
 };

@@ -1,6 +1,5 @@
 package jp.rdlabo.capacitor.plugin.brotherprint
 
-import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.graphics.BitmapFactory
@@ -14,7 +13,6 @@ import com.brother.sdk.lmprinter.Channel
 import com.brother.sdk.lmprinter.NetworkSearchOption
 import com.brother.sdk.lmprinter.PrinterSearcher
 import com.brother.sdk.lmprinter.PrinterSearcher.cancelNetworkSearch
-import com.getcapacitor.JSArray
 import com.getcapacitor.JSObject
 import com.getcapacitor.Plugin
 import android.Manifest;
@@ -24,6 +22,8 @@ import com.getcapacitor.PluginMethod
 import com.getcapacitor.annotation.CapacitorPlugin
 import com.getcapacitor.annotation.Permission
 import com.getcapacitor.annotation.PermissionCallback
+import jp.rdlabo.capacitor.plugin.brotherprint.models.BrotherPrintEvent
+import jp.rdlabo.capacitor.plugin.brotherprint.models.BrotherPrintSettings
 
 @CapacitorPlugin(
     name = "BrotherPrint",
@@ -68,15 +68,12 @@ class BrotherPrint : Plugin() {
         val ipAddress: String? = call.getString("ipAddress", "")
         val serialNumber: String? = call.getString("serialNumber", "")
         val macAddress: String? = call.getString("macAddress", "")
-        val autoCut: Boolean? = call.getBoolean("autoCut", true)
-
-        val printerModel = PrinterInfo.Model.entries.find { it.name == call.getString("modelName", "QL_820NWB") }
-        val labelName = LabelInfo.QL700.entries.find { it.name == call.getString("labelName", "W62") }
 
         val printer = Printer()
-        val settings = printer.printerInfo
-        settings.numberOfCopies = call.getInt("numberOfCopies")!!
-        settings.isAutoCut = autoCut!!
+        val settings = BrotherPrintSettings().initialize(call, printer)
+
+        val labelName = LabelInfo.QL700.entries.find { it.name == call.getString("labelName", "W62") }
+        val printerModel = PrinterInfo.Model.entries.find { it.name == call.getString("modelName", "QL_820NWB") }
         settings.labelNameIndex = labelName!!.ordinal;
         settings.printerModel = printerModel;
 
@@ -84,7 +81,6 @@ class BrotherPrint : Plugin() {
             settings.port = PrinterInfo.Port.USB
         } else if (port == "wifi") {
             settings.port = PrinterInfo.Port.NET
-            settings.ipAddress = ipAddress
         } else if (port == "bluetooth") {
             val manager =
                 bridge.context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
@@ -96,21 +92,11 @@ class BrotherPrint : Plugin() {
                 bridge.context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
             printer.setBluetooth(manager.adapter)
             settings.port = PrinterInfo.Port.BLE
-            settings.localName = localName
         }
 
         settings.ipAddress = ipAddress
         settings.macAddress = macAddress
         settings.localName = localName
-
-        settings.paperSize = PrinterInfo.PaperSize.CUSTOM
-        settings.align = PrinterInfo.Align.CENTER
-        settings.valign = PrinterInfo.VAlign.MIDDLE
-        settings.printMode = PrinterInfo.PrintMode.ORIGINAL
-        settings.printQuality = PrinterInfo.PrintQuality.HIGH_RESOLUTION
-
-        settings.printMode = PrinterInfo.PrintMode.FIT_TO_PAGE
-
         settings.workPath = bridge.context.cacheDir.path
 
         Log.d("brother", settings.toString())
