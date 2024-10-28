@@ -54,7 +54,7 @@ export type BRLMPrinterNumberOfCopies = number;
 /**
  * @url https://support.brother.co.jp/j/s/support/html/mobilesdk/reference/android_v4/printimagesettings.html#imagerotation
  */
-export enum BRLMPrinterRotation {
+export enum BRLMPrinterImageRotation {
   Rotate0 = 'Rotate0',
   Rotate90 = 'Rotate90',
   Rotate180 = 'Rotate180',
@@ -113,14 +113,6 @@ export enum BRLMPrinterCompressMode {
 export enum BRLMPrinterPrintQuality {
   Best = 'Best',
   Fast = 'Fast',
-}
-
-/**
- * url: https://support.brother.co.jp/j/s/support/html/mobilesdk/reference/android_v4/printimagesettings.html#orientation
- */
-export enum BRLMPrinterPrintOrientation {
-  Portrait = 'Portrait',
-  Landscape = 'Landscape',
 }
 
 /**

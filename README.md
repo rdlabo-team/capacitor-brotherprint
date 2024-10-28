@@ -358,15 +358,37 @@ addListener(eventName: BrotherPrintEventsEnum.onPrintError, listenerFunc: (info:
 
 #### BRLMPrintOptions
 
-<code>{ encodedImage: string; numberOfCopies: number; autoCut: boolean; /** _ Should use getPlatformName.label function. _ ex: getPlatformName.label('android', 'BRLMQLPrintSettingsLabelSizeRollW62') \*/ labelName: <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a>; /** _ Should use getPlatformName.model function. _ ex: getPlatformName.model('android', 'BRLMPrinterModelQL*820NWB') */ modelName: <a href="#brlmprintermodelname">BRLMPrinterModelName</a>; /\*\* _ These are get from search result. mostly, it is like below. _ BrotherPrint.printImage({ _ ...defaultPrintSettings, _ ...{ _ port: selectPrinter.port, _ ipAddress: selectPrinter.ipAddress, _ localName: selectPrinter.nodeName, _ macAddress: selectPrinter.macAddress, _ serialNumber: selectPrinter.serialNumber, _ }, \_ }) \*/ port?: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy' | 'usb'; ipAddress?: string; localName?: string; serialNumber?: string; }</code>
-
-#### BRLMSearchOption
-
-<code>{ port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'; /\*\* _ searchDuration is the time to end search for devices. _ default is 15 seconds. _ use only port is 'wifi' or 'bluetoothLowEnergy'. _/ searchDuration: number; }</code>
+<code>{ encodedImage: string; /** _ Should use enum <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a> _/ labelName: <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a>; /** _ Should use enum <a href="#brlmprintermodelname">BRLMPrinterModelName</a> _/ modelName: <a href="#brlmprintermodelname">BRLMPrinterModelName</a>; } & <a href="#brlmchannelresult">BRLMChannelResult</a> & <a href="#brlmprintersettings">BRLMPrinterSettings</a></code>
 
 #### BRLMChannelResult
 
 <code>{ port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'; modelName: string; serialNumber: string; macAddress: string; nodeName: string; location: string; ipAddress: string; }</code>
+
+#### BRLMPrinterSettings
+
+These are optional. If these are not set, default values are assigned by the printer.
+
+<code>{ /** _ The number of copies you print. _/ numberOfCopies?: <a href="#brlmprinternumberofcopies">BRLMPrinterNumberOfCopies</a>; /** _ Whether the auto-cut is enabled or not. If true, your printer cut the paper each page. _/ autoCut?: <a href="#brlmprinterautocuttype">BRLMPrinterAutoCutType</a>; /** _ A scale mode that specifies how your data is scaled in a print area of your printer. _/ scaleMode?: <a href="#brlmprinterscalemode">BRLMPrinterScaleMode</a>; /** _ A scale value. This is effective when ScaleMode is ScaleValue. _/ scaleValue?: <a href="#brlmprinterscalevaluetype">BRLMPrinterScaleValueType</a>; /** _ A threshold value. This is effective when the Halftone is Threshold. _/ halftoneThreshold?: <a href="#brlmprinterhalftonethresholdtype">BRLMPrinterHalftoneThresholdType</a>; /** _ A way to rasterize your data. _/ halftone?: <a href="#brlmprinterhalftone">BRLMPrinterHalftone</a>; /** _ An image rotation that specifies the angle in which your data is placed in the print area. Rotation direction is clockwise. _/ ImageRotation?: <a href="#brlmprinterimagerotation">BRLMPrinterImageRotation</a>; /** _ A vertical alignment that specifies how your data is placed in the printable area. _/ verticalAlignment?: <a href="#brlmprinterverticalalignment">BRLMPrinterVerticalAlignment</a>; /** _ A horizontal alignment that specifies how your data is placed in the printable area. _/ horizontalAlignment?: <a href="#brlmprinterhorizontalalignment">BRLMPrinterHorizontalAlignment</a>; /** _ A compress mode that specifies how to compress your data. _/ compressMode?: <a href="#brlmprintercompressmode">BRLMPrinterCompressMode</a>; /** _ A priority that is print speed or print quality. Whether or not this has an effect is depend on your printer. _/ printQuality?: <a href="#brlmprinterprintquality">BRLMPrinterPrintQuality</a>; /** _ A priority that is print speed or print quality. Whether or not this has an effect is depend on your printer. _/ resolution?: <a href="#brlmprinterprintresolution">BRLMPrinterPrintResolution</a>; }</code>
+
+#### BRLMPrinterNumberOfCopies
+
+<code>number</code>
+
+#### BRLMPrinterAutoCutType
+
+<code>boolean</code>
+
+#### BRLMPrinterScaleValueType
+
+<code>number</code>
+
+#### BRLMPrinterHalftoneThresholdType
+
+<code>number</code>
+
+#### BRLMSearchOption
+
+<code>{ port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'; /\*\* _ searchDuration is the time to end search for devices. _ default is 15 seconds. _ use only port is 'wifi' or 'bluetoothLowEnergy'. _/ searchDuration: number; }</code>
 
 #### ErrorInfo
 
@@ -412,6 +434,71 @@ addListener(eventName: BrotherPrintEventsEnum.onPrintError, listenerFunc: (info:
 | **`TD_2320D_203`** | <code>'TD_2320D_203'</code> |
 | **`TD_2030AD`**    | <code>'TD_2030AD'</code>    |
 | **`TD_2350D_203`** | <code>'TD_2350D_203'</code> |
+
+#### BRLMPrinterScaleMode
+
+| Members              | Value                         |
+| -------------------- | ----------------------------- |
+| **`ActualSize`**     | <code>'ActualSize'</code>     |
+| **`FitPageAspect`**  | <code>'FitPageAspect'</code>  |
+| **`FitPaperAspect`** | <code>'FitPaperAspect'</code> |
+| **`ScaleValue`**     | <code>'ScaleValue'</code>     |
+
+#### BRLMPrinterHalftone
+
+| Members              | Value                         |
+| -------------------- | ----------------------------- |
+| **`Threshold`**      | <code>'Threshold'</code>      |
+| **`ErrorDiffusion`** | <code>'ErrorDiffusion'</code> |
+| **`PatternDither`**  | <code>'PatternDither'</code>  |
+
+#### BRLMPrinterImageRotation
+
+| Members         | Value                    |
+| --------------- | ------------------------ |
+| **`Rotate0`**   | <code>'Rotate0'</code>   |
+| **`Rotate90`**  | <code>'Rotate90'</code>  |
+| **`Rotate180`** | <code>'Rotate180'</code> |
+| **`Rotate270`** | <code>'Rotate270'</code> |
+
+#### BRLMPrinterVerticalAlignment
+
+| Members      | Value                 |
+| ------------ | --------------------- |
+| **`Top`**    | <code>'Top'</code>    |
+| **`Center`** | <code>'Center'</code> |
+| **`Bottom`** | <code>'Bottom'</code> |
+
+#### BRLMPrinterHorizontalAlignment
+
+| Members      | Value                 |
+| ------------ | --------------------- |
+| **`Left`**   | <code>'Left'</code>   |
+| **`Center`** | <code>'Center'</code> |
+| **`Right`**  | <code>'Right'</code>  |
+
+#### BRLMPrinterCompressMode
+
+| Members     | Value                |
+| ----------- | -------------------- |
+| **`None`**  | <code>'None'</code>  |
+| **`Tiff`**  | <code>'Tiff'</code>  |
+| **`Mode9`** | <code>'Mode9'</code> |
+
+#### BRLMPrinterPrintQuality
+
+| Members    | Value               |
+| ---------- | ------------------- |
+| **`Best`** | <code>'Best'</code> |
+| **`Fast`** | <code>'Fast'</code> |
+
+#### BRLMPrinterPrintResolution
+
+| Members      | Value                 |
+| ------------ | --------------------- |
+| **`Low`**    | <code>'Low'</code>    |
+| **`Normal`** | <code>'Normal'</code> |
+| **`High`**   | <code>'High'</code>   |
 
 #### BrotherPrintEventsEnum
 

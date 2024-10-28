@@ -12,10 +12,9 @@ import {
   BRLMPrinterHalftoneThresholdType,
   BRLMPrinterHorizontalAlignment,
   BRLMPrinterNumberOfCopies,
-  BRLMPrinterPrintOrientation,
   BRLMPrinterPrintQuality,
   BRLMPrinterPrintResolution,
-  BRLMPrinterRotation,
+  BRLMPrinterImageRotation,
   BRLMPrinterScaleMode,
   BRLMPrinterScaleValueType,
   BRLMPrinterVerticalAlignment,
@@ -50,18 +49,64 @@ export type BRLMPrintOptions = {
  * These are optional. If these are not set, default values are assigned by the printer.
  */
 export type BRLMPrinterSettings = {
+  /**
+   * The number of copies you print.
+   */
   numberOfCopies?: BRLMPrinterNumberOfCopies;
+
+  /**
+   * Whether the auto-cut is enabled or not. If true, your printer cut the paper each page.
+   */
   autoCut?: BRLMPrinterAutoCutType;
-  scaleValue?: BRLMPrinterScaleValueType;
-  halftoneThreshold?: BRLMPrinterHalftoneThresholdType;
-  rotation?: BRLMPrinterRotation;
+
+  /**
+   * A scale mode that specifies how your data is scaled in a print area of your printer.
+   */
   scaleMode?: BRLMPrinterScaleMode;
+
+  /**
+   * A scale value. This is effective when ScaleMode is ScaleValue.
+   */
+  scaleValue?: BRLMPrinterScaleValueType;
+
+  /**
+   * A threshold value. This is effective when the Halftone is Threshold.
+   */
+  halftoneThreshold?: BRLMPrinterHalftoneThresholdType;
+
+  /**
+   * A way to rasterize your data.
+   */
   halftone?: BRLMPrinterHalftone;
+
+  /**
+   * An image rotation that specifies the angle in which your data is placed in the print area. Rotation direction is clockwise.
+   */
+  ImageRotation?: BRLMPrinterImageRotation;
+
+  /**
+   * A vertical alignment that specifies how your data is placed in the printable area.
+   */
   verticalAlignment?: BRLMPrinterVerticalAlignment;
+
+  /**
+   * A horizontal alignment that specifies how your data is placed in the printable area.
+   */
   horizontalAlignment?: BRLMPrinterHorizontalAlignment;
+
+  /**
+   * A compress mode that specifies how to compress your data.
+   */
   compressMode?: BRLMPrinterCompressMode;
+
+  /**
+   * A priority that is print speed or print quality. Whether or not this has an effect is depend on your printer.
+   */
   printQuality?: BRLMPrinterPrintQuality;
-  orientation?: BRLMPrinterPrintOrientation;
+
+  /**
+   * A priority that is print speed or print quality. Whether or not this has an effect is depend on your printer.
+   */
   resolution?: BRLMPrinterPrintResolution;
 };
 
