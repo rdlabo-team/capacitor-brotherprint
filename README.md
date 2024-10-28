@@ -9,8 +9,8 @@ Each product link is an Amazon affiliate link. If you choose to make a purchase 
 | Product                               | Model        | iOS/WiFi | iOS/BT | iOS/BLE | Android/USB | Android/WiFi | Android/BT | Android/BLE |
 | ------------------------------------- | ------------ | -------- | ------ | ------- | ----------- | ------------ | ---------- | ----------- |
 | QL-810W                               | QL_810W      | ✗        | ✗      | ✗       | △           | ✗            | ✗          | ✗           |
-| [QL-820NWB](https://amzn.to/3BXQ1aj)  | QL_820NWB    | ◯        | ✗      | ✗       | △           | ◯            | △          | ✗           |
-| [QL-820NWBc](https://amzn.to/4fjhUIe) | QL_820NWB    | ◯        | ※1     | ✗       | ✗           | ◯            | ◯          | ✗           |
+| [QL-820NWB](https://amzn.to/3BXQ1aj)  | QL_820NWB    | ◯        | ※1     | ✗       | △           | ◯            | △          | ✗           |
+| [QL-820NWBc](https://amzn.to/4fjhUIe) | QL_820NWB    | ◯        | ※2     | ✗       | ✗           | ◯            | ◯          | ✗           |
 | [TD-2320D](https://amzn.to/48EFCN3)   | TD_2320D_203 | ✗        | ✗      | ✗       | △           | ✗            | ✗          | ✗           |
 | [TD-2350D](https://amzn.to/48ma6TK)   | TD_2350D_203 | △        | △      | △       | △           | △            | △          | △           |
 
@@ -26,7 +26,8 @@ Amazon Affiliate Links:　**https://amzn.to/3AiiOFT**
 | BT  | Bluetooth                  |
 | BLE | Bluetooth Low Energy       |
 
-※1 The iOS/BT implementation for the QL-820NWBc is in place, but it’s uncertain if it functions correctly. It’s unclear whether this is an implementation issue, as Brother’s official app also doesn’t work well.
+※1 Due to low Bluetooth version, connection is not possible with iOS. Ref: https://okbizcs.okwave.jp/brother/qa/q9932082.html
+※2 The iOS/BT implementation for the QL-820NWBc is in place, but it’s uncertain if it functions correctly. It’s unclear whether this is an implementation issue, as Brother’s official app also doesn’t work well.
 
 ### Note
 
