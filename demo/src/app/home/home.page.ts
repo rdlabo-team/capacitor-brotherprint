@@ -19,6 +19,13 @@ import {
   BrotherPrintEventsEnum,
 } from '@rdlabo/capacitor-brotherprint';
 import { PluginListenerHandle } from '@capacitor/core';
+import {
+  BRLMPrinterHorizontalAlignment,
+  BRLMPrinterImageRotation,
+  BRLMPrinterPrintQuality,
+  BRLMPrinterPrintResolution,
+  BRLMPrinterVerticalAlignment,
+} from '../../../../src';
 
 @Component({
   selector: 'app-home',
@@ -104,6 +111,12 @@ export class HomePage implements OnInit, OnDestroy {
       encodedImage: this.base64.slice(this.base64.indexOf(',') + 1),
       numberOfCopies: 1, // default 1
       autoCut: true, // default true
+
+      imageRotation: BRLMPrinterImageRotation.Rotate90,
+      verticalAlignment: BRLMPrinterVerticalAlignment.Center,
+      horizontalAlignment: BRLMPrinterHorizontalAlignment.Center,
+      printQuality: BRLMPrinterPrintQuality.Best,
+      resolution: BRLMPrinterPrintResolution.High,
     };
 
     BrotherPrint.printImage({

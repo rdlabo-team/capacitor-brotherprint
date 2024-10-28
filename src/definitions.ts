@@ -3,6 +3,18 @@ import type { PluginListenerHandle } from '@capacitor/core';
 import type {
   BRLMPrinterLabelName,
   BRLMPrinterModelName,
+  BRLMPrinterAutoCutType,
+  BRLMPrinterCompressMode,
+  BRLMPrinterHalftone,
+  BRLMPrinterHalftoneThresholdType,
+  BRLMPrinterHorizontalAlignment,
+  BRLMPrinterNumberOfCopies,
+  BRLMPrinterPrintQuality,
+  BRLMPrinterPrintResolution,
+  BRLMPrinterImageRotation,
+  BRLMPrinterScaleMode,
+  BRLMPrinterScaleValueType,
+  BRLMPrinterVerticalAlignment,
 } from './brother-printer.enum';
 import type { BrotherPrintEventsEnum } from './events.enum';
 
@@ -18,38 +30,84 @@ export type BRLMChannelResult = {
 
 export type BRLMPrintOptions = {
   encodedImage: string;
-  numberOfCopies: number;
-  autoCut: boolean;
 
   /**
-   * Should use getPlatformName.label function.
-   * ex: getPlatformName.label('android', 'BRLMQLPrintSettingsLabelSizeRollW62')
+   * Should use enum BRLMPrinterLabelName
    */
   labelName: BRLMPrinterLabelName;
 
   /**
-   * Should use getPlatformName.model function.
-   * ex: getPlatformName.model('android', 'BRLMPrinterModelQL_820NWB')
+   * Should use enum BRLMPrinterModelName
    */
   modelName: BRLMPrinterModelName;
+} & Partial<BRLMChannelResult> &
+  BRLMPrinterSettings;
+
+/**
+ * These are optional. If these are not set, default values are assigned by the printer.
+ */
+export type BRLMPrinterSettings = {
+  /**
+   * The number of copies you print.
+   */
+  numberOfCopies?: BRLMPrinterNumberOfCopies;
 
   /**
-   * These are get from search result. mostly, it is like below.
-   * BrotherPrint.printImage({
-   *       ...defaultPrintSettings,
-   *       ...{
-   *         port: selectPrinter.port,
-   *         ipAddress: selectPrinter.ipAddress,
-   *         localName: selectPrinter.nodeName,
-   *         macAddress: selectPrinter.macAddress,
-   *         serialNumber: selectPrinter.serialNumber,
-   *       },
-   *  })
+   * Whether the auto-cut is enabled or not. If true, your printer cut the paper each page.
    */
-  port?: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy' | 'usb';
-  ipAddress?: string;
-  localName?: string;
-  serialNumber?: string;
+  autoCut?: BRLMPrinterAutoCutType;
+
+  /**
+   * A scale mode that specifies how your data is scaled in a print area of your printer.
+   */
+  scaleMode?: BRLMPrinterScaleMode;
+
+  /**
+   * A scale value. This is effective when ScaleMode is ScaleValue.
+   */
+  scaleValue?: BRLMPrinterScaleValueType;
+
+  /**
+   * A way to rasterize your data.
+   */
+  halftone?: BRLMPrinterHalftone;
+
+  /**
+   * A threshold value. This is effective when the Halftone is Threshold.
+   */
+  halftoneThreshold?: BRLMPrinterHalftoneThresholdType;
+
+  /**
+   * An image rotation that specifies the angle in which your data is placed in the print area. Rotation direction is clockwise.
+   */
+  imageRotation?: BRLMPrinterImageRotation;
+
+  /**
+   * A vertical alignment that specifies how your data is placed in the printable area.
+   */
+  verticalAlignment?: BRLMPrinterVerticalAlignment;
+
+  /**
+   * A horizontal alignment that specifies how your data is placed in the printable area.
+   */
+  horizontalAlignment?: BRLMPrinterHorizontalAlignment;
+
+  /**
+   * A compress mode that specifies how to compress your data.
+   * note: This is ios only.
+   */
+  compressMode?: BRLMPrinterCompressMode;
+
+  /**
+   * A priority that is print speed or print quality. Whether or not this has an effect is depend on your printer.
+   */
+  printQuality?: BRLMPrinterPrintQuality;
+
+  /**
+   * A priority that is print speed or print quality. Whether or not this has an effect is depend on your printer.
+   * note: This is ios only.
+   */
+  resolution?: BRLMPrinterPrintResolution;
 };
 
 export type BRLMSearchOption = {
