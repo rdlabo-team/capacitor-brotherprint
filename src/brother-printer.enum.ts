@@ -45,3 +45,89 @@ export enum BRLMPrinterLabelName {
   W62H60 = 'W62H60',
   W62H75 = 'W62H75',
 }
+
+export type BRLMPrinterAutoCutType = boolean;
+export type BRLMPrinterScaleValueType = number;
+export type BRLMPrinterHalftoneThresholdType = number;
+export type BRLMPrinterNumberOfCopies = number;
+
+/**
+ * @url https://support.brother.co.jp/j/s/support/html/mobilesdk/reference/android_v4/printimagesettings.html#imagerotation
+ */
+export enum BRLMPrinterRotation {
+  Rotate0 = 'Rotate0',
+  Rotate90 = 'Rotate90',
+  Rotate180 = 'Rotate180',
+  Rotate270 = 'Rotate270',
+}
+
+/**
+ * url https://support.brother.co.jp/j/s/support/html/mobilesdk/reference/android_v4/printimagesettings.html#scalemode
+ */
+export enum BRLMPrinterScaleMode {
+  ActualSize = 'ActualSize',
+  FitPageAspect = 'FitPageAspect',
+  FitPaperAspect = 'FitPaperAspect',
+  ScaleValue = 'ScaleValue',
+}
+
+/**
+ * url: https://support.brother.co.jp/j/s/support/html/mobilesdk/reference/android_v4/printimagesettings.html#halftone
+ */
+export enum BRLMPrinterHalftone {
+  Threshold = 'Threshold',
+  ErrorDiffusion = 'ErrorDiffusion',
+  PatternDither = 'PatternDither',
+}
+
+/**
+ * url: https://support.brother.co.jp/j/s/support/html/mobilesdk/reference/android_v4/printimagesettings.html#verticalalignment
+ */
+export enum BRLMPrinterVerticalAlignment {
+  Top = 'Top',
+  Center = 'Center',
+  Bottom = 'Bottom',
+}
+
+/**
+ * url: https://support.brother.co.jp/j/s/support/html/mobilesdk/reference/android_v4/printimagesettings.html#horizontalalignment
+ */
+export enum BRLMPrinterHorizontalAlignment {
+  Left = 'Left',
+  Center = 'Center',
+  Right = 'Right',
+}
+
+/**
+ * url: https://support.brother.co.jp/j/s/support/html/mobilesdk/reference/android_v4/printimagesettings.html#compressmode
+ */
+export enum BRLMPrinterCompressMode {
+  None = 'None',
+  Tiff = 'Tiff',
+  Mode9 = 'Mode9',
+}
+
+/**
+ * url: https://support.brother.co.jp/j/s/support/html/mobilesdk/reference/android_v4/printimagesettings.html#printquality
+ */
+export enum BRLMPrinterPrintQuality {
+  Best = 'Best',
+  Fast = 'Fast',
+}
+
+/**
+ * url: https://support.brother.co.jp/j/s/support/html/mobilesdk/reference/android_v4/printimagesettings.html#orientation
+ */
+export enum BRLMPrinterPrintOrientation {
+  Portrait = 'Portrait',
+  Landscape = 'Landscape',
+}
+
+/**
+ * url: https://support.brother.co.jp/j/s/support/html/mobilesdk/reference/android_v4/printimagesettings.html#resolution
+ */
+export enum BRLMPrinterPrintResolution {
+  Low = 'Low',
+  Normal = 'Normal',
+  High = 'High',
+}

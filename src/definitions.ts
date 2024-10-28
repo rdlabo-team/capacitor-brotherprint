@@ -5,6 +5,21 @@ import type {
   BRLMPrinterModelName,
 } from './brother-printer.enum';
 import type { BrotherPrintEventsEnum } from './events.enum';
+import {
+  BRLMPrinterAutoCutType,
+  BRLMPrinterCompressMode,
+  BRLMPrinterHalftone,
+  BRLMPrinterHalftoneThresholdType,
+  BRLMPrinterHorizontalAlignment,
+  BRLMPrinterNumberOfCopies,
+  BRLMPrinterPrintOrientation,
+  BRLMPrinterPrintQuality,
+  BRLMPrinterPrintResolution,
+  BRLMPrinterRotation,
+  BRLMPrinterScaleMode,
+  BRLMPrinterScaleValueType,
+  BRLMPrinterVerticalAlignment,
+} from './brother-printer.enum';
 
 export type BRLMChannelResult = {
   port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy';
@@ -18,38 +33,36 @@ export type BRLMChannelResult = {
 
 export type BRLMPrintOptions = {
   encodedImage: string;
-  numberOfCopies: number;
-  autoCut: boolean;
 
   /**
-   * Should use getPlatformName.label function.
-   * ex: getPlatformName.label('android', 'BRLMQLPrintSettingsLabelSizeRollW62')
+   * Should use enum BRLMPrinterLabelName
    */
   labelName: BRLMPrinterLabelName;
 
   /**
-   * Should use getPlatformName.model function.
-   * ex: getPlatformName.model('android', 'BRLMPrinterModelQL_820NWB')
+   * Should use enum BRLMPrinterModelName
    */
   modelName: BRLMPrinterModelName;
+} & BRLMChannelResult &
+  BRLMPrinterSettings;
 
-  /**
-   * These are get from search result. mostly, it is like below.
-   * BrotherPrint.printImage({
-   *       ...defaultPrintSettings,
-   *       ...{
-   *         port: selectPrinter.port,
-   *         ipAddress: selectPrinter.ipAddress,
-   *         localName: selectPrinter.nodeName,
-   *         macAddress: selectPrinter.macAddress,
-   *         serialNumber: selectPrinter.serialNumber,
-   *       },
-   *  })
-   */
-  port?: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy' | 'usb';
-  ipAddress?: string;
-  localName?: string;
-  serialNumber?: string;
+/**
+ * These are optional. If these are not set, default values are assigned by the printer.
+ */
+export type BRLMPrinterSettings = {
+  numberOfCopies?: BRLMPrinterNumberOfCopies;
+  autoCut?: BRLMPrinterAutoCutType;
+  scaleValue?: BRLMPrinterScaleValueType;
+  halftoneThreshold?: BRLMPrinterHalftoneThresholdType;
+  rotation?: BRLMPrinterRotation;
+  scaleMode?: BRLMPrinterScaleMode;
+  halftone?: BRLMPrinterHalftone;
+  verticalAlignment?: BRLMPrinterVerticalAlignment;
+  horizontalAlignment?: BRLMPrinterHorizontalAlignment;
+  compressMode?: BRLMPrinterCompressMode;
+  printQuality?: BRLMPrinterPrintQuality;
+  orientation?: BRLMPrinterPrintOrientation;
+  resolution?: BRLMPrinterPrintResolution;
 };
 
 export type BRLMSearchOption = {
