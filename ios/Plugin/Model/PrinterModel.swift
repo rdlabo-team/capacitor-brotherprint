@@ -126,7 +126,7 @@ enum PrinterModel: String, CaseIterable {
     //    case PJ_862 = "PJ-862" // swiftlint:disable:this identifier_name
     //    case PJ_863 = "PJ-863" // swiftlint:disable:this identifier_name
     //    case PJ_883 = "PJ-883" // swiftlint:disable:this identifier_name
-        case TD_2030A = "TD-2030A" // swiftlint:disable:this identifier_name
+    case TD_2030A = "TD-2030A" // swiftlint:disable:this identifier_name
     //    case TD_2125N = "TD-2125N" // swiftlint:disable:this identifier_name
     //    case TD_2125NWB = "TD-2125NWB" // swiftlint:disable:this identifier_name
     //    case TD_2135N = "TD-2135N" // swiftlint:disable:this identifier_name
@@ -136,13 +136,13 @@ enum PrinterModel: String, CaseIterable {
     //    case PT_E560BT = "PT-E560BT" // swiftlint:disable:this identifier_name
     //    case TD_2310D_203 = "TD-2310D_203" // swiftlint:disable:this identifier_name
     //    case TD_2310D_300 = "TD-2310D_300" // swiftlint:disable:this identifier_name
-        case TD_2320D_203 = "TD-2320D_203" // swiftlint:disable:this identifier_name
+    case TD_2320D_203 = "TD-2320D_203" // swiftlint:disable:this identifier_name
     //    case TD_2320D_300 = "TD-2320D_300" // swiftlint:disable:this identifier_name
     //    case TD_2320DF_203 = "TD-2320DF_203" // swiftlint:disable:this identifier_name
     //    case TD_2320DF_300 = "TD-2320DF_300" // swiftlint:disable:this identifier_name
     //    case TD_2320DSA_203 = "TD-2320DSA_203" // swiftlint:disable:this identifier_name
     //    case TD_2320DSA_300 = "TD-2320DSA_300" // swiftlint:disable:this identifier_name
-        case TD_2350D_203 = "TD-2350D_203" // swiftlint:disable:this identifier_name
+    case TD_2350D_203 = "TD-2350D_203" // swiftlint:disable:this identifier_name
     //    case TD_2350D_300 = "TD-2350D_300" // swiftlint:disable:this identifier_name
     //    case TD_2350DF_203 = "TD-2350DF_203" // swiftlint:disable:this identifier_name
     //    case TD_2350DF_300 = "TD-2350DF_300" // swiftlint:disable:this identifier_name
@@ -235,7 +235,7 @@ enum PrinterModel: String, CaseIterable {
         //        case .PJ_862: return .PJ_862
         //        case .PJ_863: return .PJ_863
         //        case .PJ_883: return .PJ_883
-                case .TD_2030A: return .TD_2030A
+        case .TD_2030A: return .TD_2030A
         //        case .TD_2125N: return .TD_2125N
         //        case .TD_2125NWB: return .TD_2125NWB
         //        case .TD_2135N: return .TD_2135N
@@ -245,13 +245,13 @@ enum PrinterModel: String, CaseIterable {
         //        case .PT_E560BT: return .PT_E560BT
         //        case .TD_2310D_203: return .TD_2310D_203
         //        case .TD_2310D_300: return .TD_2310D_300
-                case .TD_2320D_203: return .TD_2320D_203
+        case .TD_2320D_203: return .TD_2320D_203
         //        case .TD_2320D_300: return .TD_2320D_300
         //        case .TD_2320DF_203: return .TD_2320DF_203
         //        case .TD_2320DF_300: return .TD_2320DF_300
         //        case .TD_2320DSA_203: return .TD_2320DSA_203
         //        case .TD_2320DSA_300: return .TD_2320DSA_300
-                case .TD_2350D_203: return .TD_2350D_203
+        case .TD_2350D_203: return .TD_2350D_203
         //        case .TD_2350D_300: return .TD_2350D_300
         //        case .TD_2350DF_203: return .TD_2350DF_203
         //        case .TD_2350DF_300: return .TD_2350DF_300

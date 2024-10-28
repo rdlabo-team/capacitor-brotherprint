@@ -83,7 +83,7 @@ public class BrotherPrint: CAPPlugin {
                 call.reject("Error - Create BRLMQLPrintSettings is failed.")
                 return
             }
-            
+
             let printSettings = PrinterSettingsModel.initialize(call, printSettings: _printSettings)
             let printError = printerDriver.printImage(with: decodedByte.cgImage!, settings: printSettings)
 

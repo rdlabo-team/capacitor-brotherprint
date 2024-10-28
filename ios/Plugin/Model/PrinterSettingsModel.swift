@@ -5,14 +5,14 @@ import Capacitor
 
 class PrinterSettingsModel {
     static func initialize(_ call: CAPPluginCall, printSettings: BRLMQLPrintSettings) -> BRLMQLPrintSettings {
-        
+
         printSettings.labelSize = BrotherModel.getLabelSize(from: call.getString("labelName", "rollW62"))
         printSettings.numCopies = UInt(call.getInt("numberOfCopies", 1))
-        
+
         if let autoCut = call.getBool("autoCut") ?? nil {
             printSettings.autoCut = autoCut
         }
-        
+
         if let scaleMode = call.getString("scaleMode") ?? nil {
             switch scaleMode {
             case "ActualSize":
@@ -23,18 +23,18 @@ class PrinterSettingsModel {
                 printSettings.scaleMode = BRLMPrintSettingsScaleMode.fitPaperAspect
             case "ScaleValue":
                 printSettings.scaleMode = BRLMPrintSettingsScaleMode.scaleValue
-                if (call.getInt("scaleValue") != nil) {
+                if call.getInt("scaleValue") != nil {
                     printSettings.scaleValue = CGFloat(call.getInt("scaleValue")!)
                 }
             default: break
             }
         }
-        
+
         if let halftone = call.getString("halftone") ?? nil {
             switch halftone {
             case "Threshold":
                 printSettings.halftone = BRLMPrintSettingsHalftone.threshold
-                if (call.getInt("halftoneThreshold") != nil) {
+                if call.getInt("halftoneThreshold") != nil {
                     printSettings.halftoneThreshold = UInt8(call.getInt("halftoneThreshold")!)
                 }
             case "ErrorDiffusion":
@@ -44,7 +44,7 @@ class PrinterSettingsModel {
             default: break
             }
         }
-        
+
         if let imageRotation = call.getString("imageRotation") ?? nil {
             switch imageRotation {
             case "Rotate0":
@@ -58,7 +58,7 @@ class PrinterSettingsModel {
             default: break
             }
         }
-        
+
         if let verticalAlignment = call.getString("verticalAlignment") ?? nil {
             switch verticalAlignment {
             case "Top":
@@ -70,7 +70,7 @@ class PrinterSettingsModel {
             default: break
             }
         }
-        
+
         if let horizontalAlignment = call.getString("horizontalAlignment") ?? nil {
             switch horizontalAlignment {
             case "Left":
@@ -82,7 +82,7 @@ class PrinterSettingsModel {
             default: break
             }
         }
-        
+
         if let compressMode = call.getString("compressMode") ?? nil {
             switch compressMode {
             case "None":
@@ -94,7 +94,7 @@ class PrinterSettingsModel {
             default: break
             }
         }
-        
+
         if let printQuality = call.getString("printQuality") ?? nil {
             switch printQuality {
             case "Best":
@@ -116,7 +116,7 @@ class PrinterSettingsModel {
             default: break
             }
         }
-        
+
         return printSettings
     }
 }
