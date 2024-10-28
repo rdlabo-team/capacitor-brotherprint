@@ -3,9 +3,6 @@ import type { PluginListenerHandle } from '@capacitor/core';
 import type {
   BRLMPrinterLabelName,
   BRLMPrinterModelName,
-} from './brother-printer.enum';
-import type { BrotherPrintEventsEnum } from './events.enum';
-import {
   BRLMPrinterAutoCutType,
   BRLMPrinterCompressMode,
   BRLMPrinterHalftone,
@@ -19,6 +16,7 @@ import {
   BRLMPrinterScaleValueType,
   BRLMPrinterVerticalAlignment,
 } from './brother-printer.enum';
+import type { BrotherPrintEventsEnum } from './events.enum';
 
 export type BRLMChannelResult = {
   port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy';
