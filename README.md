@@ -358,7 +358,15 @@ addListener(eventName: BrotherPrintEventsEnum.onPrintError, listenerFunc: (info:
 
 #### BRLMPrintOptions
 
-<code>{ encodedImage: string; /** _ Should use enum <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a> _/ labelName: <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a>; /** _ Should use enum <a href="#brlmprintermodelname">BRLMPrinterModelName</a> _/ modelName: <a href="#brlmprintermodelname">BRLMPrinterModelName</a>; } & <a href="#brlmchannelresult">BRLMChannelResult</a> & <a href="#brlmprintersettings">BRLMPrinterSettings</a></code>
+<code>{ encodedImage: string; /** _ Should use enum <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a> _/ labelName: <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a>; /** _ Should use enum <a href="#brlmprintermodelname">BRLMPrinterModelName</a> _/ modelName: <a href="#brlmprintermodelname">BRLMPrinterModelName</a>; } & <a href="#partial">Partial</a>&lt;<a href="#brlmchannelresult">BRLMChannelResult</a>&gt; & <a href="#brlmprintersettings">BRLMPrinterSettings</a></code>
+
+#### Partial
+
+Make all properties in T optional
+
+<code>{
+[P in keyof T]?: T[P];
+}</code>
 
 #### BRLMChannelResult
 

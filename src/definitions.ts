@@ -40,7 +40,7 @@ export type BRLMPrintOptions = {
    * Should use enum BRLMPrinterModelName
    */
   modelName: BRLMPrinterModelName;
-} & BRLMChannelResult &
+} & Partial<BRLMChannelResult> &
   BRLMPrinterSettings;
 
 /**
