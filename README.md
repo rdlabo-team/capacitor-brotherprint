@@ -32,7 +32,7 @@ Amazon Affiliate Links:　**https://amzn.to/3AiiOFT**
 ## How to install
 
 ```
-% npm install @rdlabo/capacitor-brotherprint@next
+% npm install @rdlabo/capacitor-brotherprint
 ```
 
 ## Initialize the Brother SDK
