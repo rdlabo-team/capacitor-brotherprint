@@ -1,6 +1,6 @@
 {
   "name": "@rdlabo/capacitor-brotherprint",
-  "version": "6.1.0",
+  "version": "6.2.0-2",
   "description": "Capacitor plugin for Brother Print SDK",
   "main": "dist/plugin.js",
   "module": "dist/esm/index.js",
@@ -23,15 +23,16 @@
     "clean": "rimraf ./dist",
     "watch": "tsc --watch",
     "prepublishOnly": "npm run build",
-    "release": "np --no-tests",
-    "npm-publish": "np --no-tests"
+    "release": "npm run replace && np --no-tests && npm run replace:development",
+    "replace:production": "cp -f module_production.modulemap ios/Plugin/module.modulemap",
+    "replace:development": "cp -f module_development.modulemap ios/Plugin/module.modulemap"
   },
   "author": "Masahiko Sakakibara<sakakibara@rdlabo.jp>",
   "license": "MIT",
   "devDependencies": {
     "@capacitor/android": "^6.0.0",
     "@capacitor/core": "^6.0.0",
-    "@capacitor/docgen": "^0.0.18",
+    "@capacitor/docgen": "^0.3.0",
     "@capacitor/ios": "^6.0.0",
     "@ionic/eslint-config": "^0.3.0",
     "@ionic/prettier-config": "^1.0.1",

@@ -1,0 +1,8 @@
+include ':app'
+include ':capacitor-cordova-android-plugins'
+project(':capacitor-cordova-android-plugins').projectDir = new File('./capacitor-cordova-android-plugins/')
+
+include ':BrotherPrintLibrary'
+project(':BrotherPrintLibrary').projectDir = new File('./BrotherPrintLibrary/')
+
+apply from: 'capacitor.settings.gradle'

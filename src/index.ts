@@ -8,4 +8,6 @@ const BrotherPrint = registerPlugin<BrotherPrintPlugin>('BrotherPrint', {
 
 export * from './definitions';
 export * from './web';
+export * from './events.enum';
+export * from './brother-printer.enum';
 export { BrotherPrint };
