@@ -29,10 +29,6 @@ Amazon Affiliate Links:　**https://amzn.to/3AiiOFT**
 ※1 Due to low Bluetooth version, connection is not possible with iOS. Ref: https://okbizcs.okwave.jp/brother/qa/q9932082.html
 ※2 The iOS/BT implementation for the QL-820NWBc is in place, but it’s uncertain if it functions correctly. It’s unclear whether this is an implementation issue, as Brother’s official app also doesn’t work well.
 
-### Note
-
-iOS `BRLMQLPrintSettingsLabelSize.dieCutW29H90` may work as `BRLMQLPrintSettingsLabelSize.dieCutW29H42`.
-
 ## How to install
 
 ```
