@@ -118,8 +118,8 @@ export enum BRLMPrinterPrintQuality {
 /**
  * url: https://support.brother.co.jp/j/s/support/html/mobilesdk/reference/android_v4/printimagesettings.html#resolution
  */
-export enum BRLMPrinterPrintResolution {
-  Low = 'Low',
-  Normal = 'Normal',
-  High = 'High',
-}
+// export enum BRLMPrinterPrintResolution {
+//   Low = 'Low',
+//   Normal = 'Normal',
+//   High = 'High',
+// }

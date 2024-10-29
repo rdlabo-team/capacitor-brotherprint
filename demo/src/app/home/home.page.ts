@@ -23,7 +23,6 @@ import {
   BRLMPrinterHorizontalAlignment,
   BRLMPrinterImageRotation,
   BRLMPrinterPrintQuality,
-  BRLMPrinterPrintResolution,
   BRLMPrinterVerticalAlignment,
 } from '../../../../src';
 
@@ -116,7 +115,6 @@ export class HomePage implements OnInit, OnDestroy {
       verticalAlignment: BRLMPrinterVerticalAlignment.Center,
       horizontalAlignment: BRLMPrinterHorizontalAlignment.Center,
       printQuality: BRLMPrinterPrintQuality.Best,
-      resolution: BRLMPrinterPrintResolution.High,
     };
 
     BrotherPrint.printImage({
