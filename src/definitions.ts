@@ -10,7 +10,6 @@ import type {
   BRLMPrinterHorizontalAlignment,
   BRLMPrinterNumberOfCopies,
   BRLMPrinterPrintQuality,
-  BRLMPrinterPrintResolution,
   BRLMPrinterImageRotation,
   BRLMPrinterScaleMode,
   BRLMPrinterScaleValueType,
@@ -105,9 +104,9 @@ export type BRLMPrinterSettings = {
 
   /**
    * A priority that is print speed or print quality. Whether or not this has an effect is depend on your printer.
-   * note: This is ios only.
+   * note: This is ios only. And for some reason, the aspect ratio is broken, so we do not provide this as an API.
+   * resolution?: BRLMPrinterPrintResolution;
    */
-  resolution?: BRLMPrinterPrintResolution;
 };
 
 export type BRLMSearchOption = {
