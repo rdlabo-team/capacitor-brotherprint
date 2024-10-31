@@ -43,42 +43,40 @@ export type BRLMPrinterTDModelSettings = {
   /**
    * Should use enum BRKMPrinterCustomPaperType
    */
-  customPaperType: BRKMPrinterCustomPaperType;
+  paperType: BRKMPrinterCustomPaperType;
 
   /**
    * The width of the label. For example, the RD-U04J1 is 60.0 wide.
    */
-  customPaperWidth: number;
+  tapeWidth: number;
 
   /**
    * The length of the label. For example, the RD-U04J1 is 60.0 wide.
    */
-  customPaperLength: number;
+  tapeLength: number;
 
   /**
    * It is the difference between a sticker and a mount.
    * For example, the RD-U04J1 is `1.0, 2.0, 1.0, 2.0`
    */
-  customPaperMargins: {
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
-  };
-
-  customPaperMarkPosition: number;
-  customPaperMarkLength: number;
+  marginTop: number;
+  marginRight: number;
+  marginBottom: number;
+  marginLeft: number;
 
   /**
    * The spacing between seals. For example, the RD-U04J1 is 0.2.
    */
-  customPaperGapLength: number;
+  gapLength: number;
+
+  paperMarkPosition: number;
+  paperMarkLength: number;
 
   /**
    * Should use enum BRKMPrinterCustomPaperUnit.
    * For example, the RD-U04J1 is mm.
    */
-  customPaperUnit: BRKMPrinterCustomPaperUnit;
+  paperUnit: BRKMPrinterCustomPaperUnit;
 };
 
 export type BRLMPrinterQLModelSettings = {

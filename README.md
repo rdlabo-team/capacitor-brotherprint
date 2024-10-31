@@ -401,7 +401,7 @@ These are optional. If these are not set, default values are assigned by the pri
 
 #### BRLMPrinterTDModelSettings
 
-<code>{ /** _ Should use enum <a href="#brkmprintercustompapertype">BRKMPrinterCustomPaperType</a> _/ customPaperType: <a href="#brkmprintercustompapertype">BRKMPrinterCustomPaperType</a>; /** _ The width of the label. For example, the RD-U04J1 is 60.0 wide. _/ customPaperWidth: number; /** _ The length of the label. For example, the RD-U04J1 is 60.0 wide. _/ customPaperLength: number; /** _ It is the difference between a sticker and a mount. _ For example, the RD-U04J1 is `1.0, 2.0, 1.0, 2.0` _/ customPaperMargins: { top: number; right: number; bottom: number; left: number; }; customPaperMarkPosition: number; customPaperMarkLength: number; /\*\* _ The spacing between seals. For example, the RD-U04J1 is 0.2. _/ customPaperGapLength: number; /\*\* _ Should use enum <a href="#brkmprintercustompaperunit">BRKMPrinterCustomPaperUnit</a>. _ For example, the RD-U04J1 is mm. _/ customPaperUnit: <a href="#brkmprintercustompaperunit">BRKMPrinterCustomPaperUnit</a>; }</code>
+<code>{ /** _ Should use enum <a href="#brkmprintercustompapertype">BRKMPrinterCustomPaperType</a> _/ paperType: <a href="#brkmprintercustompapertype">BRKMPrinterCustomPaperType</a>; /** _ The width of the label. For example, the RD-U04J1 is 60.0 wide. _/ tapeWidth: number; /** _ The length of the label. For example, the RD-U04J1 is 60.0 wide. _/ tapeLength: number; /** _ It is the difference between a sticker and a mount. _ For example, the RD-U04J1 is `1.0, 2.0, 1.0, 2.0` _/ marginTop: number; marginRight: number; marginBottom: number; marginLeft: number; /\*\* _ The spacing between seals. For example, the RD-U04J1 is 0.2. _/ gapLength: number; paperMarkPosition: number; paperMarkLength: number; /\*\* _ Should use enum <a href="#brkmprintercustompaperunit">BRKMPrinterCustomPaperUnit</a>. _ For example, the RD-U04J1 is mm. _/ paperUnit: <a href="#brkmprintercustompaperunit">BRKMPrinterCustomPaperUnit</a>; }</code>
 
 #### BRLMSearchOption
 
@@ -514,7 +514,7 @@ These are optional. If these are not set, default values are assigned by the pri
 | Members             | Value                        |
 | ------------------- | ---------------------------- |
 | **`rollPaper`**     | <code>'rollPaper'</code>     |
-| **`dieCutLabel`**   | <code>'dieCutLabel'</code>   |
+| **`dieCutPaper`**   | <code>'dieCutPaper'</code>   |
 | **`markRollPaper`** | <code>'markRollPaper'</code> |
 
 #### BRKMPrinterCustomPaperUnit

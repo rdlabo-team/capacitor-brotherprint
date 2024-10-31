@@ -12,7 +12,7 @@ export enum BRKMPrinterCustomPaperUnit {
 
 export enum BRKMPrinterCustomPaperType {
   rollPaper = 'rollPaper',
-  dieCutLabel = 'dieCutLabel',
+  dieCutPaper = 'dieCutPaper',
   markRollPaper = 'markRollPaper',
 }
 

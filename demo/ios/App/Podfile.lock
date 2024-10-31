@@ -11,7 +11,7 @@ PODS:
     - Capacitor
   - CapacitorStatusBar (6.0.1):
     - Capacitor
-  - RdlaboCapacitorBrotherprint (6.1.0):
+  - RdlaboCapacitorBrotherprint (6.2.0):
     - BRLMPrinterKit_v4
     - Capacitor
 
@@ -57,7 +57,7 @@ SPEC CHECKSUMS:
   CapacitorHaptics: fe689ade56ef20ec9b041a753c6da70c5d8ec9a9
   CapacitorKeyboard: 2700f9b18687be021e28b5a09b59eb151a46d5e0
   CapacitorStatusBar: b81d4fb5d4e0064c712018071b3ab4b810b39a63
-  RdlaboCapacitorBrotherprint: e51b20a4ad66c12a22302648a659341aa520b7b9
+  RdlaboCapacitorBrotherprint: 33965067357a552c4ee13f8f1607494772532a78
 
 PODFILE CHECKSUM: 81f191debd37c3b29abbfe819ac7313b8ba0d109
 

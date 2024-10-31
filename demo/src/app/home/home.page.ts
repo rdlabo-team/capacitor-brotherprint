@@ -30,7 +30,9 @@ import {
   BRLMPrinterHorizontalAlignment,
   BRLMPrinterImageRotation,
   BRLMPrinterPrintQuality,
+  BRLMPrinterScaleMode,
   BRLMPrinterVerticalAlignment,
+  ErrorInfo,
 } from '../../../../src';
 import { FormsModule } from '@angular/forms';
 
@@ -69,21 +71,21 @@ export class HomePage implements OnInit, OnDestroy {
   );
   readonly useLabel = model<BRLMPrinterLabelName>(BRLMPrinterLabelName.W29H90);
 
-  readonly customPaperType = model<BRKMPrinterCustomPaperType>(
-    BRKMPrinterCustomPaperType.rollPaper,
+  readonly paperType = model<BRKMPrinterCustomPaperType>(
+    BRKMPrinterCustomPaperType.dieCutPaper,
   );
-  readonly customPaperUnit = model<BRKMPrinterCustomPaperUnit>(
+  readonly paperUnit = model<BRKMPrinterCustomPaperUnit>(
     BRKMPrinterCustomPaperUnit.mm,
   );
-  readonly customPaperWidth = model<number>(60.0);
-  readonly customPaperLength = model<number>(60.0);
-  readonly customPaperMarginTop = model<number>(1.0);
-  readonly customPaperMarginRight = model<number>(2.0);
-  readonly customPaperMarginBottom = model<number>(1.0);
-  readonly customPaperMarginLeft = model<number>(2.0);
-  readonly customPaperMarkPosition = model<number>(0);
-  readonly customPaperMarkLength = model<number>(0);
-  readonly customPaperGapLength = model<number>(0.2);
+  readonly tapeWidth = model<number>(60.0);
+  readonly tapeLength = model<number>(60.0);
+  readonly marginTop = model<number>(1.0);
+  readonly marginRight = model<number>(2.0);
+  readonly marginBottom = model<number>(1.0);
+  readonly marginLeft = model<number>(2.0);
+  readonly paperMarkPosition = model<number>(0);
+  readonly paperMarkLength = model<number>(0);
+  readonly gapLength = model<number>(2.0);
 
   readonly printers = signal<BRLMChannelResult[]>([]);
   readonly base64 =
@@ -98,7 +100,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.listenerHandlers.push(
       await BrotherPrint.addListener(
         BrotherPrintEventsEnum.onPrintError,
-        info => {
+        () => {
           console.log('onPrintError');
         },
       ),
@@ -106,7 +108,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.listenerHandlers.push(
       await BrotherPrint.addListener(
         BrotherPrintEventsEnum.onPrintFailedCommunication,
-        info => {
+        (info: ErrorInfo) => {
           console.log('onPrintFailedCommunication');
         },
       ),
@@ -114,7 +116,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.listenerHandlers.push(
       await BrotherPrint.addListener(
         BrotherPrintEventsEnum.onPrinterAvailable,
-        printer => {
+        (printer: BRLMChannelResult) => {
           this.printers.update(prev => [...prev, printer]);
         },
       ),
@@ -151,6 +153,7 @@ export class HomePage implements OnInit, OnDestroy {
         numberOfCopies: 1, // default 1
         autoCut: true, // default true
 
+        scaleMode: BRLMPrinterScaleMode.FitPageAspect,
         imageRotation: BRLMPrinterImageRotation.Rotate90,
         verticalAlignment: BRLMPrinterVerticalAlignment.Center,
         horizontalAlignment: BRLMPrinterHorizontalAlignment.Center,
@@ -160,16 +163,23 @@ export class HomePage implements OnInit, OnDestroy {
         labelName: this.useLabel(),
       },
       ...{
-        customPaperType: this.customPaperType(),
-        customPaperUnit: this.customPaperUnit(),
-        customPaperWidth: this.customPaperWidth(),
-        customPaperLength: this.customPaperLength(),
-        customPaperMarginTop: this.customPaperMarginTop(),
-        customPaperMarginRight: this.customPaperMarginRight(),
-        customPaperMarginBottom: this.customPaperMarginBottom(),
-        customPaperMarginLeft: this.customPaperMarginLeft(),
+        paperType: this.paperType(),
+        paperUnit: this.paperUnit(),
+        tapeWidth: this.tapeWidth(),
+        tapeLength: this.tapeLength(),
+        gapLength: this.gapLength(),
+
+        marginTop: this.marginTop(),
+        marginRight: this.marginRight(),
+        marginBottom: this.marginBottom(),
+        marginLeft: this.marginLeft(),
+
+        paperMarkPosition: this.paperMarkPosition(),
+        paperMarkLength: this.paperMarkLength(),
       },
     };
+
+    console.log(this.paperType());
 
     BrotherPrint.printImage({
       ...defaultPrintSettings,

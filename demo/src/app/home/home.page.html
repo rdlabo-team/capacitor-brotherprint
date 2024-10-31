@@ -33,22 +33,14 @@
   <ion-list inset="true">
     <ion-item-group>
       <ion-item>
-        <ion-select
-          label="LabelType"
-          [(ngModel)]="customPaperType"
-          name="customPaperType"
-        >
+        <ion-select label="paperType" [(ngModel)]="paperType" name="paperType">
           @for (item of paperTypes; track item) {
           <ion-select-option [value]="item">{{item}}</ion-select-option>
           }
         </ion-select>
       </ion-item>
       <ion-item>
-        <ion-select
-          label="Unit"
-          [(ngModel)]="customPaperUnit"
-          name="customPaperUnit"
-        >
+        <ion-select label="paperUnit" [(ngModel)]="paperUnit" name="paperUnit">
           @for (item of paperUnits; track item) {
           <ion-select-option [value]="item">{{item}}</ion-select-option>
           }
@@ -58,100 +50,100 @@
         <ion-input
           class="ion-text-right"
           type="number"
-          label="customPaperWidth"
-          [(ngModel)]="customPaperWidth"
+          label="tapeWidth"
+          [(ngModel)]="tapeWidth"
           step="0.1"
-          name="customPaperWidth"
+          name="tapeWidth"
         ></ion-input>
-        <ion-text slot="end">{{this.customPaperUnit()}}</ion-text>
+        <ion-text slot="end">{{this.paperUnit()}}</ion-text>
       </ion-item>
       <ion-item>
         <ion-input
           class="ion-text-right"
           type="number"
-          label="customPaperLength"
-          [(ngModel)]="customPaperLength"
+          label="tapeLength"
+          [(ngModel)]="tapeLength"
           step="0.1"
-          name="customPaperLength"
+          name="tapeLength"
         ></ion-input>
-        <ion-text slot="end">{{this.customPaperUnit()}}</ion-text>
+        <ion-text slot="end">{{this.paperUnit()}}</ion-text>
       </ion-item>
       <ion-item>
         <ion-input
           class="ion-text-right"
           type="number"
-          label="customPaperMarginTop"
-          [(ngModel)]="customPaperMarginTop"
+          label="marginTop"
+          [(ngModel)]="marginTop"
           step="0.1"
-          name="customPaperMarginTop"
+          name="marginTop"
         ></ion-input>
-        <ion-text slot="end">{{this.customPaperUnit()}}</ion-text>
+        <ion-text slot="end">{{this.paperUnit()}}</ion-text>
       </ion-item>
       <ion-item>
         <ion-input
           class="ion-text-right"
           type="number"
-          label="customPaperMarginRight"
-          [(ngModel)]="customPaperMarginRight"
+          label="marginRight"
+          [(ngModel)]="marginRight"
           step="0.1"
-          name="customPaperMarginRight"
+          name="marginRight"
         ></ion-input>
-        <ion-text slot="end">{{this.customPaperUnit()}}</ion-text>
+        <ion-text slot="end">{{this.paperUnit()}}</ion-text>
       </ion-item>
       <ion-item>
         <ion-input
           class="ion-text-right"
           type="number"
-          label="customPaperMarginBottom"
-          [(ngModel)]="customPaperMarginBottom"
+          label="marginBottom"
+          [(ngModel)]="marginBottom"
           step="0.1"
-          name="customPaperMarginBottom"
+          name="marginBottom"
         ></ion-input>
-        <ion-text slot="end">{{this.customPaperUnit()}}</ion-text>
+        <ion-text slot="end">{{this.paperUnit()}}</ion-text>
       </ion-item>
       <ion-item>
         <ion-input
           class="ion-text-right"
           type="number"
-          label="customPaperMarginLeft"
-          [(ngModel)]="customPaperMarginLeft"
+          label="marginLeft"
+          [(ngModel)]="marginLeft"
           step="0.1"
-          name="customPaperMarginLeft"
+          name="marginLeft"
         ></ion-input>
-        <ion-text slot="end">{{this.customPaperUnit()}}</ion-text>
+        <ion-text slot="end">{{this.paperUnit()}}</ion-text>
       </ion-item>
       <ion-item>
         <ion-input
           class="ion-text-right"
           type="number"
-          label="customPaperMarkPosition"
-          [(ngModel)]="customPaperMarkPosition"
+          label="paperMarkPosition"
+          [(ngModel)]="paperMarkPosition"
           step="0.1"
-          name="customPaperMarkPosition"
+          name="paperMarkPosition"
         ></ion-input>
-        <ion-text slot="end">{{this.customPaperUnit()}}</ion-text>
+        <ion-text slot="end">{{this.paperUnit()}}</ion-text>
       </ion-item>
       <ion-item>
         <ion-input
           class="ion-text-right"
           type="number"
-          label="customPaperMarkLength"
-          [(ngModel)]="customPaperMarkLength"
+          label="paperMarkLength"
+          [(ngModel)]="paperMarkLength"
           step="0.1"
-          name="customPaperMarkLength"
+          name="paperMarkLength"
         ></ion-input>
-        <ion-text slot="end">{{this.customPaperUnit()}}</ion-text>
+        <ion-text slot="end">{{this.paperUnit()}}</ion-text>
       </ion-item>
       <ion-item>
         <ion-input
           class="ion-text-right"
           type="number"
-          label="customPaperGapLength"
-          [(ngModel)]="customPaperGapLength"
+          label="gapLength"
+          [(ngModel)]="gapLength"
           step="0.1"
-          name="customPaperGapLength"
+          name="gapLength"
         ></ion-input>
-        <ion-text slot="end">{{this.customPaperUnit()}}</ion-text>
+        <ion-text slot="end">{{this.paperUnit()}}</ion-text>
       </ion-item>
     </ion-item-group>
   </ion-list>

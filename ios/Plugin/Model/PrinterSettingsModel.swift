@@ -6,6 +6,23 @@ import Capacitor
 class PrinterSettingsModel {
     static func TDModelSettings(_ call: CAPPluginCall, printSettings: BRLMTDPrintSettings) -> BRLMTDPrintSettings {
         //        printSettings.labelSize = BrotherModel.getLabelSize(from: call.getString("labelName", "rollW62"))
+        let margins = BrotherModel.getMargin(call.getDouble("marginTop", 0), call.getDouble("marginRight", 0), call.getDouble("marginBottom", 0), call.getDouble("marginLeft", 0))
+        
+        let unit = BrotherModel.getCustomPaperSizeLengthUnit(unit: call.getString("paperUnit")!)
+        
+        NSLog(call.getString("paperType") ?? "中身ないね")
+        
+        printSettings.customPaperSize = BrotherModel.getCustomPaper(
+            type: call.getString("paperType")!,
+            width: call.getFloat("tapeWidth", 0),
+            length: call.getFloat("tapeLength", 0),
+            margins: margins,
+            markPosition: call.getFloat("paperMarkPosition", 0),
+            markLength: call.getFloat("paperMarkLength", 0),
+            gapLength: call.getFloat("gapLength", 0),
+            unit: unit
+        )
+        
         printSettings.numCopies = UInt(call.getInt("numberOfCopies", 1))
 
         if let autoCut = call.getBool("autoCut") ?? nil {

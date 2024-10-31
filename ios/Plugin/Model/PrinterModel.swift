@@ -13,7 +13,7 @@ class BrotherModel {
             return BRLMCustomPaperSize(markRollWithTapeWidth: CGFloat(width), tapeLength: CGFloat(length), margins: margins, markPosition: CGFloat(markPosition), markHeight: CGFloat(markLength), unitOfLength: unit)
         default:
             // File doesn't support
-            fatalError()
+            fatalError(type + "is not supported.")
         }
     }
 
@@ -25,7 +25,7 @@ class BrotherModel {
             return BRLMCustomPaperSizeLengthUnit.mm
         default:
             // other unit is not support
-            fatalError()
+            fatalError(unit + "is not supported.")
         }
 
     }
@@ -49,8 +49,8 @@ class BrotherModel {
             return BRLMPrinterModel.TD_2320D_203
         case "TD_2030AD":
             return BRLMPrinterModel.TD_2030A
-        case "TD_2350D_203":
-            return BRLMPrinterModel.TD_2350D_203
+        case "TD_2350D_300":
+            return BRLMPrinterModel.TD_2350D_300
         default:
             return BRLMPrinterModel.unknown
         }
