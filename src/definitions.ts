@@ -16,6 +16,10 @@ import type {
   BRLMPrinterVerticalAlignment,
 } from './brother-printer.enum';
 import type { BrotherPrintEventsEnum } from './events.enum';
+import {
+  BRKMPrinterCustomPaperType,
+  BRKMPrinterCustomPaperUnit,
+} from './brother-printer.enum';
 
 export type BRLMChannelResult = {
   port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy';
@@ -31,16 +35,60 @@ export type BRLMPrintOptions = {
   encodedImage: string;
 
   /**
-   * Should use enum BRLMPrinterLabelName
-   */
-  labelName: BRLMPrinterLabelName;
-
-  /**
    * Should use enum BRLMPrinterModelName
    */
   modelName: BRLMPrinterModelName;
 } & Partial<BRLMChannelResult> &
-  BRLMPrinterSettings;
+  (BRLMPrinterQLModelSettings | BRLMPrinterTDModelSettings);
+
+export type BRLMPrinterTDModelSettings = {
+  /**
+   * Should use enum BRKMPrinterCustomPaperType
+   */
+  customPaperType: BRKMPrinterCustomPaperType;
+
+  /**
+   * The width of the label. For example, the RD-U04J1 is 60.0 wide.
+   */
+  customPaperWidth: number;
+
+  /**
+   * The length of the label. For example, the RD-U04J1 is 60.0 wide.
+   */
+  customPaperLength: number;
+
+  /**
+   * It is the difference between a sticker and a mount.
+   * For example, the RD-U04J1 is `1.0, 2.0, 1.0, 2.0`
+   */
+  customPaperMargins: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
+
+  customPaperMarkPosition: number;
+  customPaperMarkLength: number;
+
+  /**
+   * The spacing between seals. For example, the RD-U04J1 is 0.2.
+   */
+  customPaperGapLength: number;
+
+  /**
+   * Should use enum BRKMPrinterCustomPaperUnit.
+   * For example, the RD-U04J1 is mm.
+   */
+  customPaperUnit: BRKMPrinterCustomPaperUnit;
+};
+
+export type BRLMPrinterQLModelSettings = {
+  /**
+   * Should use enum BRLMPrinterLabelName
+   */
+  labelName: BRLMPrinterLabelName;
+} & BRLMPrinterSettings;
 
 /**
  * These are optional. If these are not set, default values are assigned by the printer.

@@ -27,7 +27,8 @@ public class BrotherPrint: CAPPlugin {
         let ipAddress: String = call.getString("ipAddress", "")
         let serialNumber: String = call.getString("serialNumber", "")
 
-        let modelName = BrotherModel.getModelName(from: call.getString("modelName", "QL-820NWB"))
+        let modelName: String = call.getString("modelName", "QL-820NWB")
+        let printerModel = BrotherModel.getModelName(from: modelName)
 
         NSLog(call.getString("modelName", "not set"))
         NSLog(call.getString("labelName", "not set"))
@@ -71,20 +72,47 @@ public class BrotherPrint: CAPPlugin {
                 call.reject("Error - Create decodedByte From ImageData is failed.")
                 return
             }
+            
+            var printSettings: BRLMPrintSettingsProtocol
+            
+            if modelName.hasPrefix("QL") {
+                guard
+                    let _printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: printerModel)
+                else {
+                    printerDriver.closeChannel()
+                    self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: [
+                        "code": 0,
+                        "message": "Error - Create BRLMQLPrintSettings is failed."
+                    ])
+                    call.reject("Error - Create BRLMQLPrintSettings is failed.")
+                    return
+                }
 
-            guard
-                let _printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: modelName)
-            else {
+                printSettings = PrinterSettingsModel.QLModelSettings(call, printSettings: _printSettings)
+            } else if modelName.hasPrefix("TD") {
+                guard
+                    let _printSettings = BRLMTDPrintSettings(defaultPrintSettingsWith: printerModel)
+                else {
+                    printerDriver.closeChannel()
+                    self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: [
+                        "code": 0,
+                        "message": "Error - Create BRLMQLPrintSettings is failed."
+                    ])
+                    call.reject("Error - Create BRLMQLPrintSettings is failed.")
+                    return
+                }
+
+                printSettings = PrinterSettingsModel.TDModelSettings(call, printSettings: _printSettings)
+            } else {
                 printerDriver.closeChannel()
                 self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: [
                     "code": 0,
-                    "message": "Error - Create BRLMQLPrintSettings is failed."
+                    "message": "Error - " + modelName + " is not supported"
                 ])
-                call.reject("Error - Create BRLMQLPrintSettings is failed.")
-                return
+                call.reject("Error - " + modelName + " is not supported")
+                return;
             }
-
-            let printSettings = PrinterSettingsModel.initialize(call, printSettings: _printSettings)
+            
             let printError = printerDriver.printImage(with: decodedByte.cgImage!, settings: printSettings)
 
             if printError.code != .noError {
