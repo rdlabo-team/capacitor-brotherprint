@@ -7,6 +7,158 @@
 <ion-content color="light">
   <ion-list inset="true">
     <ion-item-group>
+      <ion-item>
+        <ion-select label="Model" [(ngModel)]="useModel" name="useModel">
+          @for (item of modelNames; track item) {
+          <ion-select-option [value]="item">{{item}}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
+
+  @if (useModel().includes('QL')) {
+  <ion-list inset="true">
+    <ion-item-group>
+      <ion-item>
+        <ion-select label="LabelName" [(ngModel)]="useLabel" name="useLabel">
+          @for (item of labelNames; track item) {
+          <ion-select-option [value]="item">{{item}}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
+  } @else if (useModel().includes('TD')) {
+  <ion-list inset="true">
+    <ion-item-group>
+      <ion-item>
+        <ion-select
+          label="LabelType"
+          [(ngModel)]="customPaperType"
+          name="customPaperType"
+        >
+          @for (item of paperTypes; track item) {
+          <ion-select-option [value]="item">{{item}}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-select
+          label="Unit"
+          [(ngModel)]="customPaperUnit"
+          name="customPaperUnit"
+        >
+          @for (item of paperUnits; track item) {
+          <ion-select-option [value]="item">{{item}}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          class="ion-text-right"
+          type="number"
+          label="customPaperWidth"
+          [(ngModel)]="customPaperWidth"
+          step="0.1"
+          name="customPaperWidth"
+        ></ion-input>
+        <ion-text slot="end">{{this.customPaperUnit()}}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          class="ion-text-right"
+          type="number"
+          label="customPaperLength"
+          [(ngModel)]="customPaperLength"
+          step="0.1"
+          name="customPaperLength"
+        ></ion-input>
+        <ion-text slot="end">{{this.customPaperUnit()}}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          class="ion-text-right"
+          type="number"
+          label="customPaperMarginTop"
+          [(ngModel)]="customPaperMarginTop"
+          step="0.1"
+          name="customPaperMarginTop"
+        ></ion-input>
+        <ion-text slot="end">{{this.customPaperUnit()}}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          class="ion-text-right"
+          type="number"
+          label="customPaperMarginRight"
+          [(ngModel)]="customPaperMarginRight"
+          step="0.1"
+          name="customPaperMarginRight"
+        ></ion-input>
+        <ion-text slot="end">{{this.customPaperUnit()}}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          class="ion-text-right"
+          type="number"
+          label="customPaperMarginBottom"
+          [(ngModel)]="customPaperMarginBottom"
+          step="0.1"
+          name="customPaperMarginBottom"
+        ></ion-input>
+        <ion-text slot="end">{{this.customPaperUnit()}}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          class="ion-text-right"
+          type="number"
+          label="customPaperMarginLeft"
+          [(ngModel)]="customPaperMarginLeft"
+          step="0.1"
+          name="customPaperMarginLeft"
+        ></ion-input>
+        <ion-text slot="end">{{this.customPaperUnit()}}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          class="ion-text-right"
+          type="number"
+          label="customPaperMarkPosition"
+          [(ngModel)]="customPaperMarkPosition"
+          step="0.1"
+          name="customPaperMarkPosition"
+        ></ion-input>
+        <ion-text slot="end">{{this.customPaperUnit()}}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          class="ion-text-right"
+          type="number"
+          label="customPaperMarkLength"
+          [(ngModel)]="customPaperMarkLength"
+          step="0.1"
+          name="customPaperMarkLength"
+        ></ion-input>
+        <ion-text slot="end">{{this.customPaperUnit()}}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          class="ion-text-right"
+          type="number"
+          label="customPaperGapLength"
+          [(ngModel)]="customPaperGapLength"
+          step="0.1"
+          name="customPaperGapLength"
+        ></ion-input>
+        <ion-text slot="end">{{this.customPaperUnit()}}</ion-text>
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
+  }
+
+  <ion-list inset="true">
+    <ion-item-group>
       <ion-item button="true" (click)="searchPrinter('wifi')"
         ><ion-label>Search WiFi</ion-label></ion-item
       >
