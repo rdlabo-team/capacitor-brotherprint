@@ -359,7 +359,7 @@ addListener(eventName: BrotherPrintEventsEnum.onPrintError, listenerFunc: (info:
 
 #### BRLMPrintOptions
 
-<code>{ encodedImage: string; /** _ Should use enum <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a> _/ labelName: <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a>; /** _ Should use enum <a href="#brlmprintermodelname">BRLMPrinterModelName</a> _/ modelName: <a href="#brlmprintermodelname">BRLMPrinterModelName</a>; } & <a href="#partial">Partial</a>&lt;<a href="#brlmchannelresult">BRLMChannelResult</a>&gt; & <a href="#brlmprintersettings">BRLMPrinterSettings</a></code>
+<code>{ encodedImage: string; /\*\* _ Should use enum <a href="#brlmprintermodelname">BRLMPrinterModelName</a> _/ modelName: <a href="#brlmprintermodelname">BRLMPrinterModelName</a>; } & <a href="#partial">Partial</a>&lt;<a href="#brlmchannelresult">BRLMChannelResult</a>&gt; & (<a href="#brlmprinterqlmodelsettings">BRLMPrinterQLModelSettings</a> | <a href="#brlmprintertdmodelsettings">BRLMPrinterTDModelSettings</a>)</code>
 
 #### Partial
 
@@ -372,6 +372,10 @@ Make all properties in T optional
 #### BRLMChannelResult
 
 <code>{ port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'; modelName: string; serialNumber: string; macAddress: string; nodeName: string; location: string; ipAddress: string; }</code>
+
+#### BRLMPrinterQLModelSettings
+
+<code>{ /\*\* _ Should use enum <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a> _/ labelName: <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a>; } & <a href="#brlmprintersettings">BRLMPrinterSettings</a></code>
 
 #### BRLMPrinterSettings
 
@@ -395,6 +399,10 @@ These are optional. If these are not set, default values are assigned by the pri
 
 <code>number</code>
 
+#### BRLMPrinterTDModelSettings
+
+<code>{ /** _ Should use enum <a href="#brkmprintercustompapertype">BRKMPrinterCustomPaperType</a> _/ customPaperType: <a href="#brkmprintercustompapertype">BRKMPrinterCustomPaperType</a>; /** _ The width of the label. For example, the RD-U04J1 is 60.0 wide. _/ customPaperWidth: number; /** _ The length of the label. For example, the RD-U04J1 is 60.0 wide. _/ customPaperLength: number; /** _ It is the difference between a sticker and a mount. _ For example, the RD-U04J1 is `1.0, 2.0, 1.0, 2.0` _/ customPaperMargins: { top: number; right: number; bottom: number; left: number; }; customPaperMarkPosition: number; customPaperMarkLength: number; /\*\* _ The spacing between seals. For example, the RD-U04J1 is 0.2. _/ customPaperGapLength: number; /\*\* _ Should use enum <a href="#brkmprintercustompaperunit">BRKMPrinterCustomPaperUnit</a>. _ For example, the RD-U04J1 is mm. _/ customPaperUnit: <a href="#brkmprintercustompaperunit">BRKMPrinterCustomPaperUnit</a>; }</code>
+
 #### BRLMSearchOption
 
 <code>{ port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'; /\*\* _ searchDuration is the time to end search for devices. _ default is 15 seconds. _ use only port is 'wifi' or 'bluetoothLowEnergy'. _/ searchDuration: number; }</code>
@@ -404,6 +412,16 @@ These are optional. If these are not set, default values are assigned by the pri
 <code>{ message: string; code: number; }</code>
 
 ### Enums
+
+#### BRLMPrinterModelName
+
+| Members            | Value                       |
+| ------------------ | --------------------------- |
+| **`QL_810W`**      | <code>'QL_810W'</code>      |
+| **`QL_820NWB`**    | <code>'QL_820NWB'</code>    |
+| **`TD_2320D_203`** | <code>'TD_2320D_203'</code> |
+| **`TD_2030AD`**    | <code>'TD_2030AD'</code>    |
+| **`TD_2350D_300`** | <code>'TD_2350D_300'</code> |
 
 #### BRLMPrinterLabelName
 
@@ -433,16 +451,6 @@ These are optional. If these are not set, default values are assigned by the pri
 | **`W58DIA`**  | <code>'W58DIA'</code>  |
 | **`W62H60`**  | <code>'W62H60'</code>  |
 | **`W62H75`**  | <code>'W62H75'</code>  |
-
-#### BRLMPrinterModelName
-
-| Members            | Value                       |
-| ------------------ | --------------------------- |
-| **`QL_810W`**      | <code>'QL_810W'</code>      |
-| **`QL_820NWB`**    | <code>'QL_820NWB'</code>    |
-| **`TD_2320D_203`** | <code>'TD_2320D_203'</code> |
-| **`TD_2030AD`**    | <code>'TD_2030AD'</code>    |
-| **`TD_2350D_203`** | <code>'TD_2350D_203'</code> |
 
 #### BRLMPrinterScaleMode
 
@@ -500,6 +508,21 @@ These are optional. If these are not set, default values are assigned by the pri
 | ---------- | ------------------- |
 | **`Best`** | <code>'Best'</code> |
 | **`Fast`** | <code>'Fast'</code> |
+
+#### BRKMPrinterCustomPaperType
+
+| Members             | Value                        |
+| ------------------- | ---------------------------- |
+| **`rollPaper`**     | <code>'rollPaper'</code>     |
+| **`dieCutLabel`**   | <code>'dieCutLabel'</code>   |
+| **`markRollPaper`** | <code>'markRollPaper'</code> |
+
+#### BRKMPrinterCustomPaperUnit
+
+| Members    | Value               |
+| ---------- | ------------------- |
+| **`mm`**   | <code>'mm'</code>   |
+| **`inch`** | <code>'inch'</code> |
 
 #### BrotherPrintEventsEnum
 

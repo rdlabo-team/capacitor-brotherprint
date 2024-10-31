@@ -14,12 +14,10 @@ import type {
   BRLMPrinterScaleMode,
   BRLMPrinterScaleValueType,
   BRLMPrinterVerticalAlignment,
-} from './brother-printer.enum';
-import type { BrotherPrintEventsEnum } from './events.enum';
-import {
   BRKMPrinterCustomPaperType,
   BRKMPrinterCustomPaperUnit,
 } from './brother-printer.enum';
+import type { BrotherPrintEventsEnum } from './events.enum';
 
 export type BRLMChannelResult = {
   port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy';

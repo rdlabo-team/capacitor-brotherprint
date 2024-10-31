@@ -5,7 +5,7 @@ import Capacitor
 
 class PrinterSettingsModel {
     static func TDModelSettings(_ call: CAPPluginCall, printSettings: BRLMTDPrintSettings) -> BRLMTDPrintSettings {
-//        printSettings.labelSize = BrotherModel.getLabelSize(from: call.getString("labelName", "rollW62"))
+        //        printSettings.labelSize = BrotherModel.getLabelSize(from: call.getString("labelName", "rollW62"))
         printSettings.numCopies = UInt(call.getInt("numberOfCopies", 1))
 
         if let autoCut = call.getBool("autoCut") ?? nil {
@@ -105,23 +105,23 @@ class PrinterSettingsModel {
             }
         }
 
-//        if let resolution = call.getString("resolution") ?? nil {
-//            switch resolution {
-//            case "Low":
-//                printSettings.resolution = BRLMPrintSettingsResolution.low
-//            case "Normal":
-//                printSettings.resolution = BRLMPrintSettingsResolution.normal
-//            case "High":
-//                printSettings.resolution = BRLMPrintSettingsResolution.high
-//            default: break
-//            }
-//        }
+        //        if let resolution = call.getString("resolution") ?? nil {
+        //            switch resolution {
+        //            case "Low":
+        //                printSettings.resolution = BRLMPrintSettingsResolution.low
+        //            case "Normal":
+        //                printSettings.resolution = BRLMPrintSettingsResolution.normal
+        //            case "High":
+        //                printSettings.resolution = BRLMPrintSettingsResolution.high
+        //            default: break
+        //            }
+        //        }
 
         let report = BRLMValidatePrintSettings.validate(printSettings)
         NSLog(report.description())
         return printSettings
     }
-    
+
     static func QLModelSettings(_ call: CAPPluginCall, printSettings: BRLMQLPrintSettings) -> BRLMQLPrintSettings {
         printSettings.labelSize = BrotherModel.getLabelSize(from: call.getString("labelName", "rollW62"))
         printSettings.numCopies = UInt(call.getInt("numberOfCopies", 1))
@@ -223,17 +223,17 @@ class PrinterSettingsModel {
             }
         }
 
-//        if let resolution = call.getString("resolution") ?? nil {
-//            switch resolution {
-//            case "Low":
-//                printSettings.resolution = BRLMPrintSettingsResolution.low
-//            case "Normal":
-//                printSettings.resolution = BRLMPrintSettingsResolution.normal
-//            case "High":
-//                printSettings.resolution = BRLMPrintSettingsResolution.high
-//            default: break
-//            }
-//        }
+        //        if let resolution = call.getString("resolution") ?? nil {
+        //            switch resolution {
+        //            case "Low":
+        //                printSettings.resolution = BRLMPrintSettingsResolution.low
+        //            case "Normal":
+        //                printSettings.resolution = BRLMPrintSettingsResolution.normal
+        //            case "High":
+        //                printSettings.resolution = BRLMPrintSettingsResolution.high
+        //            default: break
+        //            }
+        //        }
 
         let report = BRLMValidatePrintSettings.validate(printSettings)
         NSLog(report.description())

@@ -72,9 +72,9 @@ public class BrotherPrint: CAPPlugin {
                 call.reject("Error - Create decodedByte From ImageData is failed.")
                 return
             }
-            
+
             var printSettings: BRLMPrintSettingsProtocol
-            
+
             if modelName.hasPrefix("QL") {
                 guard
                     let _printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: printerModel)
@@ -110,9 +110,9 @@ public class BrotherPrint: CAPPlugin {
                     "message": "Error - " + modelName + " is not supported"
                 ])
                 call.reject("Error - " + modelName + " is not supported")
-                return;
+                return
             }
-            
+
             let printError = printerDriver.printImage(with: decodedByte.cgImage!, settings: printSettings)
 
             if printError.code != .noError {

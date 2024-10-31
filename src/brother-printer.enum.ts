@@ -24,7 +24,7 @@ export enum BRLMPrinterModelName {
   QL_820NWB = 'QL_820NWB',
   TD_2320D_203 = 'TD_2320D_203',
   TD_2030AD = 'TD_2030AD',
-  TD_2350D_203 = 'TD_2350D_203',
+  TD_2350D_300 = 'TD_2350D_300',
 }
 
 /**
