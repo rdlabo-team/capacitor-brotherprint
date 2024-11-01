@@ -10,8 +10,6 @@ class PrinterSettingsModel {
         
         let unit = BrotherModel.getCustomPaperSizeLengthUnit(unit: call.getString("paperUnit")!)
         
-        NSLog(call.getString("paperType") ?? "中身ないね")
-        
         printSettings.customPaperSize = BrotherModel.getCustomPaper(
             type: call.getString("paperType")!,
             width: call.getFloat("tapeWidth", 0),
