@@ -82,11 +82,11 @@ class BrotherPrint : Plugin() {
         val modelName = call.getString("modelName", "QL_820NWB")!!
         val printerModel = PrinterModel.entries.find { it.name == modelName }
 
-        if (modelName.startsWith("QL")) {
+        if (printerModel != null && modelName.startsWith("QL")) {
             settings = QLPrintSettings(printerModel);
             settings = BrotherPrintSettings().modelQLSettings(call, settings)
             settings.workPath = bridge.context.cacheDir.path;
-        } else if (modelName.startsWith("TD")) {
+        } else if (printerModel != null && modelName.startsWith("TD")) {
             settings = TDPrintSettings(printerModel)
             settings = BrotherPrintSettings().modelTDSettings(call, settings)
             settings.workPath = bridge.context.cacheDir.path;
