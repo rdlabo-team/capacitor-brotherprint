@@ -2,6 +2,8 @@
 
 Capacitor Brother Print is a native Brother Print SDK implementation for iOS & Android. Support These models.
 
+**This plugin is still in the RC (release candidate) phase.**
+
 ## Supported models
 
 Each product link is an Amazon affiliate link. If you choose to make a purchase through these links, it would be greatly appreciated and **would help** support development costs. Thank you!
