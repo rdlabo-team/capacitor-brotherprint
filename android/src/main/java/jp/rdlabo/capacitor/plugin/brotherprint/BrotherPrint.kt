@@ -73,10 +73,10 @@ class BrotherPrint : Plugin() {
         val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
 
         val port: String? = call.getString("port", "wifi")
-        val localName: String? = call.getString("localName", "")
         val ipAddress: String? = call.getString("ipAddress", "")
-        val serialNumber: String? = call.getString("serialNumber", "")
-        val macAddress: String? = call.getString("macAddress", "")
+//        val localName: String? = call.getString("localName", "")
+//        val serialNumber: String? = call.getString("serialNumber", "")
+//        val macAddress: String? = call.getString("macAddress", "")
 
         lateinit var settings: PrintSettings;
         val modelName = call.getString("modelName", "QL_820NWB")!!
