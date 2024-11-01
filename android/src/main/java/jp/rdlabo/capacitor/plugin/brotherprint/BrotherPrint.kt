@@ -197,7 +197,7 @@ class BrotherPrint : Plugin() {
 
     private fun checkBLEChannel(call: PluginCall) {
         if (!isBluetoothPermissionGranted()) {
-            requestAllPermissions(call, "permissionCallback");
+            requestPermissionForAlias("bluetooth", call, "permissionCallback");
         } else {
             Log.d("brother", "checkBLEChannel")
             Thread {
@@ -212,7 +212,10 @@ class BrotherPrint : Plugin() {
 
     private fun searchBLEPrinter(call: PluginCall) {
         if (!isBluetoothPermissionGranted()) {
-            requestAllPermissions(call, "permissionCallback");
+            requestPermissionForAlias("bluetooth", call, "permissionCallback");
+            return;
+        } else if (!isLocationPermissionGranted()) {
+            requestPermissionForAlias("location", call, "permissionCallback");
             return;
         } else {
             Log.d("brother", "searchBLEPrinter")
@@ -257,18 +260,20 @@ class BrotherPrint : Plugin() {
     }
 
     @PluginMethod
-    fun cancelSearchWiFiPrinter(call: PluginCall?) {
+    fun cancelSearchWiFiPrinter(call: PluginCall) {
         Thread {
             this.cancelRoutineWiFi?.invoke()
             this.cancelRoutineWiFi = null
+            call.resolve()
         }.start()
     }
 
     @PluginMethod
-    fun cancelSearchBluetoothPrinter(call: PluginCall?) {
+    fun cancelSearchBluetoothPrinter(call: PluginCall) {
         Thread {
             this.cancelRoutineBluetooth?.invoke()
             this.cancelRoutineBluetooth = null
+            call.resolve()
         }.start()
     }
 
@@ -285,8 +290,7 @@ class BrotherPrint : Plugin() {
             return
         }
         when (call.methodName) {
-            "checkBLEChannel" -> checkBLEChannel(call)
-            "searchBLEPrinter" -> searchBLEPrinter(call)
+            "search" -> this.search(call)
         }
     }
 
