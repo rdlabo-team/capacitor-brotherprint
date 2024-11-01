@@ -88,7 +88,7 @@ public class BrotherPrint: CAPPlugin {
                     return
                 }
                 printSettings = PrinterSettingsModel.QLModelSettings(call, printSettings: _printSettings)
-                
+
             } else if modelName.hasPrefix("TD") {
                 guard
                     let _printSettings = BRLMTDPrintSettings(defaultPrintSettingsWith: printerModel)
@@ -102,7 +102,7 @@ public class BrotherPrint: CAPPlugin {
                     return
                 }
                 printSettings = PrinterSettingsModel.TDModelSettings(call, printSettings: _printSettings)
-                
+
             } else {
                 printerDriver.closeChannel()
                 self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: [
