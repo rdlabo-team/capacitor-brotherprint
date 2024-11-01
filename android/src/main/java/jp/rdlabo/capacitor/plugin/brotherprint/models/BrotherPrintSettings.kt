@@ -1,16 +1,43 @@
 package jp.rdlabo.capacitor.plugin.brotherprint.models
 
-import com.brother.ptouch.sdk.LabelInfo
-import com.brother.ptouch.sdk.PrinterInfo
+import com.brother.sdk.lmprinter.setting.CustomPaperSize
 import com.brother.sdk.lmprinter.setting.PrintImageSettings
 import com.brother.sdk.lmprinter.setting.QLPrintSettings
 import com.brother.sdk.lmprinter.setting.TDPrintSettings
 import com.getcapacitor.PluginCall
 
+
 class BrotherPrintSettings {
     public fun modelTDSettings(call: PluginCall, settings: TDPrintSettings): TDPrintSettings {
         val baseSettings = this.baseSettings(call, settings);
 
+        val margins = CustomPaperSize.Margins(
+            call.getFloat("marginTop", 0f)!!,
+            call.getFloat("marginRight", 0f)!!,
+            call.getFloat("marginBottom", 0f)!!,
+            call.getFloat("marginLeft", 0f)!!,
+        )
+
+        val unit: CustomPaperSize.Unit = when(call.getString("paperUnit", "mm")) {
+            "mm" -> CustomPaperSize.Unit.Mm
+            "inch" -> CustomPaperSize.Unit.Inch
+            else -> {
+                throw RuntimeException(call.getString("paperUnit") + " is not supported.")
+            }
+        }
+
+        val customPaperSize: CustomPaperSize = when (call.getString("paperType")) {
+            "rollPaper" -> CustomPaperSize.newRollPaperSize(call.getFloat("tapeWidth", 0f)!!, margins, unit)
+            "dieCutPaper" -> CustomPaperSize.newDieCutPaperSize(call.getFloat("tapeWidth", 0f)!!, call.getFloat("tapeLength", 0f)!!, margins,
+                call.getFloat("gapLength", 0f)!!, unit)
+            "markRollPaper" -> CustomPaperSize.newMarkRollPaperSize(call.getFloat("tapeWidth", 0f)!!, call.getFloat("tapeLength", 0f)!!, margins,
+                call.getFloat("paperMarkPosition", 0f)!!, call.getFloat("paperMarkLength", 0f)!!, unit)
+            else -> {
+                throw RuntimeException(call.getString("paperType") + " is not supported.")
+            }
+        }
+
+        baseSettings.customPaperSize = customPaperSize
         baseSettings.isAutoCut = call.getBoolean("autoCut", true)!!
 
         return baseSettings

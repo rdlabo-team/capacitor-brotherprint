@@ -104,9 +104,9 @@ class BrotherPrint : Plugin() {
                 val channel: Channel = when (port) {
                     "usb" -> Channel.newUsbChannel(bridge.context.getSystemService(Context.USB_SERVICE) as UsbManager)
                     "wifi" -> Channel.newWifiChannel(ipAddress)
-                    "bluetooth" -> Channel.newBluetoothChannel(macAddress, getBluetoothAdapter(bridge.context))
+                    "bluetooth" -> Channel.newBluetoothChannel(ipAddress, getBluetoothAdapter(bridge.context))
                     "bluetoothLowEnergy" -> Channel.newBluetoothLowEnergyChannel(
-                        localName, context, getBluetoothAdapter(context)
+                        ipAddress, context, getBluetoothAdapter(context)
                     )
                     else -> {
                         this.notifyListeners(BrotherPrintEvent.onPrintFailedCommunication.webEventName,
@@ -238,6 +238,7 @@ class BrotherPrint : Plugin() {
     }
 
     private fun chanelToPrinter(port: String, channel: Channel): JSObject? {
+        Log.d("brother", channel.toString());
         val modelName = channel.extraInfo[Channel.ExtraInfoKey.ModelName] ?: ""
         val serialNumber = channel.extraInfo[Channel.ExtraInfoKey.SerialNubmer] ?: ""
         val macAddress = channel.extraInfo[Channel.ExtraInfoKey.MACAddress] ?: ""
