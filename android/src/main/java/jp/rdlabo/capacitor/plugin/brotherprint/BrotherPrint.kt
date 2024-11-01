@@ -78,9 +78,6 @@ class BrotherPrint : Plugin() {
         val serialNumber: String? = call.getString("serialNumber", "")
         val macAddress: String? = call.getString("macAddress", "")
 
-        val printer = Printer()
-
-
         lateinit var settings: PrintSettings;
         val modelName = call.getString("modelName", "QL_820NWB")!!
         val printerModel = PrinterModel.entries.find { it.name == modelName }
@@ -99,8 +96,8 @@ class BrotherPrint : Plugin() {
                     .put("message", "Error - $modelName is not supported")
             )
             call.reject("Error - $modelName is not supported")
+            return;
         }
-
 
         try {
             Thread {
