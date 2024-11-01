@@ -9,7 +9,7 @@ class PrinterSettingsModel {
 
         let margins = BrotherModel.getMargin(call.getDouble("marginTop", 0), call.getDouble("marginRight", 0), call.getDouble("marginBottom", 0), call.getDouble("marginLeft", 0))
 
-        let unit = BrotherModel.getCustomPaperSizeLengthUnit(unit: call.getString("paperUnit")!)
+        let unit = BrotherModel.getCustomPaperSizeLengthUnit(unit: call.getString("paperUnit", "mm"))
 
         baseSettings.customPaperSize = BrotherModel.getCustomPaper(
             type: call.getString("paperType")!,
