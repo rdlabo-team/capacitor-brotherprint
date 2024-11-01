@@ -93,9 +93,9 @@ class BrotherPrint : Plugin() {
         } else {
             this.notifyListeners(BrotherPrintEvent.onPrintFailedCommunication.webEventName,
                 JSObject().put("code", 0)
-                    .put("message", "Error - $modelName is not supported")
+                    .put("message", "Error - modelName:$modelName is not supported")
             )
-            call.reject("Error - $modelName is not supported")
+            call.reject("Error - modelName:$modelName is not supported")
             return;
         }
 
@@ -106,14 +106,14 @@ class BrotherPrint : Plugin() {
                     "wifi" -> Channel.newWifiChannel(ipAddress)
                     "bluetooth" -> Channel.newBluetoothChannel(ipAddress, getBluetoothAdapter(bridge.context))
                     "bluetoothLowEnergy" -> Channel.newBluetoothLowEnergyChannel(
-                        ipAddress, context, getBluetoothAdapter(context)
+                        ipAddress, bridge.context, getBluetoothAdapter(bridge.context)
                     )
                     else -> {
                         this.notifyListeners(BrotherPrintEvent.onPrintFailedCommunication.webEventName,
                             JSObject().put("code", 0)
-                                .put("message", "Error - $port is not supported")
+                                .put("message", "Error - port:$port is not supported")
                         )
-                        call.reject("Error - $port is not supported")
+                        call.reject("Error - port:$port is not supported")
                         return@Thread
                     }
                 }
@@ -124,7 +124,7 @@ class BrotherPrint : Plugin() {
                         JSObject().put("code", result.error.code)
                             .put("message", result.error.code.toString())
                     )
-                    call.reject("Error - " + result.error.code.toString())
+                    call.reject("Error - openChannel: " + result.error.code.toString())
                     return@Thread
                 }
 
@@ -152,9 +152,9 @@ class BrotherPrint : Plugin() {
         } catch (e: Exception) {
             notifyListeners(
                 BrotherPrintEvent.onPrintFailedCommunication.webEventName, JSObject().put("code", 0)
-                    .put("message", e.localizedMessage)
+                    .put("message", "Error - Thread: " + e.localizedMessage)
             )
-            call.reject(e.localizedMessage, e)
+            call.reject("Error - Thread: " + e.localizedMessage, e)
         }
     }
 
