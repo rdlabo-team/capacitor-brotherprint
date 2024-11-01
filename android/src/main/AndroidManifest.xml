@@ -1,17 +1,2 @@
-
-  <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      >
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <!-- For Wi-Fi -->
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <!-- For Bluetooth -->
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
-    <!-- For Bluetooth Low Energy -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-  </manifest>
-  
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+</manifest>

@@ -3,6 +3,42 @@ import BRLMPrinterKit
 import BRPtouchPrinterKit
 
 class BrotherModel {
+    static func getCustomPaper(type: String, width: Float, length: Float, margins: BRLMCustomPaperSizeMargins, markPosition: Float, markLength: Float, gapLength: Float, unit: BRLMCustomPaperSizeLengthUnit) -> BRLMCustomPaperSize {
+        switch type {
+        case "rollPaper":
+            return BRLMCustomPaperSize(rollWithTapeWidth: CGFloat(width), margins: margins, unitOfLength: unit)
+        case "dieCutPaper":
+            return BRLMCustomPaperSize(dieCutWithTapeWidth: CGFloat(width), tapeLength: CGFloat(length), margins: margins, gapLength: CGFloat(gapLength), unitOfLength: unit)
+        case "markRollPaper":
+            return BRLMCustomPaperSize(markRollWithTapeWidth: CGFloat(width), tapeLength: CGFloat(length), margins: margins, markPosition: CGFloat(markPosition), markHeight: CGFloat(markLength), unitOfLength: unit)
+        default:
+            // File doesn't support
+            fatalError(type + "is not supported.")
+        }
+    }
+
+    static func getCustomPaperSizeLengthUnit(unit: String) -> BRLMCustomPaperSizeLengthUnit {
+        switch unit {
+        case "inch":
+            return BRLMCustomPaperSizeLengthUnit.inch
+        case "mm":
+            return BRLMCustomPaperSizeLengthUnit.mm
+        default:
+            // other unit is not support
+            fatalError(unit + "is not supported.")
+        }
+
+    }
+
+    static func getMargin(_ marginTop: Double, _ marginRight: Double, _ marginBottom: Double, _ marginLeft: Double) -> BRLMCustomPaperSizeMargins {
+        return BRLMCustomPaperSizeMargins(
+            top: CGFloat(marginTop),
+            left: CGFloat(marginLeft),
+            bottom: CGFloat(marginBottom),
+            right: CGFloat(marginRight)
+        )
+    }
+
     static func getModelName(from: String) -> BRLMPrinterModel {
         switch from {
         case "QL_810W":
@@ -13,8 +49,8 @@ class BrotherModel {
             return BRLMPrinterModel.TD_2320D_203
         case "TD_2030AD":
             return BRLMPrinterModel.TD_2030A
-        case "TD_2350D_203":
-            return BRLMPrinterModel.TD_2350D_203
+        case "TD_2350D_300":
+            return BRLMPrinterModel.TD_2350D_300
         default:
             return BRLMPrinterModel.unknown
         }

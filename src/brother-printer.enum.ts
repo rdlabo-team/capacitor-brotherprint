@@ -5,6 +5,17 @@
  * And name is follow android naming convention.
  */
 
+export enum BRKMPrinterCustomPaperUnit {
+  mm = 'mm',
+  inch = 'inch',
+}
+
+export enum BRKMPrinterCustomPaperType {
+  rollPaper = 'rollPaper',
+  dieCutPaper = 'dieCutPaper',
+  markRollPaper = 'markRollPaper',
+}
+
 /**
  * Android naming: https://support.brother.co.jp/j/s/support/html/mobilesdk/reference/android_v4/printermodel.html
  */
@@ -13,7 +24,7 @@ export enum BRLMPrinterModelName {
   QL_820NWB = 'QL_820NWB',
   TD_2320D_203 = 'TD_2320D_203',
   TD_2030AD = 'TD_2030AD',
-  TD_2350D_203 = 'TD_2350D_203',
+  TD_2350D_300 = 'TD_2350D_300',
 }
 
 /**
