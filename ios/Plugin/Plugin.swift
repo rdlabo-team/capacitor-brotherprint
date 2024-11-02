@@ -114,8 +114,8 @@ public class BrotherPrint: CAPPlugin {
             }
 
             let printError = printerDriver.printImage(with: decodedByte.cgImage!, settings: printSettings)
-
-            if printError.code != .noError {
+            
+            if printError.code != BRLMPrintErrorCode.noError {
                 printerDriver.closeChannel()
                 let message = PrintErrorModel.fetchErrorCode(errorCode: Int32(printError.code.rawValue))
                 self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: [
@@ -168,8 +168,9 @@ public class BrotherPrint: CAPPlugin {
     private func checkBLEChannel(_ call: CAPPluginCall) {
         DispatchQueue.global().async {
             let searcher = BRLMPrinterSearcher.startBluetoothSearch()
-            if (searcher.error.code != .noError) {
+            if (searcher.error.code != BRLMPrinterSearchErrorCode.noError) {
                 call.reject("Error - Bluetooth is not found. Error code: " + String(searcher.error.code.rawValue))
+                return
             }
             if (!searcher.channels.isEmpty) {
                 for channel in searcher.channels {
@@ -180,9 +181,6 @@ public class BrotherPrint: CAPPlugin {
             } else {
                 NSLog("startBluetoothSearch can't find. Next start startBluetoothAccessorySearch.")
                 BRLMPrinterSearcher.startBluetoothAccessorySearch() { result in
-                    if (result.error.code != .noError) {
-                        call.reject("Error - BluetoothAccessory is not found. Error code: " + String(searcher.error.code.rawValue))
-                    }
                     for channel in result.channels {
                         self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetooth", channel: channel))
                     }
