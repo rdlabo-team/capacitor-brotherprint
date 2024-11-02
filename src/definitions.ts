@@ -20,7 +20,7 @@ import type {
 import type { BrotherPrintEventsEnum } from './events.enum';
 
 export type BRLMChannelResult = {
-  port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy';
+  port: 'usb' | 'wifi' | 'bluetooth' | 'bluetoothLowEnergy';
   modelName: string;
   serialNumber: string;
   macAddress: string;
@@ -154,7 +154,11 @@ export type BRLMPrinterSettings = {
 };
 
 export type BRLMSearchOption = {
-  port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy';
+  /**
+   * 'usb' is android only, and now developing.
+   */
+  port: 'usb' | 'wifi' | 'bluetooth' | 'bluetoothLowEnergy';
+
   /**
    * searchDuration is the time to end search for devices.
    * default is 15 seconds.

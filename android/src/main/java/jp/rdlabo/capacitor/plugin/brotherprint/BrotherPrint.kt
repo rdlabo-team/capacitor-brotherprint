@@ -32,6 +32,8 @@ import com.getcapacitor.annotation.Permission
 import com.getcapacitor.annotation.PermissionCallback
 import jp.rdlabo.capacitor.plugin.brotherprint.models.BrotherPrintEvent
 import jp.rdlabo.capacitor.plugin.brotherprint.models.BrotherPrintSettings
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 
 @CapacitorPlugin(
@@ -166,11 +168,42 @@ class BrotherPrint : Plugin() {
     @PluginMethod
     fun search(call: PluginCall) {
         when(call.getString("port", "wifi")) {
+            "usb" -> this.searchUsbPrinter(call)
             "wifi" -> this.searchWiFiPrinter(call)
             "bluetooth" -> this.checkBLEChannel(call)
             "bluetoothLowEnergy" -> this.searchBLEPrinter(call)
             else -> call.reject("port is not 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'")
         }
+    }
+
+    private fun searchUsbPrinter(call: PluginCall) {
+        Log.d("brother", "searchUsbPrinter")
+        Thread {
+            val result = PrinterSearcher.startUSBSearch(bridge.context)
+
+            when (result.error.code) {
+                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.NoError -> {
+                }
+                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.NotPermitted -> {
+                    // TODO: has error
+                }
+                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.Canceled,
+                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.InterfaceInactive,
+                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.InterfaceUnsupported,
+                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.AlreadySearching,
+                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.UnknownError -> {
+                }
+                null -> {}
+            }
+
+            for (channel in result.channels){
+                this.notifyListeners(
+                    BrotherPrintEvent.onPrinterAvailable.webEventName,
+                    this.chanelToPrinter("usb", channel)
+                );
+            }
+        }.start()
+        call.resolve();
     }
 
     private fun searchWiFiPrinter(call: PluginCall) {

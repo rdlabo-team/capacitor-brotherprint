@@ -151,6 +151,11 @@
 
   <ion-list inset="true">
     <ion-item-group>
+      @if (this.platform.is('android')) {
+      <ion-item button="true" (click)="searchPrinter('usb')"
+        ><ion-label>Search USB</ion-label></ion-item
+      >
+      }
       <ion-item button="true" (click)="searchPrinter('wifi')"
         ><ion-label>Search WiFi</ion-label></ion-item
       >

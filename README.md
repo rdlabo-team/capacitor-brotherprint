@@ -27,6 +27,7 @@ Amazon Affiliate Links:　**https://amzn.to/3AiiOFT**
 | BLE | Bluetooth Low Energy       |
 
 ※1 Due to low Bluetooth version, connection is not possible with iOS. Ref: https://okbizcs.okwave.jp/brother/qa/q9932082.html
+
 ※2 The iOS/BT implementation for the QL-820NWBc is in place, but it’s uncertain if it functions correctly. It’s unclear whether this is an implementation issue, as Brother’s official app also doesn’t work well.
 
 ## How to install
@@ -371,7 +372,7 @@ Make all properties in T optional
 
 #### BRLMChannelResult
 
-<code>{ port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'; modelName: string; serialNumber: string; macAddress: string; nodeName: string; location: string; ipAddress: string; }</code>
+<code>{ port: 'usb' | 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'; modelName: string; serialNumber: string; macAddress: string; nodeName: string; location: string; ipAddress: string; }</code>
 
 #### BRLMPrinterQLModelSettings
 
@@ -405,7 +406,7 @@ These are optional. If these are not set, default values are assigned by the pri
 
 #### BRLMSearchOption
 
-<code>{ port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'; /\*\* _ searchDuration is the time to end search for devices. _ default is 15 seconds. _ use only port is 'wifi' or 'bluetoothLowEnergy'. _/ searchDuration: number; }</code>
+<code>{ port: 'usb' | 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'; /\*\* _ searchDuration is the time to end search for devices. _ default is 15 seconds. _ use only port is 'wifi' or 'bluetoothLowEnergy'. _/ searchDuration: number; }</code>
 
 #### ErrorInfo
 
