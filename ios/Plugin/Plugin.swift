@@ -54,7 +54,7 @@ public class BrotherPrint: CAPPlugin {
             guard generateResult.error.code == BRLMOpenChannelErrorCode.noError,
                   let printerDriver = generateResult.driver else {
                 let message = OpenChannelErrorModel.fetchChannelErrorCode(error: generateResult.error.code)
-                self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: [
+                self.notifyListeners(BrotherPrinterEvent.onPrintFailedCommunication.rawValue, data: [
                     "message": message,
                     "code": generateResult.error.code
                 ])
@@ -81,7 +81,7 @@ public class BrotherPrint: CAPPlugin {
                     let _printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: printerModel)
                 else {
                     printerDriver.closeChannel()
-                    self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: [
+                    self.notifyListeners(BrotherPrinterEvent.onPrintFailedCommunication.rawValue, data: [
                         "code": 0,
                         "message": "Error - Create BRLMQLPrintSettings with " + modelName + " is failed."
                     ])
@@ -95,7 +95,7 @@ public class BrotherPrint: CAPPlugin {
                     let _printSettings = BRLMTDPrintSettings(defaultPrintSettingsWith: printerModel)
                 else {
                     printerDriver.closeChannel()
-                    self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: [
+                    self.notifyListeners(BrotherPrinterEvent.onPrintFailedCommunication.rawValue, data: [
                         "code": 0,
                         "message": "Error - Create BRLMTDPrintSettings with " + modelName + " is failed."
                     ])
@@ -106,7 +106,7 @@ public class BrotherPrint: CAPPlugin {
 
             } else {
                 printerDriver.closeChannel()
-                self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: [
+                self.notifyListeners(BrotherPrinterEvent.onPrintFailedCommunication.rawValue, data: [
                     "code": 0,
                     "message": "Error - " + modelName + " is not supported"
                 ])
