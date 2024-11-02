@@ -115,7 +115,7 @@ public class BrotherPrint: CAPPlugin {
                     "message": message,
                     "code": printError.code.rawValue
                 ])
-                call.reject("Error - Print Image: \(printError.code)")
+                call.reject("Error - Print Image: " + message)
                 return
             }
 
