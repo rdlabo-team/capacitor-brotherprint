@@ -8,8 +8,6 @@ import android.graphics.BitmapFactory
 import android.hardware.usb.UsbManager
 import android.util.Base64
 import android.util.Log
-import com.brother.ptouch.sdk.Printer
-import com.brother.ptouch.sdk.PrinterInfo
 import com.brother.sdk.lmprinter.BLESearchOption
 import com.brother.sdk.lmprinter.Channel
 import com.brother.sdk.lmprinter.NetworkSearchOption
@@ -32,8 +30,6 @@ import com.getcapacitor.annotation.Permission
 import com.getcapacitor.annotation.PermissionCallback
 import jp.rdlabo.capacitor.plugin.brotherprint.models.BrotherPrintEvent
 import jp.rdlabo.capacitor.plugin.brotherprint.models.BrotherPrintSettings
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 
 @CapacitorPlugin(
@@ -93,71 +89,57 @@ class BrotherPrint : Plugin() {
             settings = BrotherPrintSettings().modelTDSettings(call, settings)
             settings.workPath = bridge.context.cacheDir.path;
         } else {
-            this.notifyListeners(BrotherPrintEvent.onPrintFailedCommunication.webEventName,
-                JSObject().put("code", 0)
-                    .put("message", "Error - modelName:$modelName is not supported")
-            )
             call.reject("Error - modelName:$modelName is not supported")
             return;
         }
 
-        try {
-            Thread {
-                val channel: Channel = when (port) {
-                    "usb" -> Channel.newUsbChannel(bridge.context.getSystemService(Context.USB_SERVICE) as UsbManager)
-                    "wifi" -> Channel.newWifiChannel(channelInfo)
-                    "bluetooth" -> Channel.newBluetoothChannel(channelInfo, getBluetoothAdapter(bridge.context))
-                    "bluetoothLowEnergy" -> Channel.newBluetoothLowEnergyChannel(
-                        channelInfo, bridge.context, getBluetoothAdapter(bridge.context)
-                    )
-                    else -> {
-                        this.notifyListeners(BrotherPrintEvent.onPrintFailedCommunication.webEventName,
-                            JSObject().put("code", 0)
-                                .put("message", "Error - port:$port is not supported")
-                        )
-                        call.reject("Error - port:$port is not supported")
-                        return@Thread
-                    }
-                }
-
-                val result = PrinterDriverGenerator.openChannel(channel)
-                if (result.error.code != OpenChannelError.ErrorCode.NoError) {
-                    this.notifyListeners(BrotherPrintEvent.onPrintFailedCommunication.webEventName,
-                        JSObject().put("code", result.error.code)
-                            .put("message", result.error.code.toString())
-                    )
-                    call.reject("Error - openChannel: " + result.error.code.toString())
+        Thread {
+            val channel: Channel = when (port) {
+                "usb" -> Channel.newUsbChannel(bridge.context.getSystemService(Context.USB_SERVICE) as UsbManager)
+                "wifi" -> Channel.newWifiChannel(channelInfo)
+                "bluetooth" -> Channel.newBluetoothChannel(channelInfo, getBluetoothAdapter(bridge.context))
+                "bluetoothLowEnergy" -> Channel.newBluetoothLowEnergyChannel(
+                    channelInfo, bridge.context, getBluetoothAdapter(bridge.context)
+                )
+                else -> {
+                    call.reject("Error - port:$port is not supported")
                     return@Thread
                 }
+            }
 
-                val printerDriver = result.driver
+            val result = PrinterDriverGenerator.openChannel(channel)
+            if (result.error.code != OpenChannelError.ErrorCode.NoError) {
+                this.notifyListeners(BrotherPrintEvent.onPrintFailedCommunication.webEventName,
+                    JSObject().put("code", result.error.code)
+                        .put("message", result.error.code.toString())
+                )
+                call.reject("Error - openChannel: " + result.error.code.toString())
+                return@Thread
+            }
 
-                val printError: PrintError = printerDriver.printImage(decodedByte, settings)
+            val printerDriver = result.driver
 
-                if (printError.code != PrintError.ErrorCode.NoError) {
-                    notifyListeners(
-                        BrotherPrintEvent.onPrint.webEventName,
-                        JSObject().put("code", printError.code)
-                            .put("message", result.toString())
-                    )
-                } else {
-                    notifyListeners(
-                        BrotherPrintEvent.onPrintError.webEventName,
-                        JSObject().put("code", printError.code)
-                            .put("message", result.toString())
-                    )
-                }
+            val printError: PrintError = printerDriver.printImage(decodedByte, settings)
 
+            if (printError.code != PrintError.ErrorCode.NoError) {
                 printerDriver.closeChannel()
-                call.resolve()
-            }.start()
-        } catch (e: Exception) {
+                notifyListeners(
+                    BrotherPrintEvent.onPrintError.webEventName,
+                    JSObject().put("code", printError.code)
+                        .put("message", result.error.code.toString())
+                )
+                call.reject("Error - Print Image: " + result.error.code.toString())
+                return@Thread
+            }
+
+            printerDriver.closeChannel()
+
             notifyListeners(
-                BrotherPrintEvent.onPrintFailedCommunication.webEventName, JSObject().put("code", 0)
-                    .put("message", "Error - Thread: " + e.localizedMessage)
+                BrotherPrintEvent.onPrint.webEventName,
+                JSObject()
             )
-            call.reject("Error - Thread: " + e.localizedMessage, e)
-        }
+            call.resolve()
+        }.start()
     }
 
     private fun getBluetoothAdapter(context: Context): BluetoothAdapter? {

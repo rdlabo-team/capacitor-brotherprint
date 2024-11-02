@@ -24,10 +24,10 @@ public class BrotherPrint: CAPPlugin {
         // 検索からデバイス情報が得られた場合
         let port: String = call.getString("port", "wifi")
         let channelInfo: String = call.getString("channelInfo", "")
-        
-//        let localName: String = call.getString("localName", "")
-//        let serialNumber: String = call.getString("serialNumber", "")
-        
+
+        //        let localName: String = call.getString("localName", "")
+        //        let serialNumber: String = call.getString("serialNumber", "")
+
         let modelName: String = call.getString("modelName", "QL-820NWB")
         let printerModel = BrotherModel.getModelName(from: modelName)
 
@@ -66,10 +66,6 @@ public class BrotherPrint: CAPPlugin {
                 let decodedByte = UIImage(data: newImageData! as Data)
             else {
                 printerDriver.closeChannel()
-                self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: [
-                    "code": 0,
-                    "message": "Error - Create decodedByte From ImageData is failed."
-                ])
                 call.reject("Error - Create decodedByte From ImageData is failed.")
                 return
             }
@@ -106,16 +102,12 @@ public class BrotherPrint: CAPPlugin {
 
             } else {
                 printerDriver.closeChannel()
-                self.notifyListeners(BrotherPrinterEvent.onPrintFailedCommunication.rawValue, data: [
-                    "code": 0,
-                    "message": "Error - " + modelName + " is not supported"
-                ])
                 call.reject("Error - " + modelName + " is not supported")
                 return
             }
 
             let printError = printerDriver.printImage(with: decodedByte.cgImage!, settings: printSettings)
-            
+
             if printError.code != BRLMPrintErrorCode.noError {
                 printerDriver.closeChannel()
                 let message = PrintErrorModel.fetchErrorCode(errorCode: Int32(printError.code.rawValue))
@@ -128,6 +120,8 @@ public class BrotherPrint: CAPPlugin {
             }
 
             printerDriver.closeChannel()
+            
+            self.notifyListeners(BrotherPrinterEvent.onPrint.rawValue, data: [:])
             call.resolve()
         }
     }
@@ -169,7 +163,7 @@ public class BrotherPrint: CAPPlugin {
     private func checkBLEChannel(_ call: CAPPluginCall) {
         DispatchQueue.global().async {
             let searcher = BRLMPrinterSearcher.startBluetoothSearch()
-            if (searcher.error.code != BRLMPrinterSearchErrorCode.noError) {
+            if searcher.error.code != BRLMPrinterSearchErrorCode.noError {
                 call.reject("Error - startBluetoothSearch: " + PrinterSearchErrorModel.fetchChannelErrorCode(error: searcher.error.code))
                 return
             }
@@ -179,13 +173,13 @@ public class BrotherPrint: CAPPlugin {
             }
             call.resolve()
         }
-        
-//        BRLMPrinterSearcher.startBluetoothAccessorySearch() { searcher in
-//            for channel in searcher.channels {
-//                self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetooth", channel: channel))
-//            }
-//            call.resolve()
-//        }
+
+        //        BRLMPrinterSearcher.startBluetoothAccessorySearch() { searcher in
+        //            for channel in searcher.channels {
+        //                self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetooth", channel: channel))
+        //            }
+        //            call.resolve()
+        //        }
     }
 
     private func searchBLEPrinter(_ call: CAPPluginCall) {
@@ -219,7 +213,7 @@ public class BrotherPrint: CAPPlugin {
             "macAddress": macAddress,
             "nodeName": nodeName,
             "location": location,
-            "channelInfo": ipaddress,
+            "channelInfo": ipaddress
         ]
     }
 
