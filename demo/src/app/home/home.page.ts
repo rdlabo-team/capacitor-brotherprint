@@ -197,6 +197,7 @@ export class HomePage implements OnInit, OnDestroy {
       ...defaultPrintSettings,
       ...{
         channelInfo: channel.channelInfo,
+        port: channel.port,
       },
     });
   }
