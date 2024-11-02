@@ -13,7 +13,7 @@ Each product link is an Amazon affiliate link. If you choose to make a purchase 
 | QL-810W                               | QL_810W      | ✗        | ✗      | ✗       | -           | ✗            | ✗          | ✗           |
 | [QL-820NWB](https://amzn.to/3BXQ1aj)  | QL_820NWB    | ◯        | ※1     | ✗       | -           | ◯            | △          | ✗           |
 | [QL-820NWBc](https://amzn.to/4fjhUIe) | QL_820NWB    | ◯        | ※2     | ✗       | ✗           | ◯            | ◯          | ✗           |
-| [TD-2320D](https://amzn.to/48EFCN3)   | TD_2320D_203 | ✗        | ✗      | ✗       | △           | ✗            | ✗          | ✗           |
+| [TD-2320D](https://amzn.to/48EFCN3)   | TD_2320D_203 | ✗        | ✗      | ✗       | -           | ✗            | ✗          | ✗           |
 | [TD-2350D](https://amzn.to/48ma6TK)   | TD_2350D_300 | ◯        | △      | △       | -           | ◯            | ◯          | △           |
 
 Amazon Affiliate Links:　**https://amzn.to/3AiiOFT**
