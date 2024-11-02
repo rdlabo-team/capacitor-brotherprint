@@ -197,21 +197,34 @@ export interface BrotherPrintPlugin {
    */
   cancelSearchBluetoothPrinter(): Promise<void>;
 
+  /**
+   * Find the printer that can connected to the device.
+   */
   addListener(
     eventName: BrotherPrintEventsEnum.onPrinterAvailable,
     listenerFunc: (printers: BRLMChannelResult) => void,
   ): Promise<PluginListenerHandle>;
 
+  /**
+   * Success Print Event
+   */
   addListener(
     eventName: BrotherPrintEventsEnum.onPrint,
     listenerFunc: () => void,
   ): Promise<PluginListenerHandle>;
 
+  /**
+   * Failed to connect to the printer.
+   * ex: Bluetooth is off, Printer is off, etc.
+   */
   addListener(
     eventName: BrotherPrintEventsEnum.onPrintFailedCommunication,
     listenerFunc: (info: ErrorInfo) => void,
   ): Promise<PluginListenerHandle>;
 
+  /**
+   * Failed to print.
+   */
   addListener(
     eventName: BrotherPrintEventsEnum.onPrintError,
     listenerFunc: (info: ErrorInfo) => void,
