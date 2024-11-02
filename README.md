@@ -296,6 +296,8 @@ Basically, it times out, so there is no need to use it. Use it when you want to 
 addListener(eventName: BrotherPrintEventsEnum.onPrinterAvailable, listenerFunc: (printers: BRLMChannelResult) => void) => Promise<PluginListenerHandle>
 ```
 
+Find the printer that can connected to the device.
+
 | Param              | Type                                                                                         |
 | ------------------ | -------------------------------------------------------------------------------------------- |
 | **`eventName`**    | <code><a href="#brotherprinteventsenum">BrotherPrintEventsEnum.onPrinterAvailable</a></code> |
@@ -310,6 +312,8 @@ addListener(eventName: BrotherPrintEventsEnum.onPrinterAvailable, listenerFunc: 
 ```typescript
 addListener(eventName: BrotherPrintEventsEnum.onPrint, listenerFunc: () => void) => Promise<PluginListenerHandle>
 ```
+
+Success Print Event
 
 | Param              | Type                                                                              |
 | ------------------ | --------------------------------------------------------------------------------- |
@@ -326,6 +330,9 @@ addListener(eventName: BrotherPrintEventsEnum.onPrint, listenerFunc: () => void)
 addListener(eventName: BrotherPrintEventsEnum.onPrintFailedCommunication, listenerFunc: (info: ErrorInfo) => void) => Promise<PluginListenerHandle>
 ```
 
+Failed to connect to the printer.
+ex: Bluetooth is off, Printer is off, etc.
+
 | Param              | Type                                                                                                 |
 | ------------------ | ---------------------------------------------------------------------------------------------------- |
 | **`eventName`**    | <code><a href="#brotherprinteventsenum">BrotherPrintEventsEnum.onPrintFailedCommunication</a></code> |
@@ -340,6 +347,8 @@ addListener(eventName: BrotherPrintEventsEnum.onPrintFailedCommunication, listen
 ```typescript
 addListener(eventName: BrotherPrintEventsEnum.onPrintError, listenerFunc: (info: ErrorInfo) => void) => Promise<PluginListenerHandle>
 ```
+
+Failed to print.
 
 | Param              | Type                                                                                   |
 | ------------------ | -------------------------------------------------------------------------------------- |
