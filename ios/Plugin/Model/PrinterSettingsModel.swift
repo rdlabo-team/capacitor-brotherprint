@@ -4,15 +4,52 @@ import Foundation
 import Capacitor
 
 class PrinterSettingsModel {
-    static func initialize(_ call: CAPPluginCall, printSettings: BRLMQLPrintSettings) -> BRLMPrintSettingsProtocol {
+    static func TDModelSettings(_ call: CAPPluginCall, printSettings: BRLMTDPrintSettings) -> BRLMTDPrintSettings {
+        let baseSettings = self.BaseModelSettings(call, printSettings: printSettings)
 
-        printSettings.labelSize = BrotherModel.getLabelSize(from: call.getString("labelName", "rollW62"))
-        printSettings.numCopies = UInt(call.getInt("numberOfCopies", 1))
+        let margins = BrotherModel.getMargin(call.getDouble("marginTop", 0), call.getDouble("marginRight", 0), call.getDouble("marginBottom", 0), call.getDouble("marginLeft", 0))
+
+        let unit = BrotherModel.getCustomPaperSizeLengthUnit(unit: call.getString("paperUnit", "mm"))
+
+        baseSettings.customPaperSize = BrotherModel.getCustomPaper(
+            type: call.getString("paperType")!,
+            width: call.getFloat("tapeWidth", 0),
+            length: call.getFloat("tapeLength", 0),
+            margins: margins,
+            markPosition: call.getFloat("paperMarkPosition", 0),
+            markLength: call.getFloat("paperMarkLength", 0),
+            gapLength: call.getFloat("gapLength", 0),
+            unit: unit
+        )
 
         if let autoCut = call.getBool("autoCut") ?? nil {
-            printSettings.autoCut = autoCut
-            printSettings.cutAtEnd = true
+            baseSettings.autoCut = autoCut
+            baseSettings.cutAtEnd = true
         }
+
+        let report = BRLMValidatePrintSettings.validate(baseSettings)
+        NSLog(report.description())
+
+        return printSettings
+    }
+
+    static func QLModelSettings(_ call: CAPPluginCall, printSettings: BRLMQLPrintSettings) -> BRLMQLPrintSettings {
+        let baseSettings = self.BaseModelSettings(call, printSettings: printSettings)
+        baseSettings.labelSize = BrotherModel.getLabelSize(from: call.getString("labelName", "rollW62"))
+
+        if let autoCut = call.getBool("autoCut") ?? nil {
+            baseSettings.autoCut = autoCut
+            baseSettings.cutAtEnd = true
+        }
+
+        let report = BRLMValidatePrintSettings.validate(baseSettings)
+        NSLog(report.description())
+
+        return baseSettings
+    }
+
+    static func BaseModelSettings<T: BRLMPrintImageSettings>(_ call: CAPPluginCall, printSettings: T) -> T {
+        printSettings.numCopies = UInt(call.getInt("numberOfCopies", 1))
 
         if let scaleMode = call.getString("scaleMode") ?? nil {
             switch scaleMode {
@@ -106,20 +143,18 @@ class PrinterSettingsModel {
             }
         }
 
-//        if let resolution = call.getString("resolution") ?? nil {
-//            switch resolution {
-//            case "Low":
-//                printSettings.resolution = BRLMPrintSettingsResolution.low
-//            case "Normal":
-//                printSettings.resolution = BRLMPrintSettingsResolution.normal
-//            case "High":
-//                printSettings.resolution = BRLMPrintSettingsResolution.high
-//            default: break
-//            }
-//        }
+        //        if let resolution = call.getString("resolution") ?? nil {
+        //            switch resolution {
+        //            case "Low":
+        //                printSettings.resolution = BRLMPrintSettingsResolution.low
+        //            case "Normal":
+        //                printSettings.resolution = BRLMPrintSettingsResolution.normal
+        //            case "High":
+        //                printSettings.resolution = BRLMPrintSettingsResolution.high
+        //            default: break
+        //            }
+        //        }
 
-        let report = BRLMValidatePrintSettings.validate(printSettings)
-        NSLog(report.description())
         return printSettings
     }
 }

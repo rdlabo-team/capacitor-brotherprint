@@ -7,6 +7,155 @@
 <ion-content color="light">
   <ion-list inset="true">
     <ion-item-group>
+      <ion-item>
+        <ion-select label="Model" [(ngModel)]="useModel" name="useModel">
+          @for (item of modelNames; track item) {
+          <ion-select-option [value]="item">{{item}}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
+
+  @if (useModel().includes('QL')) {
+  <ion-list inset="true">
+    <ion-item-group>
+      <ion-item>
+        <ion-select label="LabelName" [(ngModel)]="useLabel" name="useLabel">
+          @for (item of labelNames; track item) {
+          <ion-select-option [value]="item">{{item}}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
+  } @else if (useModel().includes('TD')) {
+  <ion-list inset="true">
+    <ion-item-group>
+      <ion-item>
+        <ion-select label="paperType" [(ngModel)]="paperType" name="paperType">
+          @for (item of paperTypes; track item) {
+          <ion-select-option [value]="item">{{item}}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-select label="paperUnit" [(ngModel)]="paperUnit" name="paperUnit">
+          @for (item of paperUnits; track item) {
+          <ion-select-option [value]="item">{{item}}</ion-select-option>
+          }
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          class="ion-text-right"
+          type="number"
+          label="tapeWidth"
+          [(ngModel)]="tapeWidth"
+          step="0.1"
+          name="tapeWidth"
+        ></ion-input>
+        <ion-text slot="end">{{this.paperUnit()}}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          class="ion-text-right"
+          type="number"
+          label="tapeLength"
+          [(ngModel)]="tapeLength"
+          step="0.1"
+          name="tapeLength"
+        ></ion-input>
+        <ion-text slot="end">{{this.paperUnit()}}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          class="ion-text-right"
+          type="number"
+          label="marginTop"
+          [(ngModel)]="marginTop"
+          step="0.1"
+          name="marginTop"
+        ></ion-input>
+        <ion-text slot="end">{{this.paperUnit()}}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          class="ion-text-right"
+          type="number"
+          label="marginRight"
+          [(ngModel)]="marginRight"
+          step="0.1"
+          name="marginRight"
+        ></ion-input>
+        <ion-text slot="end">{{this.paperUnit()}}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          class="ion-text-right"
+          type="number"
+          label="marginBottom"
+          [(ngModel)]="marginBottom"
+          step="0.1"
+          name="marginBottom"
+        ></ion-input>
+        <ion-text slot="end">{{this.paperUnit()}}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          class="ion-text-right"
+          type="number"
+          label="marginLeft"
+          [(ngModel)]="marginLeft"
+          step="0.1"
+          name="marginLeft"
+        ></ion-input>
+        <ion-text slot="end">{{this.paperUnit()}}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          class="ion-text-right"
+          type="number"
+          label="paperMarkPosition"
+          [(ngModel)]="paperMarkPosition"
+          step="0.1"
+          name="paperMarkPosition"
+        ></ion-input>
+        <ion-text slot="end">{{this.paperUnit()}}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          class="ion-text-right"
+          type="number"
+          label="paperMarkLength"
+          [(ngModel)]="paperMarkLength"
+          step="0.1"
+          name="paperMarkLength"
+        ></ion-input>
+        <ion-text slot="end">{{this.paperUnit()}}</ion-text>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          class="ion-text-right"
+          type="number"
+          label="gapLength"
+          [(ngModel)]="gapLength"
+          step="0.1"
+          name="gapLength"
+        ></ion-input>
+        <ion-text slot="end">{{this.paperUnit()}}</ion-text>
+      </ion-item>
+    </ion-item-group>
+  </ion-list>
+  }
+
+  <ion-list inset="true">
+    <ion-item-group>
+      @if (this.platform.is('android')) {
+      <ion-item button="true" (click)="searchPrinter('usb')"
+        ><ion-label>Search USB</ion-label></ion-item
+      >
+      }
       <ion-item button="true" (click)="searchPrinter('wifi')"
         ><ion-label>Search WiFi</ion-label></ion-item
       >

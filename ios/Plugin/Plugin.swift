@@ -27,7 +27,8 @@ public class BrotherPrint: CAPPlugin {
         let ipAddress: String = call.getString("ipAddress", "")
         let serialNumber: String = call.getString("serialNumber", "")
 
-        let modelName = BrotherModel.getModelName(from: call.getString("modelName", "QL-820NWB"))
+        let modelName: String = call.getString("modelName", "QL-820NWB")
+        let printerModel = BrotherModel.getModelName(from: modelName)
 
         NSLog(call.getString("modelName", "not set"))
         NSLog(call.getString("labelName", "not set"))
@@ -72,22 +73,49 @@ public class BrotherPrint: CAPPlugin {
                 return
             }
 
-            guard
-                let _printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: modelName)
-            else {
+            var printSettings: BRLMPrintSettingsProtocol
+
+            if modelName.hasPrefix("QL") {
+                guard
+                    let _printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: printerModel)
+                else {
+                    printerDriver.closeChannel()
+                    self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: [
+                        "code": 0,
+                        "message": "Error - Create BRLMQLPrintSettings with " + modelName + " is failed."
+                    ])
+                    call.reject("Error - Create BRLMQLPrintSettings with " + modelName + " is failed.")
+                    return
+                }
+                printSettings = PrinterSettingsModel.QLModelSettings(call, printSettings: _printSettings)
+
+            } else if modelName.hasPrefix("TD") {
+                guard
+                    let _printSettings = BRLMTDPrintSettings(defaultPrintSettingsWith: printerModel)
+                else {
+                    printerDriver.closeChannel()
+                    self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: [
+                        "code": 0,
+                        "message": "Error - Create BRLMTDPrintSettings with " + modelName + " is failed."
+                    ])
+                    call.reject("Error - Create BRLMTDPrintSettings with " + modelName + " is failed.")
+                    return
+                }
+                printSettings = PrinterSettingsModel.TDModelSettings(call, printSettings: _printSettings)
+
+            } else {
                 printerDriver.closeChannel()
                 self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: [
                     "code": 0,
-                    "message": "Error - Create BRLMQLPrintSettings is failed."
+                    "message": "Error - " + modelName + " is not supported"
                 ])
-                call.reject("Error - Create BRLMQLPrintSettings is failed.")
+                call.reject("Error - " + modelName + " is not supported")
                 return
             }
 
-            let printSettings = PrinterSettingsModel.initialize(call, printSettings: _printSettings)
             let printError = printerDriver.printImage(with: decodedByte.cgImage!, settings: printSettings)
-
-            if printError.code != .noError {
+            
+            if printError.code != BRLMPrintErrorCode.noError {
                 printerDriver.closeChannel()
                 let message = PrintErrorModel.fetchErrorCode(errorCode: Int32(printError.code.rawValue))
                 self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: [
@@ -139,14 +167,24 @@ public class BrotherPrint: CAPPlugin {
 
     private func checkBLEChannel(_ call: CAPPluginCall) {
         DispatchQueue.global().async {
-            NSLog("BRLMPrinterSearcher.startBluetoothSearch")
             let searcher = BRLMPrinterSearcher.startBluetoothSearch()
+            if (searcher.error.code != BRLMPrinterSearchErrorCode.noError) {
+                call.reject("Error - startBluetoothSearch: " + PrinterSearchErrorModel.fetchChannelErrorCode(error: searcher.error.code))
+                return
+            }
             for channel in searcher.channels {
                 NSLog(channel.channelInfo)
                 self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetooth", channel: channel))
             }
             call.resolve()
         }
+        
+//        BRLMPrinterSearcher.startBluetoothAccessorySearch() { searcher in
+//            for channel in searcher.channels {
+//                self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetooth", channel: channel))
+//            }
+//            call.resolve()
+//        }
     }
 
     private func searchBLEPrinter(_ call: CAPPluginCall) {

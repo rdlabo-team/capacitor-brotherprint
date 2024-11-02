@@ -14,7 +14,7 @@ Each product link is an Amazon affiliate link. If you choose to make a purchase 
 | [QL-820NWB](https://amzn.to/3BXQ1aj)  | QL_820NWB    | ◯        | ※1     | ✗       | △           | ◯            | △          | ✗           |
 | [QL-820NWBc](https://amzn.to/4fjhUIe) | QL_820NWB    | ◯        | ※2     | ✗       | ✗           | ◯            | ◯          | ✗           |
 | [TD-2320D](https://amzn.to/48EFCN3)   | TD_2320D_203 | ✗        | ✗      | ✗       | △           | ✗            | ✗          | ✗           |
-| [TD-2350D](https://amzn.to/48ma6TK)   | TD_2350D_203 | △        | △      | △       | △           | △            | △          | △           |
+| [TD-2350D](https://amzn.to/48ma6TK)   | TD_2350D_300 | ◯        | △      | △       | △           | ◯            | ◯          | △           |
 
 Amazon Affiliate Links:　**https://amzn.to/3AiiOFT**
 
@@ -29,6 +29,7 @@ Amazon Affiliate Links:　**https://amzn.to/3AiiOFT**
 | BLE | Bluetooth Low Energy       |
 
 ※1 Due to low Bluetooth version, connection is not possible with iOS. Ref: https://okbizcs.okwave.jp/brother/qa/q9932082.html
+
 ※2 The iOS/BT implementation for the QL-820NWBc is in place, but it’s uncertain if it functions correctly. It’s unclear whether this is an implementation issue, as Brother’s official app also doesn’t work well.
 
 ## How to install
@@ -361,7 +362,7 @@ addListener(eventName: BrotherPrintEventsEnum.onPrintError, listenerFunc: (info:
 
 #### BRLMPrintOptions
 
-<code>{ encodedImage: string; /** _ Should use enum <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a> _/ labelName: <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a>; /** _ Should use enum <a href="#brlmprintermodelname">BRLMPrinterModelName</a> _/ modelName: <a href="#brlmprintermodelname">BRLMPrinterModelName</a>; } & <a href="#partial">Partial</a>&lt;<a href="#brlmchannelresult">BRLMChannelResult</a>&gt; & <a href="#brlmprintersettings">BRLMPrinterSettings</a></code>
+<code>{ encodedImage: string; /\*\* _ Should use enum <a href="#brlmprintermodelname">BRLMPrinterModelName</a> _/ modelName: <a href="#brlmprintermodelname">BRLMPrinterModelName</a>; } & <a href="#partial">Partial</a>&lt;<a href="#brlmchannelresult">BRLMChannelResult</a>&gt; & (<a href="#brlmprinterqlmodelsettings">BRLMPrinterQLModelSettings</a> | <a href="#brlmprintertdmodelsettings">BRLMPrinterTDModelSettings</a>)</code>
 
 #### Partial
 
@@ -373,7 +374,11 @@ Make all properties in T optional
 
 #### BRLMChannelResult
 
-<code>{ port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'; modelName: string; serialNumber: string; macAddress: string; nodeName: string; location: string; ipAddress: string; }</code>
+<code>{ port: 'usb' | 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'; modelName: string; serialNumber: string; macAddress: string; nodeName: string; location: string; ipAddress: string; }</code>
+
+#### BRLMPrinterQLModelSettings
+
+<code>{ /\*\* _ Should use enum <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a> _/ labelName: <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a>; } & <a href="#brlmprintersettings">BRLMPrinterSettings</a></code>
 
 #### BRLMPrinterSettings
 
@@ -397,15 +402,29 @@ These are optional. If these are not set, default values are assigned by the pri
 
 <code>number</code>
 
+#### BRLMPrinterTDModelSettings
+
+<code>{ /** _ Should use enum <a href="#brkmprintercustompapertype">BRKMPrinterCustomPaperType</a> _/ paperType: <a href="#brkmprintercustompapertype">BRKMPrinterCustomPaperType</a>; /** _ The width of the label. For example, the RD-U04J1 is 60.0 wide. _/ tapeWidth: number; /** _ The length of the label. For example, the RD-U04J1 is 60.0 wide. _/ tapeLength: number; /** _ It is the difference between a sticker and a mount. _ For example, the RD-U04J1 is `1.0, 2.0, 1.0, 2.0` _/ marginTop: number; marginRight: number; marginBottom: number; marginLeft: number; /\*\* _ The spacing between seals. For example, the RD-U04J1 is 0.2. _/ gapLength: number; paperMarkPosition: number; paperMarkLength: number; /\*\* _ Should use enum <a href="#brkmprintercustompaperunit">BRKMPrinterCustomPaperUnit</a>. _ For example, the RD-U04J1 is mm. _/ paperUnit: <a href="#brkmprintercustompaperunit">BRKMPrinterCustomPaperUnit</a>; }</code>
+
 #### BRLMSearchOption
 
-<code>{ port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'; /\*\* _ searchDuration is the time to end search for devices. _ default is 15 seconds. _ use only port is 'wifi' or 'bluetoothLowEnergy'. _/ searchDuration: number; }</code>
+<code>{ port: 'usb' | 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'; /\*\* _ searchDuration is the time to end search for devices. _ default is 15 seconds. _ use only port is 'wifi' or 'bluetoothLowEnergy'. _/ searchDuration: number; }</code>
 
 #### ErrorInfo
 
 <code>{ message: string; code: number; }</code>
 
 ### Enums
+
+#### BRLMPrinterModelName
+
+| Members            | Value                       |
+| ------------------ | --------------------------- |
+| **`QL_810W`**      | <code>'QL_810W'</code>      |
+| **`QL_820NWB`**    | <code>'QL_820NWB'</code>    |
+| **`TD_2320D_203`** | <code>'TD_2320D_203'</code> |
+| **`TD_2030AD`**    | <code>'TD_2030AD'</code>    |
+| **`TD_2350D_300`** | <code>'TD_2350D_300'</code> |
 
 #### BRLMPrinterLabelName
 
@@ -435,16 +454,6 @@ These are optional. If these are not set, default values are assigned by the pri
 | **`W58DIA`**  | <code>'W58DIA'</code>  |
 | **`W62H60`**  | <code>'W62H60'</code>  |
 | **`W62H75`**  | <code>'W62H75'</code>  |
-
-#### BRLMPrinterModelName
-
-| Members            | Value                       |
-| ------------------ | --------------------------- |
-| **`QL_810W`**      | <code>'QL_810W'</code>      |
-| **`QL_820NWB`**    | <code>'QL_820NWB'</code>    |
-| **`TD_2320D_203`** | <code>'TD_2320D_203'</code> |
-| **`TD_2030AD`**    | <code>'TD_2030AD'</code>    |
-| **`TD_2350D_203`** | <code>'TD_2350D_203'</code> |
 
 #### BRLMPrinterScaleMode
 
@@ -502,6 +511,21 @@ These are optional. If these are not set, default values are assigned by the pri
 | ---------- | ------------------- |
 | **`Best`** | <code>'Best'</code> |
 | **`Fast`** | <code>'Fast'</code> |
+
+#### BRKMPrinterCustomPaperType
+
+| Members             | Value                        |
+| ------------------- | ---------------------------- |
+| **`rollPaper`**     | <code>'rollPaper'</code>     |
+| **`dieCutPaper`**   | <code>'dieCutPaper'</code>   |
+| **`markRollPaper`** | <code>'markRollPaper'</code> |
+
+#### BRKMPrinterCustomPaperUnit
+
+| Members    | Value               |
+| ---------- | ------------------- |
+| **`mm`**   | <code>'mm'</code>   |
+| **`inch`** | <code>'inch'</code> |
 
 #### BrotherPrintEventsEnum
 

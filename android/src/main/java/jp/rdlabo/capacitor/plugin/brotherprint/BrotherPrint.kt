@@ -1,22 +1,30 @@
 package jp.rdlabo.capacitor.plugin.brotherprint
 
+import android.Manifest
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.hardware.usb.UsbManager
 import android.util.Base64
 import android.util.Log
-import com.brother.ptouch.sdk.LabelInfo
 import com.brother.ptouch.sdk.Printer
 import com.brother.ptouch.sdk.PrinterInfo
 import com.brother.sdk.lmprinter.BLESearchOption
 import com.brother.sdk.lmprinter.Channel
 import com.brother.sdk.lmprinter.NetworkSearchOption
+import com.brother.sdk.lmprinter.OpenChannelError
+import com.brother.sdk.lmprinter.PrintError
+import com.brother.sdk.lmprinter.PrinterDriverGenerator
+import com.brother.sdk.lmprinter.PrinterModel
 import com.brother.sdk.lmprinter.PrinterSearcher
 import com.brother.sdk.lmprinter.PrinterSearcher.cancelNetworkSearch
+import com.brother.sdk.lmprinter.setting.PrintSettings
+import com.brother.sdk.lmprinter.setting.QLPrintSettings
+import com.brother.sdk.lmprinter.setting.TDPrintSettings
 import com.getcapacitor.JSObject
-import com.getcapacitor.Plugin
-import android.Manifest;
 import com.getcapacitor.PermissionState
+import com.getcapacitor.Plugin
 import com.getcapacitor.PluginCall
 import com.getcapacitor.PluginMethod
 import com.getcapacitor.annotation.CapacitorPlugin
@@ -24,6 +32,9 @@ import com.getcapacitor.annotation.Permission
 import com.getcapacitor.annotation.PermissionCallback
 import jp.rdlabo.capacitor.plugin.brotherprint.models.BrotherPrintEvent
 import jp.rdlabo.capacitor.plugin.brotherprint.models.BrotherPrintSettings
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
 
 @CapacitorPlugin(
     name = "BrotherPrint",
@@ -64,101 +75,135 @@ class BrotherPrint : Plugin() {
         val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
 
         val port: String? = call.getString("port", "wifi")
-        val localName: String? = call.getString("localName", "")
         val ipAddress: String? = call.getString("ipAddress", "")
-        val serialNumber: String? = call.getString("serialNumber", "")
-        val macAddress: String? = call.getString("macAddress", "")
+//        val localName: String? = call.getString("localName", "")
+//        val serialNumber: String? = call.getString("serialNumber", "")
+//        val macAddress: String? = call.getString("macAddress", "")
 
-        val printer = Printer()
-        val settings = BrotherPrintSettings().initialize(call, printer)
+        lateinit var settings: PrintSettings;
+        val modelName = call.getString("modelName", "QL_820NWB")!!
+        val printerModel = PrinterModel.entries.find { it.name == modelName }
 
-        val labelName = LabelInfo.QL700.entries.find { it.name == call.getString("labelName", "W62") }
-        val printerModel = PrinterInfo.Model.entries.find { it.name == call.getString("modelName", "QL_820NWB") }
-        settings.labelNameIndex = labelName!!.ordinal;
-        settings.printerModel = printerModel;
-
-        if (port == "usb") {
-            settings.port = PrinterInfo.Port.USB
-        } else if (port == "wifi") {
-            settings.port = PrinterInfo.Port.NET
-        } else if (port == "bluetooth") {
-            val manager =
-                bridge.context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-            printer.setBluetooth(manager.adapter)
-            settings.port = PrinterInfo.Port.BLUETOOTH
-            settings.macAddress = serialNumber
+        if (printerModel != null && modelName.startsWith("QL")) {
+            settings = QLPrintSettings(printerModel);
+            settings = BrotherPrintSettings().modelQLSettings(call, settings)
+            settings.workPath = bridge.context.cacheDir.path;
+        } else if (printerModel != null && modelName.startsWith("TD")) {
+            settings = TDPrintSettings(printerModel)
+            settings = BrotherPrintSettings().modelTDSettings(call, settings)
+            settings.workPath = bridge.context.cacheDir.path;
         } else {
-            val manager =
-                bridge.context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-            printer.setBluetooth(manager.adapter)
-            settings.port = PrinterInfo.Port.BLE
-        }
-
-        settings.ipAddress = ipAddress
-        settings.macAddress = macAddress
-        settings.localName = localName
-        settings.workPath = bridge.context.cacheDir.path
-
-        Log.d("brother", settings.toString())
-
-        val setPrinter = printer.setPrinterInfo(settings)
-
-        if (!setPrinter) {
-            val setResult = Printer.getResult()
-            notifyListeners(
-                BrotherPrintEvent.onPrintError.webEventName,
-                JSObject().put("code", setResult.errorCode)
-                    .put("message", setResult.toString())
+            this.notifyListeners(BrotherPrintEvent.onPrintFailedCommunication.webEventName,
+                JSObject().put("code", 0)
+                    .put("message", "Error - modelName:$modelName is not supported")
             )
+            call.reject("Error - modelName:$modelName is not supported")
+            return;
         }
 
         try {
-            Log.d(logTag, "Start Printer Thread")
             Thread {
-                if (printer.startCommunication()) {
-                    val result = printer.printImage(decodedByte)
-                    if (result.errorCode == PrinterInfo.ErrorCode.ERROR_NONE) {
-                        notifyListeners(
-                            BrotherPrintEvent.onPrint.webEventName,
-                            JSObject().put("code", result.errorCode)
-                                .put("message", result.toString())
+                val channel: Channel = when (port) {
+                    "usb" -> Channel.newUsbChannel(bridge.context.getSystemService(Context.USB_SERVICE) as UsbManager)
+                    "wifi" -> Channel.newWifiChannel(ipAddress)
+                    "bluetooth" -> Channel.newBluetoothChannel(ipAddress, getBluetoothAdapter(bridge.context))
+                    "bluetoothLowEnergy" -> Channel.newBluetoothLowEnergyChannel(
+                        ipAddress, bridge.context, getBluetoothAdapter(bridge.context)
+                    )
+                    else -> {
+                        this.notifyListeners(BrotherPrintEvent.onPrintFailedCommunication.webEventName,
+                            JSObject().put("code", 0)
+                                .put("message", "Error - port:$port is not supported")
                         )
-                    } else {
-                        Log.d("TAG", "ERROR - " + result.errorCode)
-                        notifyListeners(
-                            BrotherPrintEvent.onPrintError.webEventName,
-                            JSObject().put("code", result.errorCode)
-                                .put("message", result.toString())
-                        )
+                        call.reject("Error - port:$port is not supported")
+                        return@Thread
                     }
+                }
 
-                    printer.endCommunication()
+                val result = PrinterDriverGenerator.openChannel(channel)
+                if (result.error.code != OpenChannelError.ErrorCode.NoError) {
+                    this.notifyListeners(BrotherPrintEvent.onPrintFailedCommunication.webEventName,
+                        JSObject().put("code", result.error.code)
+                            .put("message", result.error.code.toString())
+                    )
+                    call.reject("Error - openChannel: " + result.error.code.toString())
+                    return@Thread
+                }
+
+                val printerDriver = result.driver
+
+                val printError: PrintError = printerDriver.printImage(decodedByte, settings)
+
+                if (printError.code != PrintError.ErrorCode.NoError) {
+                    notifyListeners(
+                        BrotherPrintEvent.onPrint.webEventName,
+                        JSObject().put("code", printError.code)
+                            .put("message", result.toString())
+                    )
                 } else {
                     notifyListeners(
-                        BrotherPrintEvent.onPrintFailedCommunication.webEventName,
-                        JSObject().put("code", "0")
+                        BrotherPrintEvent.onPrintError.webEventName,
+                        JSObject().put("code", printError.code)
+                            .put("message", result.toString())
                     )
                 }
-            }
-                .start()
-            call.resolve()
+
+                printerDriver.closeChannel()
+                call.resolve()
+            }.start()
         } catch (e: Exception) {
             notifyListeners(
                 BrotherPrintEvent.onPrintFailedCommunication.webEventName, JSObject().put("code", 0)
-                    .put("message", e.localizedMessage)
+                    .put("message", "Error - Thread: " + e.localizedMessage)
             )
-            call.reject(e.localizedMessage, e)
+            call.reject("Error - Thread: " + e.localizedMessage, e)
         }
+    }
+
+    private fun getBluetoothAdapter(context: Context): BluetoothAdapter? {
+        val manager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        return manager.adapter
     }
 
     @PluginMethod
     fun search(call: PluginCall) {
         when(call.getString("port", "wifi")) {
+            "usb" -> this.searchUsbPrinter(call)
             "wifi" -> this.searchWiFiPrinter(call)
             "bluetooth" -> this.checkBLEChannel(call)
             "bluetoothLowEnergy" -> this.searchBLEPrinter(call)
             else -> call.reject("port is not 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'")
         }
+    }
+
+    private fun searchUsbPrinter(call: PluginCall) {
+        Log.d("brother", "searchUsbPrinter")
+        Thread {
+            val result = PrinterSearcher.startUSBSearch(bridge.context)
+
+            when (result.error.code) {
+                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.NoError -> {
+                }
+                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.NotPermitted -> {
+                    // TODO: has error
+                }
+                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.Canceled,
+                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.InterfaceInactive,
+                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.InterfaceUnsupported,
+                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.AlreadySearching,
+                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.UnknownError -> {
+                }
+                null -> {}
+            }
+
+            for (channel in result.channels){
+                this.notifyListeners(
+                    BrotherPrintEvent.onPrinterAvailable.webEventName,
+                    this.chanelToPrinter("usb", channel)
+                );
+            }
+        }.start()
+        call.resolve();
     }
 
     private fun searchWiFiPrinter(call: PluginCall) {
@@ -185,7 +230,7 @@ class BrotherPrint : Plugin() {
 
     private fun checkBLEChannel(call: PluginCall) {
         if (!isBluetoothPermissionGranted()) {
-            requestAllPermissions(call, "permissionCallback");
+            requestPermissionForAlias("bluetooth", call, "permissionCallback");
         } else {
             Log.d("brother", "checkBLEChannel")
             Thread {
@@ -200,7 +245,10 @@ class BrotherPrint : Plugin() {
 
     private fun searchBLEPrinter(call: PluginCall) {
         if (!isBluetoothPermissionGranted()) {
-            requestAllPermissions(call, "permissionCallback");
+            requestPermissionForAlias("bluetooth", call, "permissionCallback");
+            return;
+        } else if (!isLocationPermissionGranted()) {
+            requestPermissionForAlias("location", call, "permissionCallback");
             return;
         } else {
             Log.d("brother", "searchBLEPrinter")
@@ -226,6 +274,7 @@ class BrotherPrint : Plugin() {
     }
 
     private fun chanelToPrinter(port: String, channel: Channel): JSObject? {
+        Log.d("brother", channel.toString());
         val modelName = channel.extraInfo[Channel.ExtraInfoKey.ModelName] ?: ""
         val serialNumber = channel.extraInfo[Channel.ExtraInfoKey.SerialNubmer] ?: ""
         val macAddress = channel.extraInfo[Channel.ExtraInfoKey.MACAddress] ?: ""
@@ -244,18 +293,20 @@ class BrotherPrint : Plugin() {
     }
 
     @PluginMethod
-    fun cancelSearchWiFiPrinter(call: PluginCall?) {
+    fun cancelSearchWiFiPrinter(call: PluginCall) {
         Thread {
             this.cancelRoutineWiFi?.invoke()
             this.cancelRoutineWiFi = null
+            call.resolve()
         }.start()
     }
 
     @PluginMethod
-    fun cancelSearchBluetoothPrinter(call: PluginCall?) {
+    fun cancelSearchBluetoothPrinter(call: PluginCall) {
         Thread {
             this.cancelRoutineBluetooth?.invoke()
             this.cancelRoutineBluetooth = null
+            call.resolve()
         }.start()
     }
 
@@ -272,8 +323,7 @@ class BrotherPrint : Plugin() {
             return
         }
         when (call.methodName) {
-            "checkBLEChannel" -> checkBLEChannel(call)
-            "searchBLEPrinter" -> searchBLEPrinter(call)
+            "search" -> this.search(call)
         }
     }
 

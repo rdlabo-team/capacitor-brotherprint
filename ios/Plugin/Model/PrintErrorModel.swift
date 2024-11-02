@@ -9,6 +9,25 @@ import BRLMPrinterKit
 import BRPtouchPrinterKit
 import Foundation
 
+class PrinterSearchErrorModel {
+    static func fetchChannelErrorCode(error: BRLMPrinterSearchErrorCode) -> String {
+        switch error {
+        case .noError:
+            return "noError"
+        case .canceled:
+            return "canceled"
+        case .alreadySearching:
+            return "alreadySearching"
+        case .unsupported:
+            return "unsupported"
+        case .unknownError:
+            return "unknownError"
+        @unknown default:
+            return "unknown"
+        }
+    }
+}
+
 class RequestPrinterInfoErrorModel {
     static func fetchGetPrinterInfoErrorCode(error: BRLMRequestPrinterInfoErrorCode) -> String {
         switch error {
