@@ -75,7 +75,7 @@ class BrotherPrint : Plugin() {
         val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
 
         val port: String? = call.getString("port", "wifi")
-        val ipAddress: String? = call.getString("ipAddress", "")
+        val channelInfo: String? = call.getString("channelInfo", "")
 //        val localName: String? = call.getString("localName", "")
 //        val serialNumber: String? = call.getString("serialNumber", "")
 //        val macAddress: String? = call.getString("macAddress", "")
@@ -105,10 +105,10 @@ class BrotherPrint : Plugin() {
             Thread {
                 val channel: Channel = when (port) {
                     "usb" -> Channel.newUsbChannel(bridge.context.getSystemService(Context.USB_SERVICE) as UsbManager)
-                    "wifi" -> Channel.newWifiChannel(ipAddress)
-                    "bluetooth" -> Channel.newBluetoothChannel(ipAddress, getBluetoothAdapter(bridge.context))
+                    "wifi" -> Channel.newWifiChannel(channelInfo)
+                    "bluetooth" -> Channel.newBluetoothChannel(channelInfo, getBluetoothAdapter(bridge.context))
                     "bluetoothLowEnergy" -> Channel.newBluetoothLowEnergyChannel(
-                        ipAddress, bridge.context, getBluetoothAdapter(bridge.context)
+                        channelInfo, bridge.context, getBluetoothAdapter(bridge.context)
                     )
                     else -> {
                         this.notifyListeners(BrotherPrintEvent.onPrintFailedCommunication.webEventName,
@@ -280,7 +280,7 @@ class BrotherPrint : Plugin() {
         val macAddress = channel.extraInfo[Channel.ExtraInfoKey.MACAddress] ?: ""
         val nodeName = channel.extraInfo[Channel.ExtraInfoKey.NodeName] ?: ""
         val location = channel.extraInfo[Channel.ExtraInfoKey.Location] ?: ""
-        val ipAddress = channel.channelInfo
+        val channelInfo = channel.channelInfo
 
         return JSObject()
             .put("port", port)
@@ -289,7 +289,7 @@ class BrotherPrint : Plugin() {
             .put("macAddress", macAddress)
             .put("nodeName", nodeName)
             .put("location", location)
-            .put("ipAddress", ipAddress)
+            .put("channelInfo", channelInfo)
     }
 
     @PluginMethod

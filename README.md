@@ -374,7 +374,7 @@ Make all properties in T optional
 
 #### BRLMChannelResult
 
-<code>{ port: 'usb' | 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'; modelName: string; serialNumber: string; macAddress: string; nodeName: string; location: string; ipAddress: string; }</code>
+<code>{ port: 'usb' | 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'; modelName: string; serialNumber: string; macAddress: string; nodeName: string; location: string; /\*\* _ This need to connect to the printer. _ wifi: IP Address _ bluetooth: macAddress _ bluetoothLowEnergy: modelName for bluetoothLowEnergy \*/ channelInfo: string; }</code>
 
 #### BRLMPrinterQLModelSettings
 
@@ -408,7 +408,7 @@ These are optional. If these are not set, default values are assigned by the pri
 
 #### BRLMSearchOption
 
-<code>{ port: 'usb' | 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'; /\*\* _ searchDuration is the time to end search for devices. _ default is 15 seconds. _ use only port is 'wifi' or 'bluetoothLowEnergy'. _/ searchDuration: number; }</code>
+<code>{ /** _ 'usb' is android only, and now developing. _/ port: 'usb' | 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'; /** _ searchDuration is the time to end search for devices. _ default is 15 seconds. _ use only port is 'wifi' or 'bluetoothLowEnergy'. _/ searchDuration: number; }</code>
 
 #### ErrorInfo
 

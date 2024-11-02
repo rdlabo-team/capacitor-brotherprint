@@ -26,7 +26,14 @@ export type BRLMChannelResult = {
   macAddress: string;
   nodeName: string;
   location: string;
-  ipAddress: string;
+
+  /**
+   * This need to connect to the printer.
+   * wifi: IP Address
+   * bluetooth: macAddress
+   * bluetoothLowEnergy: modelName for bluetoothLowEnergy
+   */
+  channelInfo: string;
 };
 
 export type BRLMPrintOptions = {
