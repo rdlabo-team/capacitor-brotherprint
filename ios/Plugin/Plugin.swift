@@ -167,13 +167,28 @@ public class BrotherPrint: CAPPlugin {
 
     private func checkBLEChannel(_ call: CAPPluginCall) {
         DispatchQueue.global().async {
-            NSLog("BRLMPrinterSearcher.startBluetoothSearch")
             let searcher = BRLMPrinterSearcher.startBluetoothSearch()
-            for channel in searcher.channels {
-                NSLog(channel.channelInfo)
-                self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetooth", channel: channel))
+            if (searcher.error.code != .noError) {
+                call.reject("Error - Bluetooth is not found. Error code: " + String(searcher.error.code.rawValue))
             }
-            call.resolve()
+            if (!searcher.channels.isEmpty) {
+                for channel in searcher.channels {
+                    NSLog(channel.channelInfo)
+                    self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetooth", channel: channel))
+                }
+                call.resolve()
+            } else {
+                NSLog("startBluetoothSearch can't find. Next start startBluetoothAccessorySearch.")
+                BRLMPrinterSearcher.startBluetoothAccessorySearch() { result in
+                    if (result.error.code != .noError) {
+                        call.reject("Error - BluetoothAccessory is not found. Error code: " + String(searcher.error.code.rawValue))
+                    }
+                    for channel in result.channels {
+                        self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetooth", channel: channel))
+                    }
+                    call.resolve()
+                }
+            }
         }
     }
 
