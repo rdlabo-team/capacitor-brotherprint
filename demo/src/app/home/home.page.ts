@@ -196,11 +196,7 @@ export class HomePage implements OnInit, OnDestroy {
     BrotherPrint.printImage({
       ...defaultPrintSettings,
       ...{
-        ipAddress: channel.ipAddress,
-        localName: channel.nodeName,
-        macAddress: channel.macAddress,
-        serialNumber: channel.serialNumber,
-        port: channel.port,
+        channelInfo: channel.channelInfo,
       },
     });
   }

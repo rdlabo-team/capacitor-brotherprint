@@ -23,10 +23,11 @@ public class BrotherPrint: CAPPlugin {
 
         // 検索からデバイス情報が得られた場合
         let port: String = call.getString("port", "wifi")
-        let localName: String = call.getString("localName", "")
-        let ipAddress: String = call.getString("ipAddress", "")
-        let serialNumber: String = call.getString("serialNumber", "")
-
+        let channelInfo: String = call.getString("channelInfo", "")
+        
+//        let localName: String = call.getString("localName", "")
+//        let serialNumber: String = call.getString("serialNumber", "")
+        
         let modelName: String = call.getString("modelName", "QL-820NWB")
         let printerModel = BrotherModel.getModelName(from: modelName)
 
@@ -39,11 +40,11 @@ public class BrotherPrint: CAPPlugin {
 
             switch port {
             case "wifi":
-                channel = BRLMChannel(wifiIPAddress: ipAddress)
+                channel = BRLMChannel(wifiIPAddress: channelInfo)
             case "bluetooth":
-                channel = BRLMChannel(bluetoothSerialNumber: serialNumber)
+                channel = BRLMChannel(bluetoothSerialNumber: channelInfo)
             case "bluetoothLowEnergy":
-                channel = BRLMChannel(bleLocalName: localName)
+                channel = BRLMChannel(bleLocalName: channelInfo)
             default:
                 call.reject("Error - connection is not found.")
                 return
@@ -216,9 +217,9 @@ public class BrotherPrint: CAPPlugin {
             "modelName": modelName,
             "serialNumber": serialNumber,
             "macAddress": macAddress,
-            "ipAddress": ipaddress,
             "nodeName": nodeName,
-            "location": location
+            "location": location,
+            "channelInfo": ipaddress,
         ]
     }
 
