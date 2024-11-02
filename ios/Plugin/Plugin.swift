@@ -169,25 +169,22 @@ public class BrotherPrint: CAPPlugin {
         DispatchQueue.global().async {
             let searcher = BRLMPrinterSearcher.startBluetoothSearch()
             if (searcher.error.code != BRLMPrinterSearchErrorCode.noError) {
-                call.reject("Error - Bluetooth is not found. Error code: " + String(searcher.error.code.rawValue))
+                call.reject("Error - startBluetoothSearch: " + PrinterSearchErrorModel.fetchChannelErrorCode(error: searcher.error.code))
                 return
             }
-            if (!searcher.channels.isEmpty) {
-                for channel in searcher.channels {
-                    NSLog(channel.channelInfo)
-                    self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetooth", channel: channel))
-                }
-                call.resolve()
-            } else {
-                NSLog("startBluetoothSearch can't find. Next start startBluetoothAccessorySearch.")
-                BRLMPrinterSearcher.startBluetoothAccessorySearch() { result in
-                    for channel in result.channels {
-                        self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetooth", channel: channel))
-                    }
-                    call.resolve()
-                }
+            for channel in searcher.channels {
+                NSLog(channel.channelInfo)
+                self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetooth", channel: channel))
             }
+            call.resolve()
         }
+        
+//        BRLMPrinterSearcher.startBluetoothAccessorySearch() { searcher in
+//            for channel in searcher.channels {
+//                self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetooth", channel: channel))
+//            }
+//            call.resolve()
+//        }
     }
 
     private func searchBLEPrinter(_ call: CAPPluginCall) {
