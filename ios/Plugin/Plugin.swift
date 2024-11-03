@@ -57,9 +57,9 @@ public class BrotherPrint: CAPPlugin {
                 let message = OpenChannelErrorModel.fetchChannelErrorCode(error: generateResult.error.code)
                 self.notifyListeners(BrotherPrinterEvent.onPrintFailedCommunication.rawValue, data: [
                     "message": message,
-                    "code": generateResult.error.code
+                    "code": generateResult.error.code.rawValue
                 ])
-                call.reject("Error - Open Channel: \(generateResult.error.code)")
+                call.reject("Error - Open Channel: \(message)")
                 return
             }
 
