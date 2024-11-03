@@ -1,11 +1,17 @@
 package jp.rdlabo.capacitor.plugin.brotherprint
 
 import android.Manifest
+import android.app.PendingIntent
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.BitmapFactory
+import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
+import android.os.Build
 import android.util.Base64
 import android.util.Log
 import com.brother.sdk.lmprinter.BLESearchOption
@@ -56,8 +62,12 @@ import jp.rdlabo.capacitor.plugin.brotherprint.models.BrotherPrintSettings
 class BrotherPrint : Plugin() {
     private var cancelRoutineWiFi: (() -> Unit)? = null
     private var cancelRoutineBluetooth: (() -> Unit)? = null
+
+    private val ActionUSBPermission = "jp.rdlabo.capacitor.plugin.brotherprint.USB_PERMISSION"
     private val PERMISSION_DENIED_ERROR =
         "Unable to do call operation, user denied permission request"
+
+    private var storeCall: PluginCall? = null
 
     @PluginMethod
     fun printImage(call: PluginCall) {
@@ -159,7 +169,12 @@ class BrotherPrint : Plugin() {
     }
 
     private fun searchUsbPrinter(call: PluginCall) {
-        Log.d("brother", "searchUsbPrinter")
+        if (!this.requestUsbPermission(call)) {
+            this.storeCall = call;
+            return
+        }
+        this.storeCall = null
+
         Thread {
             val result = PrinterSearcher.startUSBSearch(bridge.context)
 
@@ -307,6 +322,52 @@ class BrotherPrint : Plugin() {
         when (call.methodName) {
             "search" -> this.search(call)
         }
+    }
+
+    /**
+     * TODO: This is not called for in spite of registration.
+     * Therefore, it is now necessary for the user to run it again after permission is granted.
+     */
+    private val usbReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == ActionUSBPermission && intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                storeCall?.let { searchUsbPrinter(it) }
+            } else {
+                storeCall?.reject("Error - usbReceiver can't current receiver");
+            }
+        }
+    }
+
+    private fun requestUsbPermission(call: PluginCall): Boolean {
+        val permissionIntent = PendingIntent.getBroadcast(
+            bridge.context, 0, Intent(ActionUSBPermission), PendingIntent.FLAG_IMMUTABLE
+        )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            bridge.context.registerReceiver(
+                usbReceiver, IntentFilter(ActionUSBPermission),
+                Context.RECEIVER_NOT_EXPORTED
+            )
+        } else {
+            bridge.context.registerReceiver(
+                usbReceiver, IntentFilter(ActionUSBPermission)
+            )
+        }
+
+        var connectDevice: UsbDevice? = null
+        val usbManager = bridge.context.getSystemService(Context.USB_SERVICE) as UsbManager
+        for (device in usbManager.deviceList.values) {
+            connectDevice = device
+        }
+
+        if (connectDevice == null) {
+            call.reject("Error - connection failed: device not found")
+            return false
+        }
+
+        usbManager.requestPermission(connectDevice, permissionIntent)
+
+        return usbManager.hasPermission(connectDevice)
     }
 
     private fun isBluetoothPermissionGranted(): Boolean {
