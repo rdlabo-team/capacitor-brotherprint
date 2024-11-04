@@ -204,7 +204,7 @@ export class BrotherComponent implements OnInit, OnDestroy {
 
     const defaultPrintSettings: BRLMPrintOptions = {
       modelName: BRLMPrinterModelName.QL_820NWB,
-      labelName: BRLMPrinterLabelName.W62,
+      labelName: BRLMPrinterLabelName.RollW62,
       encodedImage: 'base64 removed mime-type', // base64
       numberOfCopies: 1, // default 1
       autoCut: true, // default true
@@ -213,16 +213,16 @@ export class BrotherComponent implements OnInit, OnDestroy {
     BrotherPrint.printImage({
       ...defaultPrintSettings,
       ...{
-        ipAddress: this.printers()[0].ipAddress,
-        localName: this.printers()[0].nodeName,
-        macAddress: this.printers()[0].macAddress,
-        serialNumber: this.printers()[0].serialNumber,
         port: this.printers()[0].port,
+        channelInfo: this.printers()[0].channelInfo,
       },
     });
   }
 }
 ```
+
+See demo for complete code:
+https://github.com/rdlabo-team/capacitor-brotherprint/blob/main/demo/src/app/home/home.page.ts
 
 ## API
 
