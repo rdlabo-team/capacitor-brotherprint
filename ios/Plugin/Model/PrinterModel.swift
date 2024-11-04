@@ -58,54 +58,74 @@ class BrotherModel {
 
     static func getLabelSize(from: String) -> BRLMQLPrintSettingsLabelSize {
         switch from {
-        case "W17H54":
+        case "DieCutW17H54":
             return BRLMQLPrintSettingsLabelSize.dieCutW17H54
-        case "W17H87":
+        case "DieCutW17H87":
             return BRLMQLPrintSettingsLabelSize.dieCutW17H87
-        case "W23H23":
+        case "DieCutW23H23":
             return BRLMQLPrintSettingsLabelSize.dieCutW23H23
-        case "W29H42":
+        case "DieCutW29H42":
             return BRLMQLPrintSettingsLabelSize.dieCutW29H42
-        case "W29H90":
+        case "DieCutW29H90":
             return BRLMQLPrintSettingsLabelSize.dieCutW29H90
-        case "W38H90":
+        case "DieCutW38H90":
             return BRLMQLPrintSettingsLabelSize.dieCutW38H90
-        case "W39H48":
+        case "DieCutW39H48":
             return BRLMQLPrintSettingsLabelSize.dieCutW39H48
-        case "W52H29":
+        case "DieCutW52H29":
             return BRLMQLPrintSettingsLabelSize.dieCutW52H29
-        case "W62H29":
+        case "DieCutW62H29":
             return BRLMQLPrintSettingsLabelSize.dieCutW62H29
-        case "W62H100":
-            return BRLMQLPrintSettingsLabelSize.dieCutW62H100
-        case "W12":
-            return BRLMQLPrintSettingsLabelSize.rollW12
-        case "W38":
-            return BRLMQLPrintSettingsLabelSize.rollW38
-        case "W50":
-            return BRLMQLPrintSettingsLabelSize.rollW50
-        case "W54":
-            return BRLMQLPrintSettingsLabelSize.rollW54
-        case "W62":
-            return BRLMQLPrintSettingsLabelSize.rollW62
-        case "W60H86":
-            return BRLMQLPrintSettingsLabelSize.dieCutW60H86
-        case "W62RB":
-            return BRLMQLPrintSettingsLabelSize.rollW62RB
-        case "W54H29":
-            return BRLMQLPrintSettingsLabelSize.dieCutW54H29
-        case "W12DIA":
-            return BRLMQLPrintSettingsLabelSize.roundW12DIA
-        case "W24DIA":
-            return BRLMQLPrintSettingsLabelSize.roundW24DIA
-        case "W58DIA":
-            return BRLMQLPrintSettingsLabelSize.roundW58DIA
-        case "W62H60":
+        case "DieCutW62H60":
             return BRLMQLPrintSettingsLabelSize.dieCutW62H60
-        case "W62H75":
+        case "DieCutW62H75":
             return BRLMQLPrintSettingsLabelSize.dieCutW62H75
-        default:
+        case "DieCutW62H100":
+            return BRLMQLPrintSettingsLabelSize.dieCutW62H100
+        case "DieCutW60H86":
+            return BRLMQLPrintSettingsLabelSize.dieCutW60H86
+        case "DieCutW54H29":
+            return BRLMQLPrintSettingsLabelSize.dieCutW54H29
+        case "DieCutW102H51":
+            return BRLMQLPrintSettingsLabelSize.dieCutW102H51
+        case "DieCutW102H152":
+            return BRLMQLPrintSettingsLabelSize.dieCutW102H152
+        case "DieCutW103H164":
+            return BRLMQLPrintSettingsLabelSize.dieCutW103H164
+        case "RollW12":
+            return BRLMQLPrintSettingsLabelSize.rollW12
+        case "RollW29":
+            return BRLMQLPrintSettingsLabelSize.rollW29
+        case "RollW38":
+            return BRLMQLPrintSettingsLabelSize.rollW38
+        case "RollW50":
+            return BRLMQLPrintSettingsLabelSize.rollW50
+        case "RollW54":
+            return BRLMQLPrintSettingsLabelSize.rollW54
+        case "RollW62":
             return BRLMQLPrintSettingsLabelSize.rollW62
+        case "RollW62RB":
+            return BRLMQLPrintSettingsLabelSize.rollW62RB
+        case "RollW102":
+            return BRLMQLPrintSettingsLabelSize.rollW102
+        case "RollW103":
+            return BRLMQLPrintSettingsLabelSize.rollW103
+        case "DTRollW90":
+            return BRLMQLPrintSettingsLabelSize.dtRollW90
+        case "DTRollW102":
+            return BRLMQLPrintSettingsLabelSize.dtRollW102
+        case "DTRollW102H51":
+            return BRLMQLPrintSettingsLabelSize.dtRollW102H51
+        case "DTRollW102H152":
+            return BRLMQLPrintSettingsLabelSize.dtRollW102H152
+        case "RoundW12DIA":
+            return BRLMQLPrintSettingsLabelSize.roundW12DIA
+        case "RoundW24DIA":
+            return BRLMQLPrintSettingsLabelSize.roundW24DIA
+        case "RoundW58DIA":
+            return BRLMQLPrintSettingsLabelSize.roundW58DIA
+        default:
+            fatalError("Unsupported label size: \(from)")
         }
     }
 }

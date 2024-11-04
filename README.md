@@ -430,6 +430,7 @@ These are optional. If these are not set, default values are assigned by the pri
 
 | Members            | Value                       |
 | ------------------ | --------------------------- |
+| **`QL_800`**       | <code>'QL_800'</code>       |
 | **`QL_810W`**      | <code>'QL_810W'</code>      |
 | **`QL_820NWB`**    | <code>'QL_820NWB'</code>    |
 | **`TD_2320D_203`** | <code>'TD_2320D_203'</code> |
@@ -438,32 +439,41 @@ These are optional. If these are not set, default values are assigned by the pri
 
 #### BRLMPrinterLabelName
 
-| Members       | Value                  |
-| ------------- | ---------------------- |
-| **`W17H54`**  | <code>'W17H54'</code>  |
-| **`W17H87`**  | <code>'W17H87'</code>  |
-| **`W23H23`**  | <code>'W23H23'</code>  |
-| **`W29H42`**  | <code>'W29H42'</code>  |
-| **`W29H90`**  | <code>'W29H90'</code>  |
-| **`W38H90`**  | <code>'W38H90'</code>  |
-| **`W39H48`**  | <code>'W39H48'</code>  |
-| **`W52H29`**  | <code>'W52H29'</code>  |
-| **`W62H29`**  | <code>'W62H29'</code>  |
-| **`W62H100`** | <code>'W62H100'</code> |
-| **`W12`**     | <code>'W12'</code>     |
-| **`W29`**     | <code>'W29'</code>     |
-| **`W38`**     | <code>'W38'</code>     |
-| **`W50`**     | <code>'W50'</code>     |
-| **`W54`**     | <code>'W54'</code>     |
-| **`W62`**     | <code>'W62'</code>     |
-| **`W60H86`**  | <code>'W60H86'</code>  |
-| **`W62RB`**   | <code>'W62RB'</code>   |
-| **`W54H29`**  | <code>'W54H29'</code>  |
-| **`W12DIA`**  | <code>'W12DIA'</code>  |
-| **`W24DIA`**  | <code>'W24DIA'</code>  |
-| **`W58DIA`**  | <code>'W58DIA'</code>  |
-| **`W62H60`**  | <code>'W62H60'</code>  |
-| **`W62H75`**  | <code>'W62H75'</code>  |
+| Members              | Value                         |
+| -------------------- | ----------------------------- |
+| **`DieCutW17H54`**   | <code>'DieCutW17H54'</code>   |
+| **`DieCutW17H87`**   | <code>'DieCutW17H87'</code>   |
+| **`DieCutW23H23`**   | <code>'DieCutW23H23'</code>   |
+| **`DieCutW29H42`**   | <code>'DieCutW29H42'</code>   |
+| **`DieCutW29H90`**   | <code>'DieCutW29H90'</code>   |
+| **`DieCutW38H90`**   | <code>'DieCutW38H90'</code>   |
+| **`DieCutW39H48`**   | <code>'DieCutW39H48'</code>   |
+| **`DieCutW52H29`**   | <code>'DieCutW52H29'</code>   |
+| **`DieCutW62H29`**   | <code>'DieCutW62H29'</code>   |
+| **`DieCutW62H60`**   | <code>'DieCutW62H60'</code>   |
+| **`DieCutW62H75`**   | <code>'DieCutW62H75'</code>   |
+| **`DieCutW62H100`**  | <code>'DieCutW62H100'</code>  |
+| **`DieCutW60H86`**   | <code>'DieCutW60H86'</code>   |
+| **`DieCutW54H29`**   | <code>'DieCutW54H29'</code>   |
+| **`DieCutW102H51`**  | <code>'DieCutW102H51'</code>  |
+| **`DieCutW102H152`** | <code>'DieCutW102H152'</code> |
+| **`DieCutW103H164`** | <code>'DieCutW103H164'</code> |
+| **`RollW12`**        | <code>'RollW12'</code>        |
+| **`RollW29`**        | <code>'RollW29'</code>        |
+| **`RollW38`**        | <code>'RollW38'</code>        |
+| **`RollW50`**        | <code>'RollW50'</code>        |
+| **`RollW54`**        | <code>'RollW54'</code>        |
+| **`RollW62`**        | <code>'RollW62'</code>        |
+| **`RollW62RB`**      | <code>'RollW62RB'</code>      |
+| **`RollW102`**       | <code>'RollW102'</code>       |
+| **`RollW103`**       | <code>'RollW103'</code>       |
+| **`DTRollW90`**      | <code>'DTRollW90'</code>      |
+| **`DTRollW102`**     | <code>'DTRollW102'</code>     |
+| **`DTRollW102H51`**  | <code>'DTRollW102H51'</code>  |
+| **`DTRollW102H152`** | <code>'DTRollW102H152'</code> |
+| **`RoundW12DIA`**    | <code>'RoundW12DIA'</code>    |
+| **`RoundW24DIA`**    | <code>'RoundW24DIA'</code>    |
+| **`RoundW58DIA`**    | <code>'RoundW58DIA'</code>    |
 
 #### BRLMPrinterScaleMode
 

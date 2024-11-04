@@ -79,7 +79,9 @@ export class HomePage implements OnInit, OnDestroy {
   readonly useModel = model<BRLMPrinterModelName>(
     BRLMPrinterModelName.TD_2350D_300,
   );
-  readonly useLabel = model<BRLMPrinterLabelName>(BRLMPrinterLabelName.W29H90);
+  readonly useLabel = model<BRLMPrinterLabelName>(
+    BRLMPrinterLabelName.RollW62RB,
+  );
 
   readonly paperType = model<BRKMPrinterCustomPaperType>(
     BRKMPrinterCustomPaperType.dieCutPaper,
