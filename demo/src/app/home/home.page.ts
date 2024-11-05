@@ -26,6 +26,7 @@ import {
 import {
   BRKMPrinterCustomPaperType,
   BRKMPrinterCustomPaperUnit,
+  BRKMPrinterPort,
   BRLMChannelResult,
   BRLMPrinterLabelName,
   BRLMPrinterModelName,
@@ -71,6 +72,7 @@ import { setPlatformOptions } from 'ionicons/components';
 })
 export class HomePage implements OnInit, OnDestroy {
   readonly listenerHandlers: PluginListenerHandle[] = [];
+  readonly printerPortEnum = BRKMPrinterPort;
   readonly modelNames = Object.values(BRLMPrinterModelName);
   readonly labelNames = Object.keys(BRLMPrinterLabelName);
   readonly paperTypes = Object.values(BRKMPrinterCustomPaperType);
@@ -139,9 +141,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.listenerHandlers.forEach(handler => handler.remove());
   }
 
-  async searchPrinter(
-    port: 'usb' | 'wifi' | 'bluetooth' | 'bluetoothLowEnergy',
-  ) {
+  async searchPrinter(port: BRKMPrinterPort) {
     // This method return void. Get the printer list by listening to the event.
     await BrotherPrint.search({
       port,

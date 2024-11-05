@@ -16,11 +16,12 @@ import type {
   BRLMPrinterVerticalAlignment,
   BRKMPrinterCustomPaperType,
   BRKMPrinterCustomPaperUnit,
+  BRKMPrinterPort,
 } from './brother-printer.enum';
 import type { BrotherPrintEventsEnum } from './events.enum';
 
 export type BRLMChannelResult = {
-  port: 'usb' | 'wifi' | 'bluetooth' | 'bluetoothLowEnergy';
+  port: BRKMPrinterPort;
   modelName: string;
   serialNumber: string;
   macAddress: string;
@@ -158,7 +159,7 @@ export type BRLMSearchOption = {
   /**
    * 'usb' is android only, and now developing.
    */
-  port: 'usb' | 'wifi' | 'bluetooth' | 'bluetoothLowEnergy';
+  port: BRKMPrinterPort;
 
   /**
    * searchDuration is the time to end search for devices.

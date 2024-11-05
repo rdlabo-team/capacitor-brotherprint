@@ -1,9 +1,9 @@
-/**
- * Note: If you update this file, you should update the following files:
- * - ios/Plugin/Model/PrinterModel.swift
- *
- * And name is follow android naming convention.
- */
+export enum BRKMPrinterPort {
+  usb = 'usb',
+  wifi = 'wifi',
+  bluetooth = 'bluetooth',
+  bluetoothLowEnergy = 'bluetoothLowEnergy',
+}
 
 export enum BRKMPrinterCustomPaperUnit {
   mm = 'mm',
@@ -17,6 +17,10 @@ export enum BRKMPrinterCustomPaperType {
 }
 
 /**
+ * Note: If you update this file, you should update the following files:
+ * - ios/Plugin/Model/PrinterModel.swift
+ *
+ * And name is follow android naming convention.
  * Android naming: https://support.brother.co.jp/j/s/support/html/mobilesdk/reference/android_v4/printermodel.html
  */
 export enum BRLMPrinterModelName {
