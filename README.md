@@ -134,15 +134,6 @@ More information is here: https://support.brother.co.jp/j/s/support/html/mobiles
 ## How to use
 
 ```typescript
-import {
-  BrotherPrint,
-  BRLMPrintOptions,
-  BRLMPrinterLabelName,
-  BrotherPrintEventsEnum,
-  BRLMPrinterModelName,
-  BRLMChannelResult,
-} from '@rdlabo/capacitor-brotherprint';
-
 @Component({
   selector: 'brother-print',
   templateUrl: 'brother.component.html',
@@ -188,7 +179,7 @@ export class BrotherComponent implements OnInit, OnDestroy {
     this.#listenerHandlers.forEach(handler => handler.remove());
   }
 
-  async searchPrinter(port: 'wifi' | 'bluetooth' | 'bluetoothLowEnergy') {
+  async searchPrinter(port: BRKMPrinterPort) {
     // This method return void. Get the printer list by listening to the event.
     await BrotherPrint.search({
       port,
