@@ -24,9 +24,9 @@ import {
   Platform,
 } from '@ionic/angular/standalone';
 import {
-  BRKMPrinterCustomPaperType,
-  BRKMPrinterCustomPaperUnit,
-  BRKMPrinterPort,
+  BRLMPrinterCustomPaperType,
+  BRLMPrinterCustomPaperUnit,
+  BRLMPrinterPort,
   BRLMChannelResult,
   BRLMPrinterLabelName,
   BRLMPrinterModelName,
@@ -72,11 +72,11 @@ import { setPlatformOptions } from 'ionicons/components';
 })
 export class HomePage implements OnInit, OnDestroy {
   readonly listenerHandlers: PluginListenerHandle[] = [];
-  readonly printerPortEnum = BRKMPrinterPort;
+  readonly printerPortEnum = BRLMPrinterPort;
   readonly modelNames = Object.values(BRLMPrinterModelName);
   readonly labelNames = Object.keys(BRLMPrinterLabelName);
-  readonly paperTypes = Object.values(BRKMPrinterCustomPaperType);
-  readonly paperUnits = Object.values(BRKMPrinterCustomPaperUnit);
+  readonly paperTypes = Object.values(BRLMPrinterCustomPaperType);
+  readonly paperUnits = Object.values(BRLMPrinterCustomPaperUnit);
 
   readonly useModel = model<BRLMPrinterModelName>(
     BRLMPrinterModelName.TD_2350D_300,
@@ -85,11 +85,11 @@ export class HomePage implements OnInit, OnDestroy {
     BRLMPrinterLabelName.RollW62RB,
   );
 
-  readonly paperType = model<BRKMPrinterCustomPaperType>(
-    BRKMPrinterCustomPaperType.dieCutPaper,
+  readonly paperType = model<BRLMPrinterCustomPaperType>(
+    BRLMPrinterCustomPaperType.dieCutPaper,
   );
-  readonly paperUnit = model<BRKMPrinterCustomPaperUnit>(
-    BRKMPrinterCustomPaperUnit.mm,
+  readonly paperUnit = model<BRLMPrinterCustomPaperUnit>(
+    BRLMPrinterCustomPaperUnit.mm,
   );
   readonly tapeWidth = model<number>(60.0);
   readonly tapeLength = model<number>(60.0);
@@ -141,7 +141,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.listenerHandlers.forEach(handler => handler.remove());
   }
 
-  async searchPrinter(port: BRKMPrinterPort) {
+  async searchPrinter(port: BRLMPrinterPort) {
     // This method return void. Get the printer list by listening to the event.
     await BrotherPrint.search({
       port,

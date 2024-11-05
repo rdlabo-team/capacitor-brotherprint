@@ -14,14 +14,14 @@ import type {
   BRLMPrinterScaleMode,
   BRLMPrinterScaleValueType,
   BRLMPrinterVerticalAlignment,
-  BRKMPrinterCustomPaperType,
-  BRKMPrinterCustomPaperUnit,
-  BRKMPrinterPort,
+  BRLMPrinterCustomPaperType,
+  BRLMPrinterCustomPaperUnit,
+  BRLMPrinterPort,
 } from './brother-printer.enum';
 import type { BrotherPrintEventsEnum } from './events.enum';
 
 export type BRLMChannelResult = {
-  port: BRKMPrinterPort;
+  port: BRLMPrinterPort;
   modelName: string;
   serialNumber: string;
   macAddress: string;
@@ -51,7 +51,7 @@ export type BRLMPrinterTDModelSettings = {
   /**
    * Should use enum BRKMPrinterCustomPaperType
    */
-  paperType: BRKMPrinterCustomPaperType;
+  paperType: BRLMPrinterCustomPaperType;
 
   /**
    * The width of the label. For example, the RD-U04J1 is 60.0 wide.
@@ -84,7 +84,7 @@ export type BRLMPrinterTDModelSettings = {
    * Should use enum BRKMPrinterCustomPaperUnit.
    * For example, the RD-U04J1 is mm.
    */
-  paperUnit: BRKMPrinterCustomPaperUnit;
+  paperUnit: BRLMPrinterCustomPaperUnit;
 };
 
 export type BRLMPrinterQLModelSettings = {
@@ -159,7 +159,7 @@ export type BRLMSearchOption = {
   /**
    * 'usb' is android only, and now developing.
    */
-  port: BRKMPrinterPort;
+  port: BRLMPrinterPort;
 
   /**
    * searchDuration is the time to end search for devices.

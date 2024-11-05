@@ -1,16 +1,16 @@
-export enum BRKMPrinterPort {
+export enum BRLMPrinterPort {
   usb = 'usb',
   wifi = 'wifi',
   bluetooth = 'bluetooth',
   bluetoothLowEnergy = 'bluetoothLowEnergy',
 }
 
-export enum BRKMPrinterCustomPaperUnit {
+export enum BRLMPrinterCustomPaperUnit {
   mm = 'mm',
   inch = 'inch',
 }
 
-export enum BRKMPrinterCustomPaperType {
+export enum BRLMPrinterCustomPaperType {
   rollPaper = 'rollPaper',
   dieCutPaper = 'dieCutPaper',
   markRollPaper = 'markRollPaper',
