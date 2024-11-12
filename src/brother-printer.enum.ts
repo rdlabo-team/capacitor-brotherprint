@@ -53,6 +53,7 @@ export enum BRLMPrinterLabelName {
   DieCutW102H51 = 'DieCutW102H51',
   DieCutW102H152 = 'DieCutW102H152',
   DieCutW103H164 = 'DieCutW103H164',
+
   RollW12 = 'RollW12',
   RollW29 = 'RollW29',
   RollW38 = 'RollW38',
@@ -69,6 +70,20 @@ export enum BRLMPrinterLabelName {
   RoundW12DIA = 'RoundW12DIA',
   RoundW24DIA = 'RoundW24DIA',
   RoundW58DIA = 'RoundW58DIA',
+
+  /**
+   * For TD series
+   * @url https://www.brother.co.jp/product/labelprinter/td2350d/accessory/index.aspx
+   */
+  RDDieCutW60H60 = 'RDDieCutW60H60',
+  RDDieCutW50H30 = 'RDDieCutW50H30',
+  RDDieCutW40H60 = 'RDDieCutW40H60',
+  RDDieCutW40H50 = 'RDDieCutW40H50',
+  RDDieCutW40H40 = 'RDDieCutW40H40',
+  RDDieCutW30H30 = 'RDDieCutW30H30',
+  RDDieCutW50H35 = 'RDDieCutW50H35',
+  RDDieCutW60H80 = 'RDDieCutW60H80',
+  RDDieCutW60H100 = 'RDDieCutW60H100',
 }
 
 export type BRLMPrinterAutoCutType = boolean;
