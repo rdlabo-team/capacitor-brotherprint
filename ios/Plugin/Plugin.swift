@@ -11,7 +11,8 @@ import BRPtouchPrinterKit
 public class BrotherPrint: CAPPlugin {
     private var cancelRoutineWiFi: (() -> Void)?
     private var cancelRoutineBluetooth: (() -> Void)?
-
+    private let bluetoothManager = BluetoothManager()
+    
     @objc func printImage(_ call: CAPPluginCall) {
         let encodedImage: String = call.getString("encodedImage", "")
         if encodedImage == "" {
@@ -167,11 +168,19 @@ public class BrotherPrint: CAPPlugin {
                 call.reject("Error - startBluetoothSearch: " + PrinterSearchErrorModel.fetchChannelErrorCode(error: searcher.error.code))
                 return
             }
-            for channel in searcher.channels {
-                NSLog(channel.channelInfo)
-                self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetooth", channel: channel))
+            
+            if (!searcher.channels.isEmpty) {
+                for channel in searcher.channels {
+                    self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetooth", channel: channel))
+                }
+                call.resolve()
+            } else {
+                let channels: [JSObject] = self.bluetoothManager.getChannels()
+                for channel in channels {
+                    self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: channel)
+                }
+                call.resolve()
             }
-            call.resolve()
         }
 
         //        BRLMPrinterSearcher.startBluetoothAccessorySearch() { searcher in
@@ -204,7 +213,7 @@ public class BrotherPrint: CAPPlugin {
         let macAddress = channel.extraInfo?.value(forKey: BRLMChannelExtraInfoKeyMacAddress) as? String ?? ""
         let nodeName = channel.extraInfo?.value(forKey: BRLMChannelExtraInfoKeyNodeName) as? String ?? ""
         let location = channel.extraInfo?.value(forKey: BRLMChannelExtraInfoKeyLocation) as? String ?? ""
-        let ipaddress = channel.channelInfo
+        let channelInfo = channel.channelInfo
 
         return [
             "port": port,
@@ -213,7 +222,7 @@ public class BrotherPrint: CAPPlugin {
             "macAddress": macAddress,
             "nodeName": nodeName,
             "location": location,
-            "channelInfo": ipaddress
+            "channelInfo": channelInfo
         ]
     }
 
