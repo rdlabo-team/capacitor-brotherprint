@@ -136,9 +136,9 @@ class BrotherPrint : Plugin() {
                 notifyListeners(
                     BrotherPrintEvent.onPrintError.webEventName,
                     JSObject().put("code", printError.code)
-                        .put("message", result.error.code.toString())
+                        .put("message", printError.code.toString())
                 )
-                call.reject("Error - Print Image: " + result.error.code.toString())
+                call.reject("Error - Print Image: " + printError.code.toString())
                 return@Thread
             }
 

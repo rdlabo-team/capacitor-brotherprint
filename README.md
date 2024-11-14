@@ -474,15 +474,15 @@ These are optional. If these are not set, default values are assigned by the pri
 | **`RoundW12DIA`**     | <code>'RoundW12DIA'</code>     |               |
 | **`RoundW24DIA`**     | <code>'RoundW24DIA'</code>     |               |
 | **`RoundW58DIA`**     | <code>'RoundW58DIA'</code>     |               |
-| **`RDDieCutW60H60`**  | <code>"RDDieCutW60H60"</code>  | For TD series |
-| **`RDDieCutW50H30`**  | <code>"RDDieCutW50H30"</code>  |               |
-| **`RDDieCutW40H60`**  | <code>"RDDieCutW40H60"</code>  |               |
-| **`RDDieCutW40H50`**  | <code>"RDDieCutW40H50"</code>  |               |
-| **`RDDieCutW40H40`**  | <code>"RDDieCutW40H40"</code>  |               |
-| **`RDDieCutW30H30`**  | <code>"RDDieCutW30H30"</code>  |               |
-| **`RDDieCutW50H35`**  | <code>"RDDieCutW50H35"</code>  |               |
-| **`RDDieCutW60H80`**  | <code>"RDDieCutW60H80"</code>  |               |
-| **`RDDieCutW60H100`** | <code>"RDDieCutW60H100"</code> |               |
+| **`RDDieCutW60H60`**  | <code>'RDDieCutW60H60'</code>  | For TD series |
+| **`RDDieCutW50H30`**  | <code>'RDDieCutW50H30'</code>  |               |
+| **`RDDieCutW40H60`**  | <code>'RDDieCutW40H60'</code>  |               |
+| **`RDDieCutW40H50`**  | <code>'RDDieCutW40H50'</code>  |               |
+| **`RDDieCutW40H40`**  | <code>'RDDieCutW40H40'</code>  |               |
+| **`RDDieCutW30H30`**  | <code>'RDDieCutW30H30'</code>  |               |
+| **`RDDieCutW50H35`**  | <code>'RDDieCutW50H35'</code>  |               |
+| **`RDDieCutW60H80`**  | <code>'RDDieCutW60H80'</code>  |               |
+| **`RDDieCutW60H100`** | <code>'RDDieCutW60H100'</code> |               |
 
 #### BRLMPrinterScaleMode
 
