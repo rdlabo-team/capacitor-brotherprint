@@ -54,11 +54,11 @@
     "@capacitor/core": ">=7.0.0"
   },
   "lint-staged": {
-    "*.{ts}": [
+    "*.ts": [
       "npm run prettier -- --write",
       "git add"
     ],
-    "*.{java}": [
+    "*.java": [
       "npm run prettier -- --write",
       "git add"
     ]
