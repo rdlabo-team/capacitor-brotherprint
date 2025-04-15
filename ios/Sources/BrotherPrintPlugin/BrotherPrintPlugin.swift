@@ -7,7 +7,7 @@ import BRPtouchPrinterKit
  * Please read the Capacitor iOS Plugin Development Guide
  * here: https://capacitorjs.com/docs/plugins/ios
  */
-@objc(BrotherPrintPlugin)
+@objc(BrotherPrint)
 public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
     public let identifier = "BrotherPrintPlugin" 
     public let jsName = "BrotherPrintPlugin" 
