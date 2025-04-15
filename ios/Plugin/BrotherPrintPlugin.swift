@@ -7,8 +7,8 @@ import BRPtouchPrinterKit
  * Please read the Capacitor iOS Plugin Development Guide
  * here: https://capacitorjs.com/docs/plugins/ios
  */
-@objc(BrotherPrint)
-public class BrotherPrint: CAPPlugin {
+@objc(BrotherPrintPlugin)
+public class BrotherPrintPlugin: CAPPlugin {
     private var cancelRoutineWiFi: (() -> Void)?
     private var cancelRoutineBluetooth: (() -> Void)?
 
@@ -120,7 +120,7 @@ public class BrotherPrint: CAPPlugin {
             }
 
             printerDriver.closeChannel()
-            
+
             self.notifyListeners(BrotherPrinterEvent.onPrint.rawValue, data: [:])
             call.resolve()
         }
