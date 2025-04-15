@@ -1,11 +1,4 @@
-import {
-  Component,
-  inject,
-  model,
-  OnDestroy,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, inject, model, OnDestroy, OnInit, signal } from '@angular/core';
 import {
   IonHeader,
   IonToolbar,
@@ -78,19 +71,11 @@ export class HomePage implements OnInit, OnDestroy {
   readonly paperTypes = Object.values(BRLMPrinterCustomPaperType);
   readonly paperUnits = Object.values(BRLMPrinterCustomPaperUnit);
 
-  readonly useModel = model<BRLMPrinterModelName>(
-    BRLMPrinterModelName.TD_2350D_300,
-  );
-  readonly useLabel = model<BRLMPrinterLabelName>(
-    BRLMPrinterLabelName.RollW62RB,
-  );
+  readonly useModel = model<BRLMPrinterModelName>(BRLMPrinterModelName.TD_2350D_300);
+  readonly useLabel = model<BRLMPrinterLabelName>(BRLMPrinterLabelName.RollW62RB);
 
-  readonly paperType = model<BRLMPrinterCustomPaperType>(
-    BRLMPrinterCustomPaperType.dieCutPaper,
-  );
-  readonly paperUnit = model<BRLMPrinterCustomPaperUnit>(
-    BRLMPrinterCustomPaperUnit.mm,
-  );
+  readonly paperType = model<BRLMPrinterCustomPaperType>(BRLMPrinterCustomPaperType.dieCutPaper);
+  readonly paperUnit = model<BRLMPrinterCustomPaperUnit>(BRLMPrinterCustomPaperUnit.mm);
   readonly tapeWidth = model<number>(60.0);
   readonly tapeLength = model<number>(60.0);
   readonly marginTop = model<number>(1.0);
@@ -112,33 +97,24 @@ export class HomePage implements OnInit, OnDestroy {
       }),
     );
     this.listenerHandlers.push(
-      await BrotherPrint.addListener(
-        BrotherPrintEventsEnum.onPrintError,
-        () => {
-          console.log('onPrintError');
-        },
-      ),
+      await BrotherPrint.addListener(BrotherPrintEventsEnum.onPrintError, () => {
+        console.log('onPrintError');
+      }),
     );
     this.listenerHandlers.push(
-      await BrotherPrint.addListener(
-        BrotherPrintEventsEnum.onPrintFailedCommunication,
-        (info: ErrorInfo) => {
-          console.log('onPrintFailedCommunication');
-        },
-      ),
+      await BrotherPrint.addListener(BrotherPrintEventsEnum.onPrintFailedCommunication, (info: ErrorInfo) => {
+        console.log('onPrintFailedCommunication');
+      }),
     );
     this.listenerHandlers.push(
-      await BrotherPrint.addListener(
-        BrotherPrintEventsEnum.onPrinterAvailable,
-        (printer: BRLMChannelResult) => {
-          this.printers.update(prev => [...prev, printer]);
-        },
-      ),
+      await BrotherPrint.addListener(BrotherPrintEventsEnum.onPrinterAvailable, (printer: BRLMChannelResult) => {
+        this.printers.update((prev) => [...prev, printer]);
+      }),
     );
   }
 
   async ngOnDestroy() {
-    this.listenerHandlers.forEach(handler => handler.remove());
+    this.listenerHandlers.forEach((handler) => handler.remove());
   }
 
   async searchPrinter(port: BRLMPrinterPort) {

@@ -1,10 +1,6 @@
 import { WebPlugin } from '@capacitor/core';
 
-import type {
-  BrotherPrintPlugin,
-  BRLMPrintOptions,
-  BRLMSearchOption,
-} from './definitions';
+import type { BrotherPrintPlugin, BRLMPrintOptions, BRLMSearchOption } from './definitions';
 
 export class BrotherPrintWeb extends WebPlugin implements BrotherPrintPlugin {
   async printImage(options: BRLMPrintOptions): Promise<void> {
