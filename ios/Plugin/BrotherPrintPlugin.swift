@@ -8,7 +8,15 @@ import BRPtouchPrinterKit
  * here: https://capacitorjs.com/docs/plugins/ios
  */
 @objc(BrotherPrintPlugin)
-public class BrotherPrintPlugin: CAPPlugin {
+public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
+    public let identifier = "BrotherPrintPlugin" 
+    public let jsName = "BrotherPrintPlugin" 
+    public let pluginMethods: [CAPPluginMethod] = [
+        CAPPluginMethod(name: "printImage", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "search", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "cancelSearchWiFiPrinter", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "cancelSearchBluetoothPrinter", returnType: CAPPluginReturnPromise),
+    ] 
     private var cancelRoutineWiFi: (() -> Void)?
     private var cancelRoutineBluetooth: (() -> Void)?
 
