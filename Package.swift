@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "RdlaboCapacitorBrotherprint",
+    name: "RdlaboCapacitorBrotherPrint",
     platforms: [.iOS(.v13)],
     products: [
         .library(
