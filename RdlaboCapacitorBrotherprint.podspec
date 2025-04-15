@@ -3,7 +3,7 @@ require 'json'
 package = JSON.parse(File.read(File.join(__dir__, 'package.json')))
 
 Pod::Spec.new do |s|
-  s.name = 'RdlaboCapacitorBrotherPrint'
+  s.name = 'RdlaboCapacitorBrotherprint'
   s.version = package['version']
   s.summary = package['description']
   s.license = package['license']
@@ -15,9 +15,9 @@ Pod::Spec.new do |s|
   s.dependency 'Capacitor'
   s.dependency 'BRLMPrinterKit_v4'
   s.swift_version = '5.1'
-  s.preserve_path = 'ios/Plugin/module.modulemap'
+  s.preserve_path = 'ios/Sources/BrotherPrintPlugin/module.modulemap'
 
   s.xcconfig = {
-    "SWIFT_INCLUDE_PATHS" => "$(PODS_TARGET_SRCROOT)/ios/Plugin/"
+    "SWIFT_INCLUDE_PATHS" => "$(PODS_TARGET_SRCROOT)/ios/Sources/BrotherPrintPlugin"
   }
 end
