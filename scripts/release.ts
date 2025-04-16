@@ -8,9 +8,9 @@ type Env = (typeof environment)[number];
 
 const headerPath: Record<Env, string> = {
   development:
-    '../../../demo/ios/LocalPackages/BRLMPrinterKit/Sources/BRLMPrinterKit.xcframework/ios-arm64/BRLMPrinterKit.framework/Headers/BRLMPrinterKit.h',
+    '../../../demo/ios/LocalPackages/BRLMPrinterKit/Sources/BRLMPrinterKit.xcframework/ios-arm64/BRLMPrinterKit.framework',
   production:
-    '../../../../../../ios/LocalPackages/BRLMPrinterKit/Sources/BRLMPrinterKit.xcframework/ios-arm64/BRLMPrinterKit.framework/Headers/BRLMPrinterKit.h',
+    '../../../../../../ios/LocalPackages/BRLMPrinterKit/Sources/BRLMPrinterKit.xcframework/ios-arm64/BRLMPrinterKit.framework',
 };
 
 const packagePathMap: Record<Env, string> = {
