@@ -1,9 +1,7 @@
 module BRLMPrinterKit {
     header "../../../demo/ios/LocalPackages/BRLMPrinterKit/Sources/BRLMPrinterKit.xcframework/ios-arm64/BRLMPrinterKit.framework/Headers/BRLMPrinterKit.h"
-    link "BRLMPrinterKit"
-}
-
-module BRPtouchPrinterKit {
     header "../../../demo/ios/LocalPackages/BRLMPrinterKit/Sources/BRLMPrinterKit.xcframework/ios-arm64/BRLMPrinterKit.framework/Headers/BRPtouchPrinterKit.h"
+    link "BRLMPrinterKit"
     link "BRPtouchPrinterKit"
+    export *
 }
