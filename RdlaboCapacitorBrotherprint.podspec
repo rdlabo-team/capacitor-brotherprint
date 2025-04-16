@@ -15,7 +15,6 @@ Pod::Spec.new do |s|
   s.dependency 'Capacitor'
   s.dependency 'BRLMPrinterKit'
   s.swift_version = '5.1'
-  s.static_framework = true
   s.preserve_path = 'ios/Sources/BrotherPrintPlugin/module.modulemap'
 
   s.xcconfig = {
