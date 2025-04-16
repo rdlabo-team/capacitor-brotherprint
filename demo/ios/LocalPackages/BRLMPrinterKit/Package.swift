@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "BRLMPrinterKit",
     platforms: [
-        .iOS(.v13)
+        .iOS(.v14)
     ],
     products: [
         .library(name: "BRLMPrinterKit", targets: ["BRLMPrinterKit"])
