@@ -68,13 +68,40 @@ These steps will integrate the Brother Print SDK with your Capacitor Android pro
 
 ### iOS configuration
 
-Update the `ios/App/Podfile` file at your project. https://github.com/BernardRadman/BRLMPrinterKit 's SDK is version 4.7.2. This is old. So should link to direct own repository.
+1. Place the following files in the ios folder of your Capacitor project:
+
+- `ios/LocalPackages/BRLMPrinterKit/Sources/BRLMPrinterKit.xcframework`
+- `ios/LocalPackages/BRLMPrinterKit/BRLMPrinterKit.podspec`
+
+
+The `BRLMPrinterKit.xcframework` file is the Brother Print SDK library, which you can download from the Brother website: https://support.brother.co.jp/j/s/es/dev/ja/mobilesdk/android/index.html?c=jp&lang=ja&navi=offall&comple=on&redirect=on#ver4
+
+`BRLMPrinterKit.podspec` content is here:
+
+```podspec
+Pod::Spec.new do |s|
+  s.name             = 'BRLMPrinterKit'
+  s.version          = '4.12.0'
+  s.homepage         = 'https://support.brother.co.jp/j/s/support/html/mobilesdk/index.html'
+  s.source           = { :path => './Sources' }
+  s.summary          = "Pod for the BRLMPrinterKit / Brother's printers"
+  s.description      = "This project is only a Pod for the Brother SDK v#{s.version}"
+  s.license          = { :type => 'MIT', :file => 'LICENSE' }
+  s.author           = { 'Masahiko Sakakibara' => 'sakakibara@rdlabo.jp' }
+  s.ios.deployment_target = '11.0'
+  s.ios.vendored_frameworks = 'Sources/BRLMPrinterKit.xcframework'
+  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+end
+```
+
+2. Update the `ios/App/Podfile` file at your project.
 
 ```diff
   target 'App' do
     capacitor_pods
     # Add your Pods here
-+   pod 'BRLMPrinterKit_v4', :git => 'https://github.com/rdlabo/BRLMPrinterKit.git', :branch => 'feat/update_4_9_1'
++   pod 'BRLMPrinterKit', :path => '../LocalPackages/BRLMPrinterKit'
   end
 ```
 
@@ -381,7 +408,9 @@ Failed to print.
 
 Make all properties in T optional
 
-<code>{ [P in keyof T]?: T[P]; }</code>
+<code>{
+ [P in keyof T]?: T[P];
+ }</code>
 
 
 #### BRLMChannelResult

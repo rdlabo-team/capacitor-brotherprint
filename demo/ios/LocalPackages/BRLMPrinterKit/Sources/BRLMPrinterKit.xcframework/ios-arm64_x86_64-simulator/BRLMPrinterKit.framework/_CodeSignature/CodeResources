@@ -46,7 +46,7 @@
 		</data>
 		<key>Headers/BRLMChannel.h</key>
 		<data>
-		9VNhxpd+Ngbw9dZ+Yq7Su2KXwtc=
+		I3LV+kBz2ClZGvnyAIXEN6KDU9w=
 		</data>
 		<key>Headers/BRLMCustomPaperSize.h</key>
 		<data>
@@ -55,18 +55,6 @@
 		<key>Headers/BRLMError.h</key>
 		<data>
 		/kpUouvmoipbJ5pNpgTZhk5yIFQ=
-		</data>
-		<key>Headers/BRLMFileAnalyzeError.h</key>
-		<data>
-		sOwfsn+263Qv5AxqO4pjgIoZWA0=
-		</data>
-		<key>Headers/BRLMFileAnalyzeResult.h</key>
-		<data>
-		HQtbudppuTt84J3A9l9h68pjnqw=
-		</data>
-		<key>Headers/BRLMFileAnalyzer.h</key>
-		<data>
-		cpevVk2U6sMffcJcfzuNYpGX6Oc=
 		</data>
 		<key>Headers/BRLMGetStatusError.h</key>
 		<data>
@@ -94,7 +82,7 @@
 		</data>
 		<key>Headers/BRLMPJPrintSettings.h</key>
 		<data>
-		RR1wclRDt5jc9fBv1qIzJi4GfwE=
+		2vXVZt1V9zWrzau4b25EIr7FBug=
 		</data>
 		<key>Headers/BRLMPJPrintSettingsCustomPaperSize.h</key>
 		<data>
@@ -110,7 +98,7 @@
 		</data>
 		<key>Headers/BRLMPTPrintSettings.h</key>
 		<data>
-		ae03qLTRzMy5M9f9oLaxqAW8hxA=
+		WE/3w2oA2B8Dk1EvSq+1kurA8PY=
 		</data>
 		<key>Headers/BRLMPTTemplatePrintSettings.h</key>
 		<data>
@@ -122,7 +110,7 @@
 		</data>
 		<key>Headers/BRLMPrintImageSettings.h</key>
 		<data>
-		BYK2BYBnLYu25nLBTkxh4DjUP9o=
+		fHvh5xMVBmgUzSb9HIQRDppJlCI=
 		</data>
 		<key>Headers/BRLMPrintSettingsProtocol.h</key>
 		<data>
@@ -132,37 +120,13 @@
 		<data>
 		4lSKSIKgHoRNwwzujaqIkMe0gtE=
 		</data>
-		<key>Headers/BRLMPrinterConfig.h</key>
-		<data>
-		BOxv0FygYhKxkCVKEK7Isv6xnd4=
-		</data>
-		<key>Headers/BRLMPrinterConfigEnums.h</key>
-		<data>
-		gvfoqitmrH+kEkEGxIEmgcC0Jo8=
-		</data>
-		<key>Headers/BRLMPrinterConfigRequestOrder.h</key>
-		<data>
-		US5Yzgy3+Wbxrh9TEddb3gdxVBU=
-		</data>
-		<key>Headers/BRLMPrinterConfigRequestResult.h</key>
-		<data>
-		W3euwyX+U1we6xkrd7WQUcuhoiM=
-		</data>
-		<key>Headers/BRLMPrinterConfigUpdateOrder.h</key>
-		<data>
-		Zz5PN71TbbYnRtAXdsL/Zz1ru4o=
-		</data>
-		<key>Headers/BRLMPrinterConfigUpdateResult.h</key>
-		<data>
-		nj0SFUNWP0yNftipJ9CaedL4r/o=
-		</data>
 		<key>Headers/BRLMPrinterDefine.h</key>
 		<data>
-		m7BUvm8dRBj0B5Yu9QDwTD1zq5w=
+		APcB5Vn9gNEWYGPM/x6i3Ra7aHU=
 		</data>
 		<key>Headers/BRLMPrinterDriver.h</key>
 		<data>
-		RdCc3SkTHt8vyWcQkw6VsdS1Cqk=
+		zX1hWqiQ8Sl3vIdnuf3LcjScvmE=
 		</data>
 		<key>Headers/BRLMPrinterDriverGenerator.h</key>
 		<data>
@@ -172,17 +136,13 @@
 		<data>
 		CvmOCoTSo/3PfmgXXgY86InFJf8=
 		</data>
-		<key>Headers/BRLMPrinterKit-Swift.h</key>
-		<data>
-		RAs9aVrcwlcAyZZy9IccnECm37U=
-		</data>
 		<key>Headers/BRLMPrinterKit.h</key>
 		<data>
-		Q8cqOzyIPjK+9wMZHr3fra05S+I=
+		+QRzPse+KPn2EMDEOzix6XYQM4Y=
 		</data>
 		<key>Headers/BRLMPrinterModelSpec.h</key>
 		<data>
-		p3ZbPBRwRBbfm1G5Cqap/ZPZobg=
+		KzyEyCFR94Bee219+B3T61EaBnE=
 		</data>
 		<key>Headers/BRLMPrinterSearchError.h</key>
 		<data>
@@ -198,7 +158,7 @@
 		</data>
 		<key>Headers/BRLMPrinterStatus.h</key>
 		<data>
-		cntblL76ryPJJ1ME/wghXy2TKD8=
+		WGPUBirFZOFqisPQCqJWVcWm1b4=
 		</data>
 		<key>Headers/BRLMPtouchDeviceDependedDataHeader.h</key>
 		<data>
@@ -210,7 +170,7 @@
 		</data>
 		<key>Headers/BRLMQLPrintSettings.h</key>
 		<data>
-		S4S7mEkhXikMz+awUlJk83jURsk=
+		n6xoeA2CXnRSCooHRIVd4OtdOqU=
 		</data>
 		<key>Headers/BRLMQLTemplatePrintSettings.h</key>
 		<data>
@@ -218,15 +178,11 @@
 		</data>
 		<key>Headers/BRLMRJPrintSettings.h</key>
 		<data>
-		y/QVYKsqQxBIoZoWTDb7Lgri7Vs=
+		cXk2lYjDEYbFssEG2apePTzwhTY=
 		</data>
 		<key>Headers/BRLMRJTemplatePrintSettings.h</key>
 		<data>
 		WHUmNe48Fv2Hf9MsVfAM6cKw0qU=
-		</data>
-		<key>Headers/BRLMRemoveTemplateResult.h</key>
-		<data>
-		f5PC/YDFQpL6LnR5QhkZKaKRtbc=
 		</data>
 		<key>Headers/BRLMRequestPrinterInfoError.h</key>
 		<data>
@@ -238,7 +194,7 @@
 		</data>
 		<key>Headers/BRLMTDPrintSettings.h</key>
 		<data>
-		jaTooIGb0UNhI1MVD6V6KC/g0g8=
+		yBjWVq5hp52iDb1om3kmIC/Oi/M=
 		</data>
 		<key>Headers/BRLMTDTemplatePrintSettings.h</key>
 		<data>
@@ -251,10 +207,6 @@
 		<key>Headers/BRLMTemplatePrintSettingsProtocol.h</key>
 		<data>
 		fSv+BPORoZAEDgrJgBMv4d+Gtos=
-		</data>
-		<key>Headers/BRLMTransferResult.h</key>
-		<data>
-		X0QChlERQKELC8UIP09KffjZ9Xw=
 		</data>
 		<key>Headers/BRLMValidatePrintSettings.h</key>
 		<data>
@@ -290,11 +242,11 @@
 		</data>
 		<key>Headers/BRPtouchPrintInfo.h</key>
 		<data>
-		0VAES/Gw6/pPMaeTR4oe9XGKHg8=
+		xf+DdCConVfNAJQVhiH3rON/dqo=
 		</data>
 		<key>Headers/BRPtouchPrinter.h</key>
 		<data>
-		f0uXIUxXUck4M4i1MCaNTEyR8kY=
+		ftBWADbXN7iFIVCoiMt7oPtiqtI=
 		</data>
 		<key>Headers/BRPtouchPrinterData.h</key>
 		<data>
@@ -602,55 +554,15 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		zVS59ytUSQ0uScjmXbhgRGm2Uh0=
+		j2j0AWzEgxgRGbeiTNNlvkrkPHE=
 		</data>
 		<key>MarginViewController.nib</key>
 		<data>
 		jOm+rxRpAOPpyw2BCTp1GMMtVN8=
 		</data>
-		<key>Modules/BRLMPrinterKit.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
-		<data>
-		1P7fAvKl4b1++LRNemtcIGQshHM=
-		</data>
-		<key>Modules/BRLMPrinterKit.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
-		<data>
-		i7iUs++MjlB5SZWG+nI+RenUszk=
-		</data>
-		<key>Modules/BRLMPrinterKit.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
-		<data>
-		4CP/qaQXTohgZlD+lZNNfYm/sJ0=
-		</data>
-		<key>Modules/BRLMPrinterKit.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
-		<data>
-		i7iUs++MjlB5SZWG+nI+RenUszk=
-		</data>
-		<key>Modules/BRLMPrinterKit.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
-		<data>
-		NuWR06BvlbRjhq9zE8lCl66ex3U=
-		</data>
-		<key>Modules/BRLMPrinterKit.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
-		<data>
-		1P7fAvKl4b1++LRNemtcIGQshHM=
-		</data>
-		<key>Modules/BRLMPrinterKit.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
-		<data>
-		ubk409fVH11YpmX9ytdwHcrRGbo=
-		</data>
-		<key>Modules/BRLMPrinterKit.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
-		<data>
-		BzUEnu/ODsTESp2t1X7TvNruWho=
-		</data>
-		<key>Modules/BRLMPrinterKit.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
-		<data>
-		ubk409fVH11YpmX9ytdwHcrRGbo=
-		</data>
-		<key>Modules/BRLMPrinterKit.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
-		<data>
-		m97HZLTmoVvBjMKSaYljL0arUro=
-		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
-		PV9ebJo17WwqhW9rvBw8A3Z5GEA=
+		Vp+ZsczVK8VGZa7Um7lvg/MzIN4=
 		</data>
 		<key>PJCustomPaperViewController.nib</key>
 		<data>
@@ -942,7 +854,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			2JRkjayjcwN/sXeu85XL5otJsgffVhz5tTiui6zOGu8=
+			ZBJFrEmGgDwcrPliRdL/5v4N83S5D5T4caEFvi7DI9M=
 			</data>
 		</dict>
 		<key>Headers/BRLMCustomPaperSize.h</key>
@@ -957,27 +869,6 @@
 			<key>hash2</key>
 			<data>
 			wORbuVN33n1X8jfjpaQy7adPyVtqzliWA3Mb/OFo6sk=
-			</data>
-		</dict>
-		<key>Headers/BRLMFileAnalyzeError.h</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			mJQ9nSE48U76mCmtyfqCqmOx8IRN871vQiJzs0IYwWc=
-			</data>
-		</dict>
-		<key>Headers/BRLMFileAnalyzeResult.h</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			FTL1N1dck/XMobTOZe4SWPylmtp777jFOV4GzDyjhLg=
-			</data>
-		</dict>
-		<key>Headers/BRLMFileAnalyzer.h</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			aLY7lUAARR9APu9GHSvw27ZTWDigoZCtOFDnwVuxdL8=
 			</data>
 		</dict>
 		<key>Headers/BRLMGetStatusError.h</key>
@@ -1026,7 +917,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			0LPziuzy7f8BLopTS7ABrcUAoD9YIt5Mh+tX3z+APm4=
+			Yhp4ArTwRGO0cPjANOGiShKj2Z53vhZzxkQppin4YZ0=
 			</data>
 		</dict>
 		<key>Headers/BRLMPJPrintSettingsCustomPaperSize.h</key>
@@ -1054,7 +945,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			K1Wf3Mg/h0OY0PIZAmmuHec/h23DlL4EDGrnpi6hXr8=
+			6cBBnBAU3bhLYynGkVdY+54GrW8G1rBKQz8XHm/3NR0=
 			</data>
 		</dict>
 		<key>Headers/BRLMPTTemplatePrintSettings.h</key>
@@ -1075,7 +966,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			D2KnlCGf+8BhKDAY3m0eqaXnAF+v+LELAxtpWvCOEJo=
+			+6RO3mDZRZxTgWwyVO/oHz1xSJgoY7Hrm0YP7pOhu+k=
 			</data>
 		</dict>
 		<key>Headers/BRLMPrintSettingsProtocol.h</key>
@@ -1092,60 +983,18 @@
 			bqqbx4BJxCpZzp/wIUPPtWPXAQnZhz0Xq2JACVHnrFc=
 			</data>
 		</dict>
-		<key>Headers/BRLMPrinterConfig.h</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			DHHMYvXmLd9yfIqEeSsuHMqgT0Q6Wzwf+x2rPiXw+14=
-			</data>
-		</dict>
-		<key>Headers/BRLMPrinterConfigEnums.h</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			JBvbhmIhrdjn28aqnI5uo7V8wUqFyqPW3vi5JKsnEes=
-			</data>
-		</dict>
-		<key>Headers/BRLMPrinterConfigRequestOrder.h</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			9HUVHeMf7BEc3ll/GQlwZOKiL0DD7rb8EOta6hsONNg=
-			</data>
-		</dict>
-		<key>Headers/BRLMPrinterConfigRequestResult.h</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			awg1Hi2Q18htRXRpixDiZ2j3LQM6WJ/BlhT5pEws+1A=
-			</data>
-		</dict>
-		<key>Headers/BRLMPrinterConfigUpdateOrder.h</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			KkycB/tiOswDzcZZZYoJb2cgI/G03OsaRqnnalk+LRA=
-			</data>
-		</dict>
-		<key>Headers/BRLMPrinterConfigUpdateResult.h</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			bqD5rVBhQeFMiDntnOH0oV8Ulg95Wj34iznJzW7e0PE=
-			</data>
-		</dict>
 		<key>Headers/BRLMPrinterDefine.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			PSd6v9rdPkJQGToTs/GaAmkCT7MJuy4TB8HoDQ0dqCw=
+			c5GTODbK8cQ2TLEVov08EyOrdzAMz54ULraLHIXoInA=
 			</data>
 		</dict>
 		<key>Headers/BRLMPrinterDriver.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			vygU8fdgKeaAUstFFVUUzwxrX2jdmNKDOMZVCQqG2dM=
+			D+mHsTLLMuuZOzI2lHZWBTlaEz/QdgZlP0xZF6hX044=
 			</data>
 		</dict>
 		<key>Headers/BRLMPrinterDriverGenerator.h</key>
@@ -1162,25 +1011,18 @@
 			NLkjbTCuvQ3Y57dzDZkV5fOjr/dGIgzRI/S/rnN5rM4=
 			</data>
 		</dict>
-		<key>Headers/BRLMPrinterKit-Swift.h</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			BbVUI9CjEAWuOJ44RFB9h0nt5hNJH6yiOHcv1URwwE0=
-			</data>
-		</dict>
 		<key>Headers/BRLMPrinterKit.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			HN4tCYUyfWHOGd4yov2m0GG5a0vGMFnZgs4QWpOjApI=
+			Rtmjgdv4nmuXw/II0+3rv6xhx+q8pXErpMeSXjiKfj0=
 			</data>
 		</dict>
 		<key>Headers/BRLMPrinterModelSpec.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			6wBtFquoMPkwQdmIE99DJ3CNXBHjIDxWyFwF4Ron8yg=
+			ocOczQbT6SIGXIyRWtQ7ojFxFl5L+e3tA/pgS7/EL7c=
 			</data>
 		</dict>
 		<key>Headers/BRLMPrinterSearchError.h</key>
@@ -1208,7 +1050,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			316ez/85A7SfhyN9QHFYscCPGHahi7nfquJhB+RrtCw=
+			DlDT5KXV/WS3AaHIBiqz0w+uXTAq2ytvHZt+4cjshkM=
 			</data>
 		</dict>
 		<key>Headers/BRLMPtouchDeviceDependedDataHeader.h</key>
@@ -1229,7 +1071,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			P5AOP9G8Hh4qb1xBqZuhVwN5KMIYnrEwE0i63hu9CZo=
+			n8hOUetSm8fuYEDZuJ16NIV5XuEYGEhYa/j+lDw+Otk=
 			</data>
 		</dict>
 		<key>Headers/BRLMQLTemplatePrintSettings.h</key>
@@ -1243,7 +1085,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			ZgWoNzULsfgzKIn4+YwHRXNqh3HeipFwy9vZZyuhmp4=
+			Mn8KAmHEj/+AdCTPuMFELwAlme2V8X93IdpfBsHISJI=
 			</data>
 		</dict>
 		<key>Headers/BRLMRJTemplatePrintSettings.h</key>
@@ -1251,13 +1093,6 @@
 			<key>hash2</key>
 			<data>
 			2mcEEpOnmkZrKqhrJt1vYJactZZgh83i4NrVb7swblc=
-			</data>
-		</dict>
-		<key>Headers/BRLMRemoveTemplateResult.h</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			mvUEG+HT3jq9+XOYU3sm0kvTR8+eTmlnv81QBanRQ2Q=
 			</data>
 		</dict>
 		<key>Headers/BRLMRequestPrinterInfoError.h</key>
@@ -1278,7 +1113,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			5FL7BsJusCsl2e2FtuZmFujcvxvrOD+DOcYg10Ati0A=
+			4T4KK93ZIv3a0qWc4k1o0mngiJzz4xI86C3paKrM92Q=
 			</data>
 		</dict>
 		<key>Headers/BRLMTDTemplatePrintSettings.h</key>
@@ -1300,13 +1135,6 @@
 			<key>hash2</key>
 			<data>
 			wdztRR5XrdIXULHgj2e4xsaWQM2NVOn6nNFSFkSJjao=
-			</data>
-		</dict>
-		<key>Headers/BRLMTransferResult.h</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			vfcPROTBWvfV99gf2in7t9amoi29Z/5OmA59+3kVUyQ=
 			</data>
 		</dict>
 		<key>Headers/BRLMValidatePrintSettings.h</key>
@@ -1369,14 +1197,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			a1Q/aauJLQS5ZWI0PsRDkYxzMiD34ddBLXOywTg9vS4=
+			d4EzcEoulBITf2tqGY1qi8YZ5kLr7zoXYIrrZY9Ao4w=
 			</data>
 		</dict>
 		<key>Headers/BRPtouchPrinter.h</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			qTeW1MGAHxG+AgIfG1V1LxdiIwDaLjxQZbn4puMPeBY=
+			j1zszxQKqowLokXXUk5m3Ri3KV4QuVgeZxjUhlgZ5+w=
 			</data>
 		</dict>
 		<key>Headers/BRPtouchPrinterData.h</key>
@@ -1918,81 +1746,11 @@
 			vnoPJD5vqYs2EVV1YUrmcUTeNHRnyl1vI/pMG5aRjtw=
 			</data>
 		</dict>
-		<key>Modules/BRLMPrinterKit.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			WTvF5lN+na/5AFjEG4K3kMh2l2CDEdZ7OTc8RVlkRSU=
-			</data>
-		</dict>
-		<key>Modules/BRLMPrinterKit.swiftmodule/arm64-apple-ios-simulator.private.swiftinterface</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			A9fZM43L8nCNSTRhxXtdviARQzLEOiYoiNCwcPEnDvc=
-			</data>
-		</dict>
-		<key>Modules/BRLMPrinterKit.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			CtZAItes0O2rG4xFfER654NjGOT344BTD2q06M3Ykm0=
-			</data>
-		</dict>
-		<key>Modules/BRLMPrinterKit.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			A9fZM43L8nCNSTRhxXtdviARQzLEOiYoiNCwcPEnDvc=
-			</data>
-		</dict>
-		<key>Modules/BRLMPrinterKit.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			S/p61usHphQqwiJATEvTf5b++zNftOEWqtRiKg/aAUY=
-			</data>
-		</dict>
-		<key>Modules/BRLMPrinterKit.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			WTvF5lN+na/5AFjEG4K3kMh2l2CDEdZ7OTc8RVlkRSU=
-			</data>
-		</dict>
-		<key>Modules/BRLMPrinterKit.swiftmodule/x86_64-apple-ios-simulator.private.swiftinterface</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			5XdSxKWe7p3nOVN6/NUeoVMFiX21NXaB47zpLfZPAvA=
-			</data>
-		</dict>
-		<key>Modules/BRLMPrinterKit.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			uJm/+JeqSnkOHrFQIks610iIAxMQgiqKG6T9sQnDrmU=
-			</data>
-		</dict>
-		<key>Modules/BRLMPrinterKit.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			5XdSxKWe7p3nOVN6/NUeoVMFiX21NXaB47zpLfZPAvA=
-			</data>
-		</dict>
-		<key>Modules/BRLMPrinterKit.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			qJxBQ7OkPAH2AXgESd35OtFyh2AgWerjDjxkO89OLtA=
-			</data>
-		</dict>
 		<key>Modules/module.modulemap</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			Yf+yDs1XnkWGRJy9LFw/FUEAnTq3imCV43gcB2DIci0=
+			PgYyGCrgYJMkSXkhSDzF1nqafbLVeGAPTmyJ8BHRi2s=
 			</data>
 		</dict>
 		<key>PJCustomPaperViewController.nib</key>

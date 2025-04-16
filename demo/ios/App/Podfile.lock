@@ -44,7 +44,7 @@ EXTERNAL SOURCES:
     :path: "../../.."
 
 SPEC CHECKSUMS:
-  BRLMPrinterKit: 1f7bd48f81b9206f410630ec5c055de442c72050
+  BRLMPrinterKit: caaefcdc387a0dccbcbff70b1006ce9d37707ec2
   Capacitor: 106e7a4205f4618d582b886a975657c61179138d
   CapacitorApp: d63334c052278caf5d81585d80b21905c6f93f39
   CapacitorCordova: 5967b9ba03915ef1d585469d6e31f31dc49be96f
