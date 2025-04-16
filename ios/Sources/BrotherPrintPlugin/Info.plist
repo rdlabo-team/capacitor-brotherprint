@@ -21,7 +21,7 @@
 	<key>NSPrincipalClass</key>
 	<string></string>
     <key>NSLocalNetworkUsageDescription</key>
-    <string>Use Bluetooth for label printer search.</string>
+    <string>Use local network for label printer search.</string>
     <key>NSBluetoothAlwaysUsageDescription</key>
     <string>Use Bluetooth for label printer search.</string>
     <key>NSBluetoothPeripheralUsageDescription</key>

@@ -157,11 +157,16 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
             option.searchDuration = TimeInterval(call.getInt("searchDuration", 15))
 
             NSLog("BRLMPrinterSearcher.startNetworkSearch")
-            BRLMPrinterSearcher.startNetworkSearch(option) { channel in
+            let searcher = BRLMPrinterSearcher.startNetworkSearch(option) { channel in
                 NSLog(channel.channelInfo)
                 let printer = self.chanelToPrinter(port: "wifi", channel: channel)
                 self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: printer)
             }
+            if searcher.error.code != BRLMPrinterSearchErrorCode.noError {
+                call.reject("Error - startNetworkSearch: " + PrinterSearchErrorModel.fetchChannelErrorCode(error: searcher.error.code))
+                return
+            }
+            print(searcher.channels.count)
             self.cancelRoutineWiFi = nil
             call.resolve()
         }
