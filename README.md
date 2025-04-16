@@ -431,9 +431,7 @@ Failed to print.
 
 Make all properties in T optional
 
-<code>{
- [P in keyof T]?: T[P];
- }</code>
+<code>{ [P in keyof T]?: T[P]; }</code>
 
 
 #### BRLMChannelResult
