@@ -219,17 +219,17 @@ https://github.com/rdlabo-team/capacitor-brotherprint/blob/main/demo/src/app/hom
 
 <docgen-index>
 
-- [`printImage(...)`](#printimage)
-- [`search(...)`](#search)
-- [`cancelSearchWiFiPrinter()`](#cancelsearchwifiprinter)
-- [`cancelSearchBluetoothPrinter()`](#cancelsearchbluetoothprinter)
-- [`addListener(BrotherPrintEventsEnum.onPrinterAvailable, ...)`](#addlistenerbrotherprinteventsenumonprinteravailable-)
-- [`addListener(BrotherPrintEventsEnum.onPrint, ...)`](#addlistenerbrotherprinteventsenumonprint-)
-- [`addListener(BrotherPrintEventsEnum.onPrintFailedCommunication, ...)`](#addlistenerbrotherprinteventsenumonprintfailedcommunication-)
-- [`addListener(BrotherPrintEventsEnum.onPrintError, ...)`](#addlistenerbrotherprinteventsenumonprinterror-)
-- [Interfaces](#interfaces)
-- [Type Aliases](#type-aliases)
-- [Enums](#enums)
+* [`printImage(...)`](#printimage)
+* [`search(...)`](#search)
+* [`cancelSearchWiFiPrinter()`](#cancelsearchwifiprinter)
+* [`cancelSearchBluetoothPrinter()`](#cancelsearchbluetoothprinter)
+* [`addListener(BrotherPrintEventsEnum.onPrinterAvailable, ...)`](#addlistenerbrotherprinteventsenumonprinteravailable-)
+* [`addListener(BrotherPrintEventsEnum.onPrint, ...)`](#addlistenerbrotherprinteventsenumonprint-)
+* [`addListener(BrotherPrintEventsEnum.onPrintFailedCommunication, ...)`](#addlistenerbrotherprinteventsenumonprintfailedcommunication-)
+* [`addListener(BrotherPrintEventsEnum.onPrintError, ...)`](#addlistenerbrotherprinteventsenumonprinterror-)
+* [Interfaces](#interfaces)
+* [Type Aliases](#type-aliases)
+* [Enums](#enums)
 
 </docgen-index>
 
@@ -246,7 +246,8 @@ printImage(options: BRLMPrintOptions) => Promise<void>
 | ------------- | ------------------------------------------------------------- |
 | **`options`** | <code><a href="#brlmprintoptions">BRLMPrintOptions</a></code> |
 
----
+--------------------
+
 
 ### search(...)
 
@@ -260,7 +261,8 @@ Search for printers. If not found, it will return an empty array.(not error)
 | ------------ | ------------------------------------------------------------- |
 | **`option`** | <code><a href="#brlmsearchoption">BRLMSearchOption</a></code> |
 
----
+--------------------
+
 
 ### cancelSearchWiFiPrinter()
 
@@ -270,7 +272,8 @@ cancelSearchWiFiPrinter() => Promise<void>
 
 Basically, it times out, so there is no need to use it. Use it when you want to run multiple connectType searches at the same time and time out any of them manually.
 
----
+--------------------
+
 
 ### cancelSearchBluetoothPrinter()
 
@@ -280,7 +283,8 @@ cancelSearchBluetoothPrinter() => Promise<void>
 
 Basically, it times out, so there is no need to use it. Use it when you want to run multiple connectType searches at the same time and time out any of them manually.
 
----
+--------------------
+
 
 ### addListener(BrotherPrintEventsEnum.onPrinterAvailable, ...)
 
@@ -297,7 +301,8 @@ Find the printer that can connected to the device.
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
----
+--------------------
+
 
 ### addListener(BrotherPrintEventsEnum.onPrint, ...)
 
@@ -314,7 +319,8 @@ Success Print Event
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
----
+--------------------
+
 
 ### addListener(BrotherPrintEventsEnum.onPrintFailedCommunication, ...)
 
@@ -332,7 +338,8 @@ ex: Bluetooth is off, Printer is off, etc.
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
----
+--------------------
+
 
 ### addListener(BrotherPrintEventsEnum.onPrintError, ...)
 
@@ -349,9 +356,11 @@ Failed to print.
 
 **Returns:** <code>Promise&lt;<a href="#pluginlistenerhandle">PluginListenerHandle</a>&gt;</code>
 
----
+--------------------
+
 
 ### Interfaces
+
 
 #### PluginListenerHandle
 
@@ -359,63 +368,76 @@ Failed to print.
 | ------------ | ----------------------------------------- |
 | **`remove`** | <code>() =&gt; Promise&lt;void&gt;</code> |
 
+
 ### Type Aliases
+
 
 #### BRLMPrintOptions
 
-<code>{ encodedImage: string; /\*\* _ Should use enum <a href="#brlmprintermodelname">BRLMPrinterModelName</a> _/ modelName: <a href="#brlmprintermodelname">BRLMPrinterModelName</a>; } & <a href="#partial">Partial</a>&lt;<a href="#brlmchannelresult">BRLMChannelResult</a>&gt; & (<a href="#brlmprinterqlmodelsettings">BRLMPrinterQLModelSettings</a> | <a href="#brlmprintertdmodelsettings">BRLMPrinterTDModelSettings</a>)</code>
+<code>{ encodedImage: string; /** * Should use enum <a href="#brlmprintermodelname">BRLMPrinterModelName</a> */ modelName: <a href="#brlmprintermodelname">BRLMPrinterModelName</a>; } & <a href="#partial">Partial</a>&lt;<a href="#brlmchannelresult">BRLMChannelResult</a>&gt; & (<a href="#brlmprinterqlmodelsettings">BRLMPrinterQLModelSettings</a> | <a href="#brlmprintertdmodelsettings">BRLMPrinterTDModelSettings</a>)</code>
+
 
 #### Partial
 
 Make all properties in T optional
 
-<code>{
-[P in keyof T]?: T[P];
-}</code>
+<code>{ [P in keyof T]?: T[P]; }</code>
+
 
 #### BRLMChannelResult
 
-<code>{ port: <a href="#brlmprinterport">BRLMPrinterPort</a>; modelName: string; serialNumber: string; macAddress: string; nodeName: string; location: string; /\*\* _ This need to connect to the printer. _ wifi: IP Address _ bluetooth: macAddress _ bluetoothLowEnergy: modelName for bluetoothLowEnergy \*/ channelInfo: string; }</code>
+<code>{ port: <a href="#brlmprinterport">BRLMPrinterPort</a>; modelName: string; serialNumber: string; macAddress: string; nodeName: string; location: string; /** * This need to connect to the printer. * wifi: IP Address * bluetooth: macAddress * bluetoothLowEnergy: modelName for bluetoothLowEnergy */ channelInfo: string; }</code>
+
 
 #### BRLMPrinterQLModelSettings
 
-<code>{ /\*\* _ Should use enum <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a> _/ labelName: <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a>; } & <a href="#brlmprintersettings">BRLMPrinterSettings</a></code>
+<code>{ /** * Should use enum <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a> */ labelName: <a href="#brlmprinterlabelname">BRLMPrinterLabelName</a>; } & <a href="#brlmprintersettings">BRLMPrinterSettings</a></code>
+
 
 #### BRLMPrinterSettings
 
 These are optional. If these are not set, default values are assigned by the printer.
 
-<code>{ /** _ The number of copies you print. _/ numberOfCopies?: <a href="#brlmprinternumberofcopies">BRLMPrinterNumberOfCopies</a>; /** _ Whether the auto-cut is enabled or not. If true, your printer cut the paper each page. _/ autoCut?: <a href="#brlmprinterautocuttype">BRLMPrinterAutoCutType</a>; /** _ A scale mode that specifies how your data is scaled in a print area of your printer. _/ scaleMode?: <a href="#brlmprinterscalemode">BRLMPrinterScaleMode</a>; /** _ A scale value. This is effective when ScaleMode is ScaleValue. _/ scaleValue?: <a href="#brlmprinterscalevaluetype">BRLMPrinterScaleValueType</a>; /** _ A way to rasterize your data. _/ halftone?: <a href="#brlmprinterhalftone">BRLMPrinterHalftone</a>; /** _ A threshold value. This is effective when the Halftone is Threshold. _/ halftoneThreshold?: <a href="#brlmprinterhalftonethresholdtype">BRLMPrinterHalftoneThresholdType</a>; /** _ An image rotation that specifies the angle in which your data is placed in the print area. Rotation direction is clockwise. _/ imageRotation?: <a href="#brlmprinterimagerotation">BRLMPrinterImageRotation</a>; /** _ A vertical alignment that specifies how your data is placed in the printable area. _/ verticalAlignment?: <a href="#brlmprinterverticalalignment">BRLMPrinterVerticalAlignment</a>; /** _ A horizontal alignment that specifies how your data is placed in the printable area. _/ horizontalAlignment?: <a href="#brlmprinterhorizontalalignment">BRLMPrinterHorizontalAlignment</a>; /** _ A compress mode that specifies how to compress your data. _ note: This is ios only. _/ compressMode?: <a href="#brlmprintercompressmode">BRLMPrinterCompressMode</a>; /\*\* _ A priority that is print speed or print quality. Whether or not this has an effect is depend on your printer. \*/ printQuality?: <a href="#brlmprinterprintquality">BRLMPrinterPrintQuality</a>; }</code>
+<code>{ /** * The number of copies you print. */ numberOfCopies?: <a href="#brlmprinternumberofcopies">BRLMPrinterNumberOfCopies</a>; /** * Whether the auto-cut is enabled or not. If true, your printer cut the paper each page. */ autoCut?: <a href="#brlmprinterautocuttype">BRLMPrinterAutoCutType</a>; /** * A scale mode that specifies how your data is scaled in a print area of your printer. */ scaleMode?: <a href="#brlmprinterscalemode">BRLMPrinterScaleMode</a>; /** * A scale value. This is effective when ScaleMode is ScaleValue. */ scaleValue?: <a href="#brlmprinterscalevaluetype">BRLMPrinterScaleValueType</a>; /** * A way to rasterize your data. */ halftone?: <a href="#brlmprinterhalftone">BRLMPrinterHalftone</a>; /** * A threshold value. This is effective when the Halftone is Threshold. */ halftoneThreshold?: <a href="#brlmprinterhalftonethresholdtype">BRLMPrinterHalftoneThresholdType</a>; /** * An image rotation that specifies the angle in which your data is placed in the print area. Rotation direction is clockwise. */ imageRotation?: <a href="#brlmprinterimagerotation">BRLMPrinterImageRotation</a>; /** * A vertical alignment that specifies how your data is placed in the printable area. */ verticalAlignment?: <a href="#brlmprinterverticalalignment">BRLMPrinterVerticalAlignment</a>; /** * A horizontal alignment that specifies how your data is placed in the printable area. */ horizontalAlignment?: <a href="#brlmprinterhorizontalalignment">BRLMPrinterHorizontalAlignment</a>; /** * A compress mode that specifies how to compress your data. * note: This is ios only. */ compressMode?: <a href="#brlmprintercompressmode">BRLMPrinterCompressMode</a>; /** * A priority that is print speed or print quality. Whether or not this has an effect is depend on your printer. */ printQuality?: <a href="#brlmprinterprintquality">BRLMPrinterPrintQuality</a>; }</code>
+
 
 #### BRLMPrinterNumberOfCopies
 
 <code>number</code>
 
+
 #### BRLMPrinterAutoCutType
 
 <code>boolean</code>
+
 
 #### BRLMPrinterScaleValueType
 
 <code>number</code>
 
+
 #### BRLMPrinterHalftoneThresholdType
 
 <code>number</code>
 
+
 #### BRLMPrinterTDModelSettings
 
-<code>{ /** _ Should use enum BRKMPrinterCustomPaperType _/ paperType: <a href="#brlmprintercustompapertype">BRLMPrinterCustomPaperType</a>; /** _ The width of the label. For example, the RD-U04J1 is 60.0 wide. _/ tapeWidth: number; /** _ The length of the label. For example, the RD-U04J1 is 60.0 wide. _/ tapeLength: number; /** _ It is the difference between a sticker and a mount. _ For example, the RD-U04J1 is `1.0, 2.0, 1.0, 2.0` _/ marginTop: number; marginRight: number; marginBottom: number; marginLeft: number; /\*\* _ The spacing between seals. For example, the RD-U04J1 is 0.2. _/ gapLength: number; paperMarkPosition: number; paperMarkLength: number; /\*\* _ Should use enum BRKMPrinterCustomPaperUnit. _ For example, the RD-U04J1 is mm. _/ paperUnit: <a href="#brlmprintercustompaperunit">BRLMPrinterCustomPaperUnit</a>; }</code>
+<code>{ /** * Should use enum BRKMPrinterCustomPaperType */ paperType: <a href="#brlmprintercustompapertype">BRLMPrinterCustomPaperType</a>; /** * The width of the label. For example, the RD-U04J1 is 60.0 wide. */ tapeWidth: number; /** * The length of the label. For example, the RD-U04J1 is 60.0 wide. */ tapeLength: number; /** * It is the difference between a sticker and a mount. * For example, the RD-U04J1 is `1.0, 2.0, 1.0, 2.0` */ marginTop: number; marginRight: number; marginBottom: number; marginLeft: number; /** * The spacing between seals. For example, the RD-U04J1 is 0.2. */ gapLength: number; paperMarkPosition: number; paperMarkLength: number; /** * Should use enum BRKMPrinterCustomPaperUnit. * For example, the RD-U04J1 is mm. */ paperUnit: <a href="#brlmprintercustompaperunit">BRLMPrinterCustomPaperUnit</a>; }</code>
+
 
 #### BRLMSearchOption
 
-<code>{ /** _ 'usb' is android only, and now developing. _/ port: <a href="#brlmprinterport">BRLMPrinterPort</a>; /** _ searchDuration is the time to end search for devices. _ default is 15 seconds. _ use only port is 'wifi' or 'bluetoothLowEnergy'. _/ searchDuration: number; }</code>
+<code>{ /** * 'usb' is android only, and now developing. */ port: <a href="#brlmprinterport">BRLMPrinterPort</a>; /** * searchDuration is the time to end search for devices. * default is 15 seconds. * use only port is 'wifi' or 'bluetoothLowEnergy'. */ searchDuration: number; }</code>
+
 
 #### ErrorInfo
 
 <code>{ message: string; code: number; }</code>
 
+
 ### Enums
+
 
 #### BRLMPrinterModelName
 
@@ -428,6 +450,7 @@ These are optional. If these are not set, default values are assigned by the pri
 | **`TD_2030AD`**    | <code>'TD_2030AD'</code>    |
 | **`TD_2350D_300`** | <code>'TD_2350D_300'</code> |
 
+
 #### BRLMPrinterPort
 
 | Members                  | Value                             |
@@ -436,6 +459,7 @@ These are optional. If these are not set, default values are assigned by the pri
 | **`wifi`**               | <code>'wifi'</code>               |
 | **`bluetooth`**          | <code>'bluetooth'</code>          |
 | **`bluetoothLowEnergy`** | <code>'bluetoothLowEnergy'</code> |
+
 
 #### BRLMPrinterLabelName
 
@@ -484,6 +508,7 @@ These are optional. If these are not set, default values are assigned by the pri
 | **`RDDieCutW60H80`**  | <code>'RDDieCutW60H80'</code>  |               |
 | **`RDDieCutW60H100`** | <code>'RDDieCutW60H100'</code> |               |
 
+
 #### BRLMPrinterScaleMode
 
 | Members              | Value                         |
@@ -493,6 +518,7 @@ These are optional. If these are not set, default values are assigned by the pri
 | **`FitPaperAspect`** | <code>'FitPaperAspect'</code> |
 | **`ScaleValue`**     | <code>'ScaleValue'</code>     |
 
+
 #### BRLMPrinterHalftone
 
 | Members              | Value                         |
@@ -500,6 +526,7 @@ These are optional. If these are not set, default values are assigned by the pri
 | **`Threshold`**      | <code>'Threshold'</code>      |
 | **`ErrorDiffusion`** | <code>'ErrorDiffusion'</code> |
 | **`PatternDither`**  | <code>'PatternDither'</code>  |
+
 
 #### BRLMPrinterImageRotation
 
@@ -510,6 +537,7 @@ These are optional. If these are not set, default values are assigned by the pri
 | **`Rotate180`** | <code>'Rotate180'</code> |
 | **`Rotate270`** | <code>'Rotate270'</code> |
 
+
 #### BRLMPrinterVerticalAlignment
 
 | Members      | Value                 |
@@ -517,6 +545,7 @@ These are optional. If these are not set, default values are assigned by the pri
 | **`Top`**    | <code>'Top'</code>    |
 | **`Center`** | <code>'Center'</code> |
 | **`Bottom`** | <code>'Bottom'</code> |
+
 
 #### BRLMPrinterHorizontalAlignment
 
@@ -526,6 +555,7 @@ These are optional. If these are not set, default values are assigned by the pri
 | **`Center`** | <code>'Center'</code> |
 | **`Right`**  | <code>'Right'</code>  |
 
+
 #### BRLMPrinterCompressMode
 
 | Members     | Value                |
@@ -534,12 +564,14 @@ These are optional. If these are not set, default values are assigned by the pri
 | **`Tiff`**  | <code>'Tiff'</code>  |
 | **`Mode9`** | <code>'Mode9'</code> |
 
+
 #### BRLMPrinterPrintQuality
 
 | Members    | Value               |
 | ---------- | ------------------- |
 | **`Best`** | <code>'Best'</code> |
 | **`Fast`** | <code>'Fast'</code> |
+
 
 #### BRLMPrinterCustomPaperType
 
@@ -549,12 +581,14 @@ These are optional. If these are not set, default values are assigned by the pri
 | **`dieCutPaper`**   | <code>'dieCutPaper'</code>   |
 | **`markRollPaper`** | <code>'markRollPaper'</code> |
 
+
 #### BRLMPrinterCustomPaperUnit
 
 | Members    | Value               |
 | ---------- | ------------------- |
 | **`mm`**   | <code>'mm'</code>   |
 | **`inch`** | <code>'inch'</code> |
+
 
 #### BrotherPrintEventsEnum
 
