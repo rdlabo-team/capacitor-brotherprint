@@ -72,7 +72,7 @@ These steps will integrate the Brother Print SDK with your Capacitor Android pro
 
 - `ios/LocalPackages/BRLMPrinterKit/Sources/BRLMPrinterKit.xcframework`
 - `ios/LocalPackages/BRLMPrinterKit/BRLMPrinterKit.podspec`
-
+- `ios/LocalPackages/BRLMPrinterKit/Package.swift`
 
 The `BRLMPrinterKit.xcframework` file is the Brother Print SDK library, which you can download from the Brother website: https://support.brother.co.jp/j/s/es/dev/ja/mobilesdk/android/index.html?c=jp&lang=ja&navi=offall&comple=on&redirect=on#ver4
 
@@ -93,6 +93,29 @@ Pod::Spec.new do |s|
   s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
   s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
 end
+```
+
+`Package.swift` content is here:
+
+```swift
+// swift-tools-version: 5.9
+import PackageDescription
+
+let package = Package(
+    name: "BRLMPrinterKit",
+    platforms: [
+        .iOS(.v13)
+    ],
+    products: [
+        .library(name: "BRLMPrinterKit", targets: ["BRLMPrinterKit"])
+    ],
+    targets: [
+        .binaryTarget(
+            name: "BRLMPrinterKit",
+            path: "Sources/BRLMPrinterKit.xcframework"
+        )
+    ]
+)
 ```
 
 2. Update the `ios/App/Podfile` file at your project.

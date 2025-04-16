@@ -1,7 +1,6 @@
 import Foundation
 import Capacitor
 import BRLMPrinterKit
-import BRPtouchPrinterKit
 
 /**
  * Please read the Capacitor iOS Plugin Development Guide

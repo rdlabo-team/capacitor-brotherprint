@@ -1,6 +1,5 @@
 import Foundation
 import BRLMPrinterKit
-import BRPtouchPrinterKit
 
 class BrotherModel {
     static func getCustomPaper(type: String, width: Float, length: Float, margins: BRLMCustomPaperSizeMargins, markPosition: Float, markLength: Float, gapLength: Float, unit: BRLMCustomPaperSizeLengthUnit) -> BRLMCustomPaperSize {

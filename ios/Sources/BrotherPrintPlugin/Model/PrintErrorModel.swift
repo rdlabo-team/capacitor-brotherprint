@@ -6,7 +6,6 @@
 //
 
 import BRLMPrinterKit
-import BRPtouchPrinterKit
 import Foundation
 
 class PrinterSearchErrorModel {

@@ -1,5 +1,4 @@
 import BRLMPrinterKit
-import BRPtouchPrinterKit
 import Foundation
 import Capacitor
 
