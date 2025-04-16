@@ -1,0 +1,6 @@
+framework module BRLMPrinterKit {
+  umbrella header "BRLMPrinterKit+BRPtouchPrinterKit+BMSPrinterKit.h"
+
+  export *
+  module * { export * }
+}

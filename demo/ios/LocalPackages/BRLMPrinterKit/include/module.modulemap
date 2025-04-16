@@ -1,0 +1,14 @@
+module BRLMPrinterKit {
+    header "../Sources/BRLMPrinterKit.xcframework/ios-arm64/BRLMPrinterKit.framework/Headers/BRLMPrinterKit.h"
+    link "BRLMPrinterKit"
+}
+
+module BRPtouchPrinterKit {
+    header "../Sources/BRLMPrinterKit.xcframework/ios-arm64/BRLMPrinterKit.framework/Headers/BRPtouchPrinterKit.h"
+    link "BRPtouchPrinterKit"
+}
+
+module BMSPrinterKit {
+    header "../Sources/BRLMPrinterKit.xcframework/ios-arm64/BRLMPrinterKit.framework/Headers/BMSPrinterKit.h"
+    link "BMSPrinterKit"
+}

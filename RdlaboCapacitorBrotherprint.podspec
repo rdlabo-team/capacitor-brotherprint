@@ -10,14 +10,15 @@ Pod::Spec.new do |s|
   s.homepage = package['repository']['url']
   s.author = package['author']
   s.source = { :git => package['repository']['url'], :tag => s.version.to_s }
-  s.source_files = ['ios/Plugin/**/*.{swift,h,m,c,cc,mm,cpp}']
-  s.ios.deployment_target  = '13.0'
+  s.source_files = ['ios/Sources/**/*.{swift,h,m,c,cc,mm,cpp}']
+  s.ios.deployment_target = '14.0'
   s.dependency 'Capacitor'
-  s.dependency 'BRLMPrinterKit_v4'
+  s.dependency 'BRLMPrinterKit'
   s.swift_version = '5.1'
-  s.preserve_path = 'ios/Plugin/module.modulemap'
+  s.static_framework = true
+  s.preserve_path = 'ios/Sources/BrotherPrintPlugin/module.modulemap'
 
   s.xcconfig = {
-    "SWIFT_INCLUDE_PATHS" => "$(PODS_TARGET_SRCROOT)/ios/Plugin/"
+    "SWIFT_INCLUDE_PATHS" => "$(PODS_TARGET_SRCROOT)/ios/Sources/BrotherPrintPlugin"
   }
 end

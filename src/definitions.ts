@@ -203,10 +203,7 @@ export interface BrotherPrintPlugin {
   /**
    * Success Print Event
    */
-  addListener(
-    eventName: BrotherPrintEventsEnum.onPrint,
-    listenerFunc: () => void,
-  ): Promise<PluginListenerHandle>;
+  addListener(eventName: BrotherPrintEventsEnum.onPrint, listenerFunc: () => void): Promise<PluginListenerHandle>;
 
   /**
    * Failed to connect to the printer.
