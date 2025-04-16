@@ -24,7 +24,7 @@
     "clean": "rimraf ./dist",
     "watch": "tsc --watch",
     "prepublishOnly": "npm run replace:production && npm run build",
-    "release": "np --no-tests --tag=latest-6 && npm run replace:development",
+    "release": "np --no-tests --tag=latest-6 --branch=6.x && npm run replace:development",
     "replace:production": "cp -f module_production.modulemap ios/Plugin/module.modulemap",
     "replace:development": "cp -f module_development.modulemap ios/Plugin/module.modulemap"
   },
