@@ -4,7 +4,7 @@ Capacitor Brother Print is a native Brother Print SDK implementation for iOS & A
 
 **This plugin is still in the RC (release candidate) phase.**
 
-**Brother Print SDK is incompatible with CocoaPods and Minimum Develoyments iOS 14 and is not working at this time, please use Swift Package Manager.**
+**Brother Print SDK is incompatible with CocoaPods and Minimum Developments iOS 14 and is not working at this time, please use Swift Package Manager.**
 
 ## Supported models
 
