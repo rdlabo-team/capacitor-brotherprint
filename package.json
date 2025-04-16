@@ -25,8 +25,8 @@
     "watch": "tsc --watch",
     "prepublishOnly": "npm run replace:production && npm run build",
     "release": "np --no-tests && npm run replace:development",
-    "replace:production": "cp -f module.modulemap.production ios/Sources/BrotherPrintPlugin/module.modulemap",
-    "replace:development": "cp -f module.modulemap.development ios/Sources/BrotherPrintPlugin/module.modulemap",
+    "replace:production": "ts-node -P scripts/tsconfig.json scripts/release -- production",
+    "replace:development": "ts-node -P scripts/tsconfig.json scripts/release -- development",
     "prepare": "husky"
   },
   "author": "Masahiko Sakakibara<sakakibara@rdlabo.jp>",
@@ -48,6 +48,7 @@
     "rimraf": "^6.0.1",
     "rollup": "^4.30.1",
     "swiftlint": "^2.0.0",
+    "ts-node": "^10.9.2",
     "typescript": "~4.1.5"
   },
   "peerDependencies": {

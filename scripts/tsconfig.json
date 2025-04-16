@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "allowUnreachableCode": false,
+    "declaration": false,
+    "esModuleInterop": true,
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "outDir": "build",
+    "pretty": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "target": "esnext"
+  },
+  "include": [
+    "**/*.ts"
+  ]
+}
