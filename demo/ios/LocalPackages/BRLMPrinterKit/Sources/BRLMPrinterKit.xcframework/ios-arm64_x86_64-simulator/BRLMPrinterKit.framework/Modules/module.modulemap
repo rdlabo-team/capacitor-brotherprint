@@ -1,0 +1,11 @@
+framework module BRLMPrinterKit {
+  umbrella header "BRLMPrinterKit+BRPtouchPrinterKit+BMSPrinterKit.h"
+
+  export *
+  module * { export * }
+}
+
+module BRLMPrinterKit.Swift {
+  header "BRLMPrinterKit-Swift.h"
+  requires objc
+}

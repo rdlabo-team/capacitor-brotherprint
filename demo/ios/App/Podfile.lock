@@ -1,22 +1,22 @@
 PODS:
-  - BRLMPrinterKit_v4 (4.9.1)
-  - Capacitor (6.1.2):
+  - BRLMPrinterKit (4.9.1)
+  - Capacitor (7.2.0):
     - CapacitorCordova
-  - CapacitorApp (6.0.1):
+  - CapacitorApp (7.0.1):
     - Capacitor
-  - CapacitorCordova (6.1.2)
-  - CapacitorHaptics (6.0.1):
+  - CapacitorCordova (7.2.0)
+  - CapacitorHaptics (7.0.1):
     - Capacitor
-  - CapacitorKeyboard (6.0.2):
+  - CapacitorKeyboard (7.0.1):
     - Capacitor
-  - CapacitorStatusBar (6.0.1):
+  - CapacitorStatusBar (7.0.1):
     - Capacitor
-  - RdlaboCapacitorBrotherprint (6.4.4):
-    - BRLMPrinterKit_v4
+  - RdlaboCapacitorBrotherprint (7.0.0):
+    - BRLMPrinterKit
     - Capacitor
 
 DEPENDENCIES:
-  - BRLMPrinterKit_v4 (from `https://github.com/rdlabo/BRLMPrinterKit`, branch `feat/update_4_9_1`)
+  - BRLMPrinterKit (from `../LocalPackages/BRLMPrinterKit`)
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
   - "CapacitorApp (from `../../node_modules/@capacitor/app`)"
   - "CapacitorCordova (from `../../node_modules/@capacitor/ios`)"
@@ -26,9 +26,8 @@ DEPENDENCIES:
   - RdlaboCapacitorBrotherprint (from `../../..`)
 
 EXTERNAL SOURCES:
-  BRLMPrinterKit_v4:
-    :branch: feat/update_4_9_1
-    :git: https://github.com/rdlabo/BRLMPrinterKit
+  BRLMPrinterKit:
+    :path: "../LocalPackages/BRLMPrinterKit"
   Capacitor:
     :path: "../../node_modules/@capacitor/ios"
   CapacitorApp:
@@ -44,21 +43,16 @@ EXTERNAL SOURCES:
   RdlaboCapacitorBrotherprint:
     :path: "../../.."
 
-CHECKOUT OPTIONS:
-  BRLMPrinterKit_v4:
-    :commit: 7fb27cda1dbbf7849d5eb24b3464bbb6a38ee0f6
-    :git: https://github.com/rdlabo/BRLMPrinterKit
-
 SPEC CHECKSUMS:
-  BRLMPrinterKit_v4: 897535d1daabef525bee65c2cd3d8d6aebb79c90
-  Capacitor: 679f9673fdf30597493a6362a5d5bf233d46abc2
-  CapacitorApp: 0bc633b4eae40a1f32cd2834788fad3bc42da6a1
-  CapacitorCordova: f48c89f96c319101cd2f0ce8a2b7449b5fb8b3dd
-  CapacitorHaptics: fe689ade56ef20ec9b041a753c6da70c5d8ec9a9
-  CapacitorKeyboard: 2700f9b18687be021e28b5a09b59eb151a46d5e0
-  CapacitorStatusBar: b81d4fb5d4e0064c712018071b3ab4b810b39a63
-  RdlaboCapacitorBrotherprint: 02f70356ee2bb87b27db0e2c357ec296ba29381b
+  BRLMPrinterKit: 1f7bd48f81b9206f410630ec5c055de442c72050
+  Capacitor: 106e7a4205f4618d582b886a975657c61179138d
+  CapacitorApp: d63334c052278caf5d81585d80b21905c6f93f39
+  CapacitorCordova: 5967b9ba03915ef1d585469d6e31f31dc49be96f
+  CapacitorHaptics: 70e47470fa1a6bd6338cd102552e3846b7f9a1b3
+  CapacitorKeyboard: 969647d0ca2e5c737d7300088e2517aa832434e2
+  CapacitorStatusBar: 275cbf2f4dfc00388f519ef80c7ec22edda342c9
+  RdlaboCapacitorBrotherprint: 297b92b8d82fc4fb0ac2893b3c29f28f82097518
 
-PODFILE CHECKSUM: 81f191debd37c3b29abbfe819ac7313b8ba0d109
+PODFILE CHECKSUM: 67a9ef60ee268256524bf466c2808cbbe55b3eff
 
 COCOAPODS: 1.15.2
