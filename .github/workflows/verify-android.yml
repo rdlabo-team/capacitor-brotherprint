@@ -16,7 +16,7 @@ jobs:
           java-version: '21'
       - name: Gradle cache
         uses: gradle/actions/setup-gradle@v3
-      - name: Verify 16KB alignment
+      - name: Verify 16KB alignment (strict)
         working-directory: android
-        run: ./gradlew -Dorg.gradle.jvmargs="-Xmx2g" :verifyBrotherNative16KB -PbrotherPrint.warnOnly=false
+        run: ./gradlew -Dorg.gradle.jvmargs="-Xmx2g" :verifyBrotherNative16KB -PbrotherPrint.warnOnly=false -PbrotherPrint.strict16kb=true
 
