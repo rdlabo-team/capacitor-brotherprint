@@ -68,6 +68,35 @@ project(':BrotherPrintLibrary').projectDir = new File('./BrotherPrintLibrary/')
 
 These steps will integrate the Brother Print SDK with your Capacitor Android project.
 
+### Android 15+ 16 KB page size compliance
+
+Google requires apps targeting Android 15+ on 64-bit devices to support 16 KB page sizes. The embedded Brother SDK AAR (`BrotherPrintLibrary.aar`) contains native libraries under `jni/*/*.so` that must be built with proper page alignment.
+
+This plugin adds a verification step that inspects the AAR and validates ELF segment alignment:
+
+- `./android/gradlew verifyBrotherNative16KB` runs automatically before Android builds.
+- If `targetSdkVersion >= 35`, misaligned libraries will fail the build by default.
+
+You can override the AAR path to test a Brother-provided update without changing the repo:
+
+```
+cd android
+./gradlew clean :verifyBrotherNative16KB -PbrotherPrint.aarPath=/absolute/path/to/BrotherPrintLibrary.aar
+```
+
+Environment variable alternative:
+
+```
+BROTHER_PRINT_AAR_PATH=/absolute/path/to/BrotherPrintLibrary.aar ./gradlew :verifyBrotherNative16KB
+```
+
+Controls:
+
+- `-PbrotherPrint.strict16kb=true|false` (default true when `targetSdk>=35`)
+- `-PbrotherPrint.warnOnly=true` to only warn instead of fail (not recommended)
+
+Reference: `https://developer.android.com/guide/practices/page-sizes`
+
 ### iOS configuration
 
 1. Place the following files in the ios folder of your Capacitor project:
@@ -433,7 +462,9 @@ Failed to print.
 
 Make all properties in T optional
 
-<code>{ [P in keyof T]?: T[P]; }</code>
+<code>{
+ [P in keyof T]?: T[P];
+ }</code>
 
 
 #### BRLMChannelResult
