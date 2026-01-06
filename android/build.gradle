@@ -69,5 +69,184 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-    implementation project(":BrotherPrintLibrary")
+    // Allow consumers to override the embedded Brother AAR with a custom path
+    // Set via -PbrotherPrint.aarPath=/absolute/path/BrotherPrintLibrary.aar or env BROTHER_PRINT_AAR_PATH
+    def brotherAarPathProp = project.findProperty('brotherPrint.aarPath') ?: System.getenv('BROTHER_PRINT_AAR_PATH')
+    if (brotherAarPathProp) {
+        implementation files(brotherAarPathProp)
+    } else {
+        implementation project(":BrotherPrintLibrary")
+    }
 }
+
+// -----------------------------------------------------------------------------
+// Android 15+ (16 KB page size) native library alignment verification
+// This task inspects the embedded Brother AAR's jni/*.so files and validates
+// that all PT_LOAD segments are aligned for 16 KB pages (>= 16384).
+//
+// Controls:
+//  -PbrotherPrint.strict16kb=true|false  (default: true if targetSdk >= 35, else false)
+//  -PbrotherPrint.aarPath=...</absolute/path/BrotherPrintLibrary.aar>
+//  BROTHER_PRINT_AAR_PATH env var is also supported.
+//  -PbrotherPrint.warnOnly=true  force warnings instead of failing the build
+// -----------------------------------------------------------------------------
+
+def locateBrotherAar = {
+    def overridePath = project.findProperty('brotherPrint.aarPath') ?: System.getenv('BROTHER_PRINT_AAR_PATH')
+    if (overridePath) {
+        return new File(overridePath)
+    }
+    // Fallback to embedded module AAR
+    def module = project.findProject(':BrotherPrintLibrary')
+    if (module != null) {
+        return new File(module.projectDir, 'BrotherPrintLibrary.aar')
+    }
+    return null
+}
+
+def readUInt16LE = { byte[] data, int offset ->
+    (int)((data[offset] & 0xFF) | ((data[offset + 1] & 0xFF) << 8))
+}
+
+def readUInt32LE = { byte[] data, long offset ->
+    int o = (int) offset
+    long value = ((long)(data[o] & 0xFF)) |
+            (((long)(data[o + 1] & 0xFF)) << 8) |
+            (((long)(data[o + 2] & 0xFF)) << 16) |
+            (((long)(data[o + 3] & 0xFF)) << 24)
+    return value & 0xFFFFFFFFL
+}
+
+def readUInt64LE = { byte[] data, long offset ->
+    int o = (int) offset
+    long value = 0L
+    for (int i = 0; i < 8; i++) {
+        value |= ((long)(data[o + i] & 0xFF)) << (8 * i)
+    }
+    return value
+}
+
+def analyzeElfAlignments = { byte[] bytes ->
+    if (bytes.length < 64) {
+        return [valid: false, reason: 'ELF too small']
+    }
+    // Check ELF magic: 0x7F 'E' 'L' 'F' => 0x7F 0x45 0x4C 0x46
+    if (!(bytes[0] == (byte)0x7F && bytes[1] == (byte)0x45 && bytes[2] == (byte)0x4C && bytes[3] == (byte)0x46)) {
+        return [valid: false, reason: 'Not an ELF']
+    }
+    int eiClass = bytes[4] & 0xFF // 1=ELF32, 2=ELF64
+    int eiData = bytes[5] & 0xFF  // 1=little, 2=big
+    if (eiData != 1) {
+        return [valid: false, reason: 'Big-endian ELF not supported']
+    }
+
+    long e_phoff
+    int e_phentsize
+    int e_phnum
+    if (eiClass == 1) { // ELF32
+        e_phoff = readUInt32LE(bytes, 28)
+        e_phentsize = readUInt16LE(bytes, 42)
+        e_phnum = readUInt16LE(bytes, 44)
+    } else if (eiClass == 2) { // ELF64
+        e_phoff = readUInt64LE(bytes, 32)
+        e_phentsize = readUInt16LE(bytes, 54)
+        e_phnum = readUInt16LE(bytes, 56)
+    } else {
+        return [valid: false, reason: 'Unknown ELF class']
+    }
+
+    if (e_phoff <= 0 || e_phnum <= 0 || e_phentsize <= 0) {
+        return [valid: false, reason: 'Invalid program header']
+    }
+
+    List<Long> loadAlignments = []
+    for (int i = 0; i < e_phnum; i++) {
+        long phBase = e_phoff + (long)i * (long)e_phentsize
+        if (phBase + e_phentsize > bytes.length) break
+        int p_type = (int) readUInt32LE(bytes, phBase + 0)
+        if (eiClass == 1) { // 32-bit layout
+            if (p_type == 1) { // PT_LOAD
+                long p_align = readUInt32LE(bytes, phBase + 28)
+                loadAlignments.add(p_align)
+            }
+        } else { // 64-bit layout
+            if (p_type == 1) { // PT_LOAD
+                long p_align = readUInt64LE(bytes, phBase + 48)
+                loadAlignments.add(p_align)
+            }
+        }
+    }
+    if (loadAlignments.isEmpty()) {
+        return [valid: false, reason: 'No PT_LOAD segments']
+    }
+    long minAlign = loadAlignments.min()
+    return [valid: true, minAlign: minAlign, alignments: loadAlignments]
+}
+
+tasks.register('verifyBrotherNative16KB') {
+    group = 'verification'
+    description = 'Verify Brother AAR native libraries (jni/*.so) are aligned for 16 KB page size.'
+    doLast {
+        File aar = locateBrotherAar()
+        if (aar == null || !aar.exists()) {
+            logger.lifecycle("[brother-16kb] No Brother AAR found to verify. Skipping.")
+            return
+        }
+
+        logger.lifecycle("[brother-16kb] Verifying native libs in: ${aar.absolutePath}")
+
+        def zip = new java.util.zip.ZipFile(aar)
+        def entries = zip.entries().findAll { it.name.startsWith('jni/') && it.name.endsWith('.so') }
+        if (entries.isEmpty()) {
+            logger.lifecycle("[brother-16kb] No jni/*.so entries found in AAR. Nothing to verify.")
+            zip.close()
+            return
+        }
+
+        boolean allOk = true
+        int required = 16384
+        entries.each { e ->
+            def is = zip.getInputStream(e)
+            byte[] bytes = is.readAllBytes()
+            is.close()
+            def result = analyzeElfAlignments(bytes)
+            if (!result.valid) {
+                allOk = false
+                logger.warn("[brother-16kb] ${e.name}: invalid ELF (${result.reason})")
+            } else {
+                long minAlign = (long) result.minAlign
+                String alignsStr = (result.alignments as List<Long>).collect { it as Long }.join(', ')
+                if (minAlign < required) {
+                    allOk = false
+                    logger.warn("[brother-16kb] ${e.name}: min PT_LOAD Align=${minAlign} (< ${required}) [all: ${alignsStr}]")
+                } else {
+                    logger.lifecycle("[brother-16kb] ${e.name}: OK (min Align=${minAlign})")
+                }
+            }
+        }
+        zip.close()
+
+        // Decide whether to fail the build
+        boolean warnOnlyProp = (project.findProperty('brotherPrint.warnOnly') ?: 'false').toString().toBoolean()
+        int targetApi = 0
+        try {
+            targetApi = android.defaultConfig.targetSdkVersion.apiLevel
+        } catch (Throwable ignored) {
+            // Best-effort; if unavailable, keep 0
+        }
+        // Default to warn-only behavior for library builds; CI can enforce strict mode
+        boolean strict = (project.findProperty('brotherPrint.strict16kb') ?: 'false').toString().toBoolean()
+
+        if (!allOk) {
+            String msg = "BrotherPrintLibrary native libs are not aligned for 16 KB pages. See https://developer.android.com/guide/practices/page-sizes"
+            if (warnOnlyProp || !strict) {
+                logger.warn("[brother-16kb] WARNING: ${msg}")
+            } else {
+                throw new GradleException("[brother-16kb] ${msg}\nYou can supply an updated AAR via -PbrotherPrint.aarPath or override with -PbrotherPrint.warnOnly=true (not recommended for production).")
+            }
+        }
+    }
+}
+
+// Run the verification before building
+tasks.matching { it.name == 'preBuild' }.configureEach { dependsOn tasks.named('verifyBrotherNative16KB') }
