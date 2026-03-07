@@ -101,7 +101,7 @@ export class HomePage implements OnInit, OnDestroy {
       }),
     );
     this.listenerHandlers.push(
-      await BrotherPrint.addListener(BrotherPrintEventsEnum.onPrintFailedCommunication, (info: ErrorInfo) => {
+      await BrotherPrint.addListener(BrotherPrintEventsEnum.onPrintFailedCommunication, () => {
         console.log('onPrintFailedCommunication');
       }),
     );
