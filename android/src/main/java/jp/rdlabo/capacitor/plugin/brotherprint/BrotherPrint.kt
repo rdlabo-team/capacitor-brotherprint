@@ -14,6 +14,7 @@ import android.hardware.usb.UsbManager
 import android.os.Build
 import android.util.Base64
 import android.util.Log
+import androidx.core.content.ContextCompat
 import com.brother.sdk.lmprinter.BLESearchOption
 import com.brother.sdk.lmprinter.Channel
 import com.brother.sdk.lmprinter.NetworkSearchOption
@@ -349,8 +350,11 @@ class BrotherPrint : Plugin() {
                 Context.RECEIVER_NOT_EXPORTED
             )
         } else {
-            bridge.context.registerReceiver(
-                usbReceiver, IntentFilter(ActionUSBPermission)
+            ContextCompat.registerReceiver(
+                bridge.context,
+                usbReceiver,
+                IntentFilter(ActionUSBPermission),
+                ContextCompat.RECEIVER_NOT_EXPORTED
             )
         }
 
