@@ -6,7 +6,7 @@ import type {
   BRLMPrintOptions,
   BRLMSearchOption,
   ErrorInfo,
-  isPortAvailableResult,
+  isChannelAvailableResult,
 } from './interfaces';
 
 export interface BrotherPrintPlugin {
@@ -21,7 +21,7 @@ export interface BrotherPrintPlugin {
    * If you have saved the last connected BRLMChannelResult,
    * you can use it to verify whether it is currently usable.
    */
-  isPortAvailable(option: BRLMChannelResult): Promise<isPortAvailableResult>;
+  isChannelAvailable(option: BRLMChannelResult): Promise<isChannelAvailableResult>;
 
   /**
    * Basically, it times out, so there is no need to use it. Use it when you want to run multiple connectType searches at the same time and time out any of them manually.

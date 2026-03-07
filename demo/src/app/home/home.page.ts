@@ -33,7 +33,7 @@ import {
   BRLMPrinterPrintQuality,
   BRLMPrinterScaleMode,
   BRLMPrinterVerticalAlignment,
-  isPortAvailableResult,
+  isChannelAvailableResult,
 } from '../../../../src';
 import { FormsModule } from '@angular/forms';
 import { printData } from '../print-data';
@@ -122,8 +122,8 @@ export class HomePage implements OnInit, OnDestroy {
     });
   }
 
-  async isPortAvailable(channel: BRLMChannelResult) {
-    const { result } = await BrotherPrint.isPortAvailable(channel);
+  async isChannelAvailable(channel: BRLMChannelResult) {
+    const { result } = await BrotherPrint.isChannelAvailable(channel);
     const toast = await this.toastCtrl.create({
       color: result ? 'success' : 'warning',
       message: result ? 'Ready to print' : 'Failed to connect',

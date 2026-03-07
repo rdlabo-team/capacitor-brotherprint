@@ -160,7 +160,7 @@ class BrotherPrint : Plugin() {
 
 
     @PluginMethod
-    fun isPortAvailable(call: PluginCall) {
+    fun isChannelAvailable(call: PluginCall) {
         val port: String? = call.getString("port", "wifi")
         val channelInfo: String? = call.getString("channelInfo", "")
 

@@ -44,7 +44,7 @@ export type BRLMPrintOptions = {
 } & Partial<BRLMChannelResult> &
   (BRLMPrinterQLModelSettings | BRLMPrinterTDModelSettings);
 
-export type isPortAvailableResult = {
+export type isChannelAvailableResult = {
   result: boolean;
 };
 

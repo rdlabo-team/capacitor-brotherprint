@@ -12,7 +12,7 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
     public let jsName = "BrotherPrint"
     public let pluginMethods: [CAPPluginMethod] = [
         CAPPluginMethod(name: "printImage", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "isPortAvailable", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "isChannelAvailable", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "search", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "cancelSearchWiFiPrinter", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "cancelSearchBluetoothPrinter", returnType: CAPPluginReturnPromise)
@@ -134,7 +134,7 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
         }
     }
 
-    @objc func isPortAvailable(_ call: CAPPluginCall) {
+    @objc func isChannelAvailable(_ call: CAPPluginCall) {
         let port: String = call.getString("port", "wifi")
         let channelInfo: String = call.getString("channelInfo", "")
 
