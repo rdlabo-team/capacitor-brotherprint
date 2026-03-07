@@ -127,6 +127,7 @@ export class HomePage implements OnInit, OnDestroy {
     const toast = await this.toastCtrl.create({
       color: result ? 'success' : 'warning',
       message: result ? 'Ready to print' : 'Failed to connect',
+      duration: 400,
     });
     await toast.present();
   }

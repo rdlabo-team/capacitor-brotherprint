@@ -133,11 +133,11 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
             call.resolve()
         }
     }
-    
+
     @objc func isPortAvailable(_ call: CAPPluginCall) {
         let port: String = call.getString("port", "wifi")
         let channelInfo: String = call.getString("channelInfo", "")
-        
+
         DispatchQueue.main.async {
             var channel: BRLMChannel
             switch port {
@@ -152,14 +152,14 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
                 return
             }
             let generateResult = BRLMPrinterDriverGenerator.open(channel)
-            
+
             guard generateResult.error.code == BRLMOpenChannelErrorCode.noError,
                   let printerDriver = generateResult.driver else {
-                call.resolve(["result": false]);
-                return;
+                call.resolve(["result": false])
+                return
             }
             printerDriver.closeChannel()
-            call.resolve(["result": true]);
+            call.resolve(["result": true])
         }
     }
 
