@@ -1,11 +1,17 @@
 import { WebPlugin } from '@capacitor/core';
 
 import type { BrotherPrintPlugin } from './definitions';
-import type { BRLMPrintOptions, BRLMSearchOption } from './interfaces';
+import type { BRLMChannelResult, BRLMPrintOptions, BRLMSearchOption, isPortAvailableResult } from './interfaces';
 
 export class BrotherPrintWeb extends WebPlugin implements BrotherPrintPlugin {
   async printImage(options: BRLMPrintOptions): Promise<void> {
     console.log('printImage', options);
+  }
+  async isPortAvailable(options: BRLMChannelResult): Promise<isPortAvailableResult> {
+    console.log('isPortAvailable', options);
+    return {
+      result: false,
+    };
   }
   async search(options: BRLMSearchOption): Promise<void> {
     console.log('search', options);

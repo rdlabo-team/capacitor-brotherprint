@@ -12,10 +12,11 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
     public let jsName = "BrotherPrint"
     public let pluginMethods: [CAPPluginMethod] = [
         CAPPluginMethod(name: "printImage", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "isPortAvailable", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "search", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "cancelSearchWiFiPrinter", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "cancelSearchBluetoothPrinter", returnType: CAPPluginReturnPromise),
-    ] 
+        CAPPluginMethod(name: "cancelSearchBluetoothPrinter", returnType: CAPPluginReturnPromise)
+    ]
     private var cancelRoutineWiFi: (() -> Void)?
     private var cancelRoutineBluetooth: (() -> Void)?
 
@@ -130,6 +131,35 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
 
             self.notifyListeners(BrotherPrinterEvent.onPrint.rawValue, data: [:])
             call.resolve()
+        }
+    }
+    
+    @objc func isPortAvailable(_ call: CAPPluginCall) {
+        let port: String = call.getString("port", "wifi")
+        let channelInfo: String = call.getString("channelInfo", "")
+        
+        DispatchQueue.main.async {
+            var channel: BRLMChannel
+            switch port {
+            case "wifi":
+                channel = BRLMChannel(wifiIPAddress: channelInfo)
+            case "bluetooth":
+                channel = BRLMChannel(bluetoothSerialNumber: channelInfo)
+            case "bluetoothLowEnergy":
+                channel = BRLMChannel(bleLocalName: channelInfo)
+            default:
+                call.reject("Error - connection is not found.")
+                return
+            }
+            let generateResult = BRLMPrinterDriverGenerator.open(channel)
+            
+            guard generateResult.error.code == BRLMOpenChannelErrorCode.noError,
+                  let printerDriver = generateResult.driver else {
+                call.resolve(["result": false]);
+                return;
+            }
+            printerDriver.closeChannel()
+            call.resolve(["result": true]);
         }
     }
 

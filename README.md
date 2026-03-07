@@ -273,6 +273,7 @@ https://github.com/rdlabo-team/capacitor-brotherprint/blob/main/demo/src/app/hom
 
 * [`printImage(...)`](#printimage)
 * [`search(...)`](#search)
+* [`isPortAvailable(...)`](#isportavailable)
 * [`cancelSearchWiFiPrinter()`](#cancelsearchwifiprinter)
 * [`cancelSearchBluetoothPrinter()`](#cancelsearchbluetoothprinter)
 * [`addListener(BrotherPrintEventsEnum.onPrinterAvailable, ...)`](#addlistenerbrotherprinteventsenumonprinteravailable-)
@@ -312,6 +313,22 @@ Search for printers. If not found, it will return an empty array.(not error)
 | Param        | Type                                                          |
 | ------------ | ------------------------------------------------------------- |
 | **`option`** | <code><a href="#brlmsearchoption">BRLMSearchOption</a></code> |
+
+--------------------
+
+
+### isPortAvailable(...)
+
+```typescript
+isPortAvailable(option: BRLMChannelResult) => Promise<void>
+```
+
+If you have saved the last connected <a href="#brlmchannelresult">BRLMChannelResult</a>,
+you can use it to verify whether it is currently usable.
+
+| Param        | Type                                                            |
+| ------------ | --------------------------------------------------------------- |
+| **`option`** | <code><a href="#brlmchannelresult">BRLMChannelResult</a></code> |
 
 --------------------
 
@@ -426,7 +443,12 @@ Failed to print.
 
 #### BRLMPrintOptions
 
-<code>{ encodedImage: string; /** * Should use enum <a href="#brlmprintermodelname">BRLMPrinterModelName</a> */ modelName: <a href="#brlmprintermodelname">BRLMPrinterModelName</a>; } & <a href="#partial">Partial</a>&lt;<a href="#brlmchannelresult">BRLMChannelResult</a>&gt; & (<a href="#brlmprinterqlmodelsettings">BRLMPrinterQLModelSettings</a> | <a href="#brlmprintertdmodelsettings">BRLMPrinterTDModelSettings</a>)</code>
+<code>{ encodedImage: string; /** * Should use enum <a href="#brlmprintermodelname">BRLMPrinterModelName</a> */ modelName: <a href="#brlmprintermodelname">BRLMPrinterModelName</a>; } & <a href="#brlmprintchannelconnect">BRLMPrintChannelConnect</a> & (<a href="#brlmprinterqlmodelsettings">BRLMPrinterQLModelSettings</a> | <a href="#brlmprintertdmodelsettings">BRLMPrinterTDModelSettings</a>)</code>
+
+
+#### BRLMPrintChannelConnect
+
+<code><a href="#partial">Partial</a>&lt;<a href="#brlmchannelresult">BRLMChannelResult</a>&gt; & <a href="#pick">Pick</a>&lt;<a href="#brlmchannelresult">BRLMChannelResult</a>, 'channelInfo'&gt;</code>
 
 
 #### Partial
@@ -439,6 +461,13 @@ Make all properties in T optional
 #### BRLMChannelResult
 
 <code>{ port: <a href="#brlmprinterport">BRLMPrinterPort</a>; modelName: string; serialNumber: string; macAddress: string; nodeName: string; location: string; /** * This need to connect to the printer. * wifi: IP Address * bluetooth: macAddress * bluetoothLowEnergy: modelName for bluetoothLowEnergy */ channelInfo: string; }</code>
+
+
+#### Pick
+
+From T, pick a set of properties whose keys are in the union K
+
+<code>{ [P in K]: T[P]; }</code>
 
 
 #### BRLMPrinterQLModelSettings

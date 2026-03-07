@@ -44,6 +44,10 @@ export type BRLMPrintOptions = {
 } & Partial<BRLMChannelResult> &
   (BRLMPrinterQLModelSettings | BRLMPrinterTDModelSettings);
 
+export type isPortAvailableResult = {
+  result: boolean;
+};
+
 export type BRLMPrinterTDModelSettings = {
   /**
    * Should use enum BRKMPrinterCustomPaperType
