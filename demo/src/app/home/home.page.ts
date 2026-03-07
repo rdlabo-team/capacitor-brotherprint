@@ -34,7 +34,6 @@ import {
   BRLMPrinterPrintQuality,
   BRLMPrinterScaleMode,
   BRLMPrinterVerticalAlignment,
-  ErrorInfo,
 } from '../../../../src';
 import { FormsModule } from '@angular/forms';
 import { printData } from '../print-data';
@@ -54,8 +53,6 @@ import { setPlatformOptions } from 'ionicons/components';
     IonItemGroup,
     IonLabel,
     IonText,
-    IonRadioGroup,
-    IonRadio,
     FormsModule,
     IonSelect,
     IonSelectOption,
