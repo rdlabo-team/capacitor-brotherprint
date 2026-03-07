@@ -273,6 +273,7 @@ https://github.com/rdlabo-team/capacitor-brotherprint/blob/main/demo/src/app/hom
 
 * [`printImage(...)`](#printimage)
 * [`search(...)`](#search)
+* [`isPortAvailable(...)`](#isportavailable)
 * [`cancelSearchWiFiPrinter()`](#cancelsearchwifiprinter)
 * [`cancelSearchBluetoothPrinter()`](#cancelsearchbluetoothprinter)
 * [`addListener(BrotherPrintEventsEnum.onPrinterAvailable, ...)`](#addlistenerbrotherprinteventsenumonprinteravailable-)
@@ -312,6 +313,24 @@ Search for printers. If not found, it will return an empty array.(not error)
 | Param        | Type                                                          |
 | ------------ | ------------------------------------------------------------- |
 | **`option`** | <code><a href="#brlmsearchoption">BRLMSearchOption</a></code> |
+
+--------------------
+
+
+### isPortAvailable(...)
+
+```typescript
+isPortAvailable(option: BRLMChannelResult) => Promise<isPortAvailableResult>
+```
+
+If you have saved the last connected <a href="#brlmchannelresult">BRLMChannelResult</a>,
+you can use it to verify whether it is currently usable.
+
+| Param        | Type                                                            |
+| ------------ | --------------------------------------------------------------- |
+| **`option`** | <code><a href="#brlmchannelresult">BRLMChannelResult</a></code> |
+
+**Returns:** <code>Promise&lt;<a href="#isportavailableresult">isPortAvailableResult</a>&gt;</code>
 
 --------------------
 
@@ -481,6 +500,11 @@ These are optional. If these are not set, default values are assigned by the pri
 #### BRLMSearchOption
 
 <code>{ /** * 'usb' is android only, and now developing. */ port: <a href="#brlmprinterport">BRLMPrinterPort</a>; /** * searchDuration is the time to end search for devices. * default is 15 seconds. * use only port is 'wifi' or 'bluetoothLowEnergy'. */ searchDuration: number; }</code>
+
+
+#### isPortAvailableResult
+
+<code>{ result: boolean; }</code>
 
 
 #### ErrorInfo

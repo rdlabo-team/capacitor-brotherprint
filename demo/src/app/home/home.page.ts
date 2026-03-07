@@ -9,12 +9,11 @@ import {
   IonItemGroup,
   IonLabel,
   IonText,
-  IonRadioGroup,
-  IonRadio,
   IonSelect,
   IonSelectOption,
   IonInput,
   Platform,
+  ToastController,
 } from '@ionic/angular/standalone';
 import {
   BRLMPrinterCustomPaperType,
@@ -34,6 +33,7 @@ import {
   BRLMPrinterPrintQuality,
   BRLMPrinterScaleMode,
   BRLMPrinterVerticalAlignment,
+  isPortAvailableResult,
 } from '../../../../src';
 import { FormsModule } from '@angular/forms';
 import { printData } from '../print-data';
@@ -85,6 +85,7 @@ export class HomePage implements OnInit, OnDestroy {
   readonly printers = signal<BRLMChannelResult[]>([]);
   readonly base64: string = printData();
   readonly platform = inject(Platform);
+  readonly toastCtrl = inject(ToastController);
 
   async ngOnInit() {
     this.listenerHandlers.push(
@@ -119,6 +120,16 @@ export class HomePage implements OnInit, OnDestroy {
       port,
       searchDuration: 15, // seconds
     });
+  }
+
+  async isPortAvailable(channel: BRLMChannelResult) {
+    const { result } = await BrotherPrint.isPortAvailable(channel);
+    const toast = await this.toastCtrl.create({
+      color: result ? 'success' : 'warning',
+      message: result ? 'Ready to print' : 'Failed to connect',
+      duration: 400,
+    });
+    await toast.present();
   }
 
   print(channel: BRLMChannelResult) {

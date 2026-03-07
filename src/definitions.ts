@@ -1,7 +1,13 @@
 import type { PluginListenerHandle } from '@capacitor/core';
 
 import type { BrotherPrintEventsEnum } from './events.enum';
-import type { BRLMChannelResult, BRLMPrintOptions, BRLMSearchOption, ErrorInfo } from './interfaces';
+import type {
+  BRLMChannelResult,
+  BRLMPrintOptions,
+  BRLMSearchOption,
+  ErrorInfo,
+  isPortAvailableResult,
+} from './interfaces';
 
 export interface BrotherPrintPlugin {
   printImage(options: BRLMPrintOptions): Promise<void>;
@@ -10,6 +16,12 @@ export interface BrotherPrintPlugin {
    * Search for printers. If not found, it will return an empty array.(not error)
    */
   search(option: BRLMSearchOption): Promise<void>;
+
+  /**
+   * If you have saved the last connected BRLMChannelResult,
+   * you can use it to verify whether it is currently usable.
+   */
+  isPortAvailable(option: BRLMChannelResult): Promise<isPortAvailableResult>;
 
   /**
    * Basically, it times out, so there is no need to use it. Use it when you want to run multiple connectType searches at the same time and time out any of them manually.

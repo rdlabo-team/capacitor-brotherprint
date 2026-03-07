@@ -176,6 +176,9 @@
         <ion-item><ion-label>nodeName</ion-label><ion-text>{{channel.nodeName}}</ion-text></ion-item>
         <ion-item><ion-label>location</ion-label><ion-text>{{channel.location}}</ion-text></ion-item>
         <ion-item><ion-label>channelInfo</ion-label><ion-text>{{channel.channelInfo}}</ion-text></ion-item>
+        <ion-item button="true" color="warning" (click)="isPortAvailable(channel)"
+        ><ion-label>Validate channel</ion-label></ion-item
+        >
         <ion-item button="true" color="primary" (click)="print(channel)"
         ><ion-label>Print demo label</ion-label></ion-item
         >
