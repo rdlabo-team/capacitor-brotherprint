@@ -157,6 +157,37 @@ class BrotherPrint : Plugin() {
         return manager.adapter
     }
 
+
+    @PluginMethod
+    fun isPortAvailable(call: PluginCall) {
+        val port: String? = call.getString("port", "wifi")
+        val channelInfo: String? = call.getString("channelInfo", "")
+
+        Thread {
+            val channel: Channel = when (port) {
+                "usb" -> Channel.newUsbChannel(bridge.context.getSystemService(Context.USB_SERVICE) as UsbManager)
+                "wifi" -> Channel.newWifiChannel(channelInfo)
+                "bluetooth" -> Channel.newBluetoothChannel(channelInfo, getBluetoothAdapter(bridge.context))
+                "bluetoothLowEnergy" -> Channel.newBluetoothLowEnergyChannel(
+                    channelInfo, bridge.context, getBluetoothAdapter(bridge.context)
+                )
+                else -> {
+                    call.reject("Error - port:$port is not supported")
+                    return@Thread
+                }
+            }
+
+            val result = PrinterDriverGenerator.openChannel(channel)
+            if (result.error.code != OpenChannelError.ErrorCode.NoError) {
+                call.resolve(JSObject().put("result", false))
+                return@Thread
+            }
+            val printerDriver = result.driver
+            printerDriver.closeChannel()
+            call.resolve(JSObject().put("result", true))
+        }.start()
+    }
+
     @PluginMethod
     fun search(call: PluginCall) {
         when(call.getString("port", "wifi")) {
