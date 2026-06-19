@@ -1,14 +1,13 @@
-name: validation
+name: Validation
 on:
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened]
   push:
     branches: [main]
-
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: validation-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   test-demo:
@@ -17,7 +16,7 @@ jobs:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
-          node-version: 24
+          node-version: 22
           cache: npm
           cache-dependency-path: '**/package-lock.json'
       - name: Cache Angular
@@ -30,5 +29,5 @@ jobs:
             ${{ runner.os }}-angular-
       - run: npm install
       - run: npm run build
-      - run: npm install && npm run test:ci
+      - run: npm ci && npm run test:ci
         working-directory: demo
