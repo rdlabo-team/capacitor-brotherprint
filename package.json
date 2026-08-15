@@ -94,9 +94,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:rdlabo-team/capacitor-brotherprint.git"
+    "url": "git@github.com:rdlabo-dev/capacitor-brotherprint.git"
   },
   "bugs": {
-    "url": "git@github.com:rdlabo-team/capacitor-brotherprint.git/issues"
+    "url": "git@github.com:rdlabo-dev/capacitor-brotherprint.git/issues"
   }
 }

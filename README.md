@@ -265,7 +265,7 @@ export class BrotherComponent implements OnInit, OnDestroy {
 ```
 
 See demo for complete code:
-https://github.com/rdlabo-team/capacitor-brotherprint/blob/main/demo/src/app/home/home.page.ts
+https://github.com/rdlabo-dev/capacitor-brotherprint/blob/main/demo/src/app/home/home.page.ts
 
 ## API
 
