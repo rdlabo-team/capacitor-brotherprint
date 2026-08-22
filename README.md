@@ -16,11 +16,11 @@ Each product link is an Amazon affiliate link. If you choose to make a purchase 
 
 | Product                               | Model        | iOS/WiFi | iOS/BT | iOS/BLE | Android/USB | Android/WiFi | Android/BT | Android/BLE |
 | ------------------------------------- | ------------ | -------- | ------ | ------- | ----------- | ------------ | ---------- | ----------- |
-| QL-810W                               | QL_810W      | ✗        | ✗      | ✗       | ◯           | ✗            | ✗          | ✗           |
-| [QL-820NWB](https://amzn.to/3BXQ1aj)  | QL_820NWB    | ◯        | ※1     | ✗       | △           | ◯            | △          | ✗           |
-| [QL-820NWBc](https://amzn.to/4fjhUIe) | QL_820NWB    | ◯        | ※2     | ✗       | ✗           | ◯            | ◯          | ✗           |
-| [TD-2320D](https://amzn.to/48EFCN3)   | TD_2320D_203 | ✗        | ✗      | ✗       | △           | ✗            | ✗          | ✗           |
-| [TD-2350D](https://amzn.to/48ma6TK)   | TD_2350D_300 | ◯        | △      | △       | ◯           | ◯            | ◯          | △           |
+| QL-810W                               | QL_810W      | ❌       | ❌     | ❌      | ✅          | ❌           | ❌         | ❌          |
+| [QL-820NWB](https://amzn.to/3BXQ1aj)  | QL_820NWB    | ✅       | ※1     | ❌      | △           | ✅           | △          | ❌          |
+| [QL-820NWBc](https://amzn.to/4fjhUIe) | QL_820NWB    | ✅       | ※2     | ❌      | ❌          | ✅           | ✅         | ❌          |
+| [TD-2320D](https://amzn.to/48EFCN3)   | TD_2320D_203 | ❌       | ❌     | ❌      | △           | ❌           | ❌         | ❌          |
+| [TD-2350D](https://amzn.to/48ma6TK)   | TD_2350D_300 | ✅       | △      | △       | ✅          | ✅           | ✅         | △           |
 
 Amazon Affiliate Links:　**https://amzn.to/3AiiOFT**
 
@@ -28,10 +28,10 @@ Amazon Affiliate Links:　**https://amzn.to/3AiiOFT**
 
 |     | description                |
 | --- | -------------------------- |
-| ◯   | Supported and tested       |
+| ✅  | Supported and tested       |
 | △   | Implemented but not tested |
 | -   | Plugin is not supported    |
-| ✗   | Device is not supported    |
+| ❌  | Device is not supported    |
 | BT  | Bluetooth                  |
 | BLE | Bluetooth Low Energy       |
 
