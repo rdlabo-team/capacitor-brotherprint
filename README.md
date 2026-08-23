@@ -462,6 +462,12 @@ These are optional. If these are not set, default values are assigned by the pri
 </docgen-api>
 
 <!-- rdlabo-docs-omit -->
+## Maintainers
+
+- [rdlabo](https://rdlabo.dev/)
+<!-- /rdlabo-docs-omit -->
+
+<!-- rdlabo-docs-omit -->
 ## License
 
 MIT
