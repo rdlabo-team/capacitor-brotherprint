@@ -99,5 +99,6 @@
   },
   "bugs": {
     "url": "git@github.com:rdlabo-dev/capacitor-brotherprint.git/issues"
-  }
+  },
+  "homepage": "https://docs.rdlabo.dev/projects/capacitor-brotherprint"
 }
