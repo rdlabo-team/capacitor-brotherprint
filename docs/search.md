@@ -15,7 +15,11 @@ await BrotherPrint.search({
 });
 ```
 
-`searchDuration` applies to `wifi` and `bluetoothLowEnergy`. `usb` is Android only. If nothing is found, you get no error and no printers. Signatures are on the [API](/docs/api#brlmsearchoption) page.
+`searchDuration` applies to `wifi` and `bluetoothLowEnergy`. `usb` is Android only. If nothing is found, you get no error and no printers.
+
+<!-- !::search:: -->
+
+<!-- !::BRLMSearchOption:: -->
 
 ## isChannelAvailable
 
@@ -36,7 +40,11 @@ const checkChannel = async (lastPrinter: BRLMChannelResult) => {
 };
 ```
 
-Signatures are on the [API](/docs/api#ischannelavailableresult) page.
+<!-- !::isChannelAvailable:: -->
+
+<!-- !::isChannelAvailableResult:: -->
+
+<!-- !::BRLMChannelResult:: -->
 
 ## cancelSearchWiFiPrinter / cancelSearchBluetoothPrinter
 
@@ -48,3 +56,7 @@ import { BrotherPrint } from '@rdlabo/capacitor-brotherprint';
 await BrotherPrint.cancelSearchWiFiPrinter();
 await BrotherPrint.cancelSearchBluetoothPrinter();
 ```
+
+<!-- !::cancelSearchWiFiPrinter:: -->
+
+<!-- !::cancelSearchBluetoothPrinter:: -->

@@ -30,4 +30,6 @@ const printImage = async () => {
 
 https://github.com/rdlabo-dev/capacitor-brotherprint/blob/v8.1.1/demo/src/app/home/home.page.ts
 
-Option fields are on the [API](/docs/api#brlmprintoptions) page.
+<!-- !::printImage:: -->
+
+<!-- !::BRLMPrintOptions:: -->
