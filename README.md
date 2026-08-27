@@ -45,11 +45,11 @@ Amazon Affiliate Links:　**https://amzn.to/3AiiOFT**
 % npm install @rdlabo/capacitor-brotherprint
 ```
 
-For detailed SDK setup and permission configuration, see [Installation](./docs/installation.md).
+For detailed SDK setup and permission configuration, see [Installation](https://docs.rdlabo.dev/projects/capacitor-brotherprint/docs/installation).
 
 ## Usage
 
-See [Search](./docs/search.md), [Print](./docs/print.md), and [Events](./docs/events.md).
+See [Search](https://docs.rdlabo.dev/projects/capacitor-brotherprint/docs/search), [Print](https://docs.rdlabo.dev/projects/capacitor-brotherprint/docs/print), and [Events](https://docs.rdlabo.dev/projects/capacitor-brotherprint/docs/events).
 
 ## API
 
