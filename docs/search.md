@@ -86,6 +86,4 @@ await BrotherPrint.cancelSearchWiFiPrinter();
 await BrotherPrint.cancelSearchBluetoothPrinter();
 ```
 
-<!-- !::cancelSearchWiFiPrinter:: -->
-
-<!-- !::cancelSearchBluetoothPrinter:: -->
+See [API](/docs/api#cancelsearchwifiprinter) for the cancellation signatures.
