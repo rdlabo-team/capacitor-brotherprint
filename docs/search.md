@@ -1,19 +1,52 @@
 # Search
 
-Search finds nearby Brother printers. Results arrive on [Events](/docs/events) `onPrinterAvailable`. Call this after [Installation](/docs/readme#installation).
+Search finds nearby Brother printers. Results arrive on `onPrinterAvailable`. Call this after [Installation](/docs/installation). Register the listener before `search`, keep the discovered `BRLMChannelResult` (especially `channelInfo` and `port`), then continue to [Print](/docs/print). Full event list: [Events](/docs/events).
 
 ## search
 
-The call returns `void`. Collect printers from the event.
+Register `onPrinterAvailable`, retain the channel, then start a Wi-Fi search. The `search` call itself returns `void`.
 
 ```typescript
-import { BrotherPrint, BRLMPrinterPort } from '@rdlabo/capacitor-brotherprint';
+import type { PluginListenerHandle } from '@capacitor/core';
+import {
+  BrotherPrint,
+  BrotherPrintEventsEnum,
+  BRLMPrinterPort,
+} from '@rdlabo/capacitor-brotherprint';
+import type { BRLMChannelResult } from '@rdlabo/capacitor-brotherprint';
 
-await BrotherPrint.search({
-  port: BRLMPrinterPort.wifi,
-  searchDuration: 15, // seconds
-});
+let discovered: BRLMChannelResult | undefined;
+let availableHandle: PluginListenerHandle | undefined;
+
+const searchWifiPrinters = async () => {
+  if (!availableHandle) {
+    availableHandle = await BrotherPrint.addListener(
+    BrotherPrintEventsEnum.onPrinterAvailable,
+    (printer) => {
+      discovered = printer;
+      console.log('channelInfo', printer.channelInfo);
+    },
+    );
+  }
+
+  await BrotherPrint.search({
+    port: BRLMPrinterPort.wifi,
+    searchDuration: 15, // seconds
+  });
+};
+
+const stopSearching = async () => {
+  try {
+    await BrotherPrint.cancelSearchWiFiPrinter();
+  } finally {
+    await availableHandle?.remove();
+    availableHandle = undefined;
+  }
+};
 ```
+
+Call `searchWifiPrinters` from the search button and await `stopSearching` when leaving the screen.
+
 
 `searchDuration` applies to `wifi` and `bluetoothLowEnergy`. `usb` is Android only. If nothing is found, you get no error and no printers. Signatures are on the [API](/docs/api#brlmsearchoption) page.
 
@@ -40,7 +73,7 @@ Signatures are on the [API](/docs/api#ischannelavailableresult) page.
 
 ## cancelSearchWiFiPrinter / cancelSearchBluetoothPrinter
 
-Search already times out. Use these only when you run several `search` `port` values at once and want to stop one yourself.
+Use these to stop an active search before its timeout, including when leaving the screen.
 
 ```typescript
 import { BrotherPrint } from '@rdlabo/capacitor-brotherprint';

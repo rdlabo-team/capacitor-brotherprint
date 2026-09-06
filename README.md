@@ -1,18 +1,31 @@
 # @rdlabo/capacitor-brotherprint
 
-Capacitor Brother Print is a native Brother Print SDK implementation for iOS & Android. Support These models.
+Capacitor Brother Print binds the native Brother Print SDK for iOS and Android so you can search supported Brother label printers and print images from a Capacitor app.
+
+**This plugin is still in the RC (release candidate) phase.** iOS requires **Swift Package Manager** and a minimum of **iOS 15**. The Brother Print SDK is not compatible with CocoaPods for this plugin.
 
 <!-- rdlabo-docs-omit -->
 **Documentation:** [Read the full documentation](https://docs.rdlabo.dev/projects/capacitor-brotherprint)
 <!-- /rdlabo-docs-omit -->
 
-**This plugin is still in the RC (release candidate) phase.**
+## Install
 
-**Brother Print SDK is incompatible with CocoaPods and Minimum Developments iOS 14 and is not working at this time, please use Swift Package Manager.**
+```
+npm install @rdlabo/capacitor-brotherprint
+```
+
+For SDK placement, SPM layout, and permissions, see [Installation](./docs/installation.md).
+
+## Print your first label
+
+1. [Installation](./docs/installation.md) — npm install, place the Brother SDK, permissions, then `npx cap sync`.
+2. [Search](./docs/search.md) — register `onPrinterAvailable`, keep the discovered channel, run Wi-Fi (or other) search.
+3. [Print](./docs/print.md) — print with that channel, a supported model/label, and a real base64 image you prepare.
+4. [Events](./docs/events.md) — print success and error listeners in more detail.
 
 ## Supported models
 
-Each product link is an Amazon affiliate link. If you choose to make a purchase through these links, it would be greatly appreciated and **would help** support development costs. Thank you!
+Each product link is an Amazon affiliate link. Purchases through these links help support development costs.
 
 | Product                               | Model        | iOS/WiFi | iOS/BT | iOS/BLE | Android/USB | Android/WiFi | Android/BT | Android/BLE |
 | ------------------------------------- | ------------ | -------- | ------ | ------- | ----------- | ------------ | ---------- | ----------- |
@@ -22,7 +35,7 @@ Each product link is an Amazon affiliate link. If you choose to make a purchase 
 | [TD-2320D](https://amzn.to/48EFCN3)   | TD_2320D_203 | ❌       | ❌     | ❌      | △           | ❌           | ❌         | ❌          |
 | [TD-2350D](https://amzn.to/48ma6TK)   | TD_2350D_300 | ✅       | △      | △       | ✅          | ✅           | ✅         | △           |
 
-Amazon Affiliate Links:　**https://amzn.to/3AiiOFT**
+Amazon Affiliate Links: **https://amzn.to/3AiiOFT**
 
 **Supplement**
 
@@ -37,19 +50,7 @@ Amazon Affiliate Links:　**https://amzn.to/3AiiOFT**
 
 ※1 Due to low Bluetooth version, connection is not possible with iOS. Ref: https://okbizcs.okwave.jp/brother/qa/q9932082.html
 
-※2 The iOS/BT implementation for the QL-820NWBc is in place, but it’s uncertain if it functions correctly. It’s unclear whether this is an implementation issue, as Brother’s official app also doesn’t work well.
-
-## Install
-
-```
-% npm install @rdlabo/capacitor-brotherprint
-```
-
-For detailed SDK setup and permission configuration, see [Installation](./docs/installation.md).
-
-## Usage
-
-See [Search](./docs/search.md), [Print](./docs/print.md), and [Events](./docs/events.md).
+※2 The iOS/BT implementation for the QL-820NWBc is in place, but it is uncertain if it functions correctly. It is unclear whether this is an implementation issue, as Brother’s official app also does not work well.
 
 ## API
 
@@ -125,7 +126,7 @@ you can use it to verify whether it is currently usable.
 cancelSearchWiFiPrinter() => Promise<void>
 ```
 
-Basically, it times out, so there is no need to use it. Use it when you want to run multiple connectType searches at the same time and time out any of them manually.
+Stop an active search before its timeout, including when leaving the screen.
 
 --------------------
 
@@ -136,7 +137,7 @@ Basically, it times out, so there is no need to use it. Use it when you want to 
 cancelSearchBluetoothPrinter() => Promise<void>
 ```
 
-Basically, it times out, so there is no need to use it. Use it when you want to run multiple connectType searches at the same time and time out any of them manually.
+Stop an active search before its timeout, including when leaving the screen.
 
 --------------------
 
@@ -236,7 +237,9 @@ Failed to print.
 
 Make all properties in T optional
 
-<code>{ [P in keyof T]?: T[P]; }</code>
+<code>{
+ [P in keyof T]?: T[P];
+ }</code>
 
 
 #### BRLMChannelResult
