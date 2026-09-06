@@ -69,7 +69,11 @@ const checkChannel = async (lastPrinter: BRLMChannelResult) => {
 };
 ```
 
-Signatures are on the [API](/docs/api#ischannelavailableresult) page.
+<!-- !::isChannelAvailable:: -->
+
+<!-- !::isChannelAvailableResult:: -->
+
+<!-- !::BRLMChannelResult:: -->
 
 ## cancelSearchWiFiPrinter / cancelSearchBluetoothPrinter
 
@@ -81,3 +85,7 @@ import { BrotherPrint } from '@rdlabo/capacitor-brotherprint';
 await BrotherPrint.cancelSearchWiFiPrinter();
 await BrotherPrint.cancelSearchBluetoothPrinter();
 ```
+
+<!-- !::cancelSearchWiFiPrinter:: -->
+
+<!-- !::cancelSearchBluetoothPrinter:: -->

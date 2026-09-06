@@ -47,4 +47,10 @@ See the demo for a complete page:
 
 https://github.com/rdlabo-dev/capacitor-brotherprint/blob/v8.1.1/demo/src/app/home/home.page.ts
 
-Signatures are on the [API](/docs/api) page.
+<!-- !::addListener.BrotherPrintEventsEnum:: -->
+
+<!-- !::BrotherPrintEventsEnum:: -->
+
+<!-- !::PluginListenerHandle:: -->
+
+<!-- !::ErrorInfo:: -->

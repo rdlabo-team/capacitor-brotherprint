@@ -14,14 +14,14 @@ Capacitor Brother Print binds the native Brother Print SDK for iOS and Android s
 npm install @rdlabo/capacitor-brotherprint
 ```
 
-For SDK placement, SPM layout, and permissions, see [Installation](./docs/installation.md).
+For SDK placement, SPM layout, and permissions, see [Installation](https://docs.rdlabo.dev/projects/capacitor-brotherprint/docs/installation).
 
 ## Print your first label
 
-1. [Installation](./docs/installation.md) — npm install, place the Brother SDK, permissions, then `npx cap sync`.
-2. [Search](./docs/search.md) — register `onPrinterAvailable`, keep the discovered channel, run Wi-Fi (or other) search.
-3. [Print](./docs/print.md) — print with that channel, a supported model/label, and a real base64 image you prepare.
-4. [Events](./docs/events.md) — print success and error listeners in more detail.
+1. [Installation](https://docs.rdlabo.dev/projects/capacitor-brotherprint/docs/installation) — npm install, place the Brother SDK, permissions, then `npx cap sync`.
+2. [Search](https://docs.rdlabo.dev/projects/capacitor-brotherprint/docs/search) — register `onPrinterAvailable`, keep the discovered channel, run Wi-Fi (or other) search.
+3. [Print](https://docs.rdlabo.dev/projects/capacitor-brotherprint/docs/print) — print with that channel, a supported model/label, and a real base64 image you prepare.
+4. [Events](https://docs.rdlabo.dev/projects/capacitor-brotherprint/docs/events) — print success and error listeners in more detail.
 
 ## Supported models
 
@@ -465,6 +465,22 @@ These are optional. If these are not set, default values are assigned by the pri
 </docgen-api>
 
 <!-- rdlabo-docs-omit -->
+## Prerelease channels
+
+An open, non-draft pull request can be published to the npm `beta` dist-tag after its `Validation` and `Package Candidate` workflows pass. A repository owner or maintainer must add a comment whose entire body is:
+
+```text
+/beta
+```
+
+The request authorizes only the pull request head SHA that existed when the comment was added. The workflow revalidates the owner or maintainer permission and head SHA immediately before publishing. Any new commit requires CI to pass again and a fresh owner or maintainer `/beta` comment. Fork pull requests are supported. Pull requests that change a release-gating workflow cannot be beta-published until those workflow changes land on `main`.
+
+Beta versions use `<base>-beta.pr<PR number>.sha<12-character SHA>`. The candidate is built in a read-only workflow without npm publishing credentials. The privileged release workflow publishes only the validated immutable package artifact with lifecycle scripts disabled. A notification failure cannot invalidate a successful npm publish.
+
+When a pull request is merged into `main`, it is automatically published to `beta` only after the required CI and `Package Candidate` succeed for that exact merge commit. Direct pushes to `main` do not publish a candidate.
+
+Only `npm run release` creates a release tag. Stable `vX.Y.Z` tags publish to npm `latest`; revision/prerelease tags publish to `next`. Neither `beta` nor `next` publishing changes the npm `latest` dist-tag.
+
 ## Maintainers
 
 - [rdlabo](https://rdlabo.dev/)
