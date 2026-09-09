@@ -294,6 +294,10 @@ class BrotherPrint : Plugin() {
                     return@Thread
                 }
                 for (channel in result.channels){
+                    if (call.getBoolean("bluetoothPrintersOnly", false) == true) {
+                        val device = getBluetoothAdapter(bridge.context)?.getRemoteDevice(channel.channelInfo)
+                        if (!isBluetoothPrinterClass(device?.bluetoothClass?.deviceClass)) continue
+                    }
                     Log.d("brother", this.chanelToPrinter("bluetooth", channel).toString())
                     this.notifyListeners(BrotherPrintEvent.onPrinterAvailable.webEventName, this.chanelToPrinter("bluetooth", channel));
                 }
@@ -468,4 +472,13 @@ class BrotherPrint : Plugin() {
     private fun isLocationPermissionGranted(): Boolean {
         return getPermissionState("location") == PermissionState.GRANTED
     }
+}
+
+internal fun isBluetoothPrinterClass(deviceClass: Int?): Boolean {
+    // Brother QL-820NWB / TD-2350D reported Bluetooth Class of Device 0x140680.
+    // Match its Imaging/Printer bits, not the entire value: Android's deviceClass
+    // omits service bits (0x140000), and other printers can report 0x000680.
+    // Class of Device: major Imaging (0x0600), minor Printer bit (0x0080).
+    // Other imaging capabilities (e.g. Scanner) may be set alongside Printer.
+    return deviceClass != null && (deviceClass and 0x1F80) == 0x0680
 }

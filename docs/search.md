@@ -55,6 +55,18 @@ On Android, pair a Bluetooth printer in the system settings before calling `sear
 
 `searchDuration` applies to `wifi` and `bluetoothLowEnergy`. `usb` is Android only. If nothing is found, you get no error and no printers. Signatures are on the [API](/docs/api#brlmsearchoption) page.
 
+On Android, Bluetooth Classic searches return paired devices. To include only devices that report the Bluetooth Imaging/Printer class:
+
+```typescript
+await BrotherPrint.search({
+  port: BRLMPrinterPort.bluetooth,
+  searchDuration: 15,
+  bluetoothPrintersOnly: true,
+});
+```
+
+`bluetoothPrintersOnly` defaults to `false`, preserving the unfiltered results. It is ignored on iOS and for other ports, including BLE. The filter does not depend on device names and does not identify Brother products: other manufacturers' printers can still appear. Printers with a missing or non-printer Bluetooth class are excluded when enabled.
+
 ## isChannelAvailable
 
 If you saved the last `BRLMChannelResult`, check whether that channel is still usable before [Print](/docs/print).
