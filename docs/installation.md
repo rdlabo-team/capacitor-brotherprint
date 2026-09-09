@@ -143,7 +143,15 @@ Update `Info.plist` to include the following permissions:
 + <key>NSLocalNetworkUsageDescription</key>
 + <string>【Why use WiFi for your app.】</string>
 + <key>UISupportedExternalAccessoryProtocols</key>
-+ <string>com.brother.ptcbp</string>
++ <array>
++   <string>com.brother.ptcbp</string>
++ </array>
 ```
+
+#### Bluetooth plist types (verified September 9, 2026)
+
+`UISupportedExternalAccessoryProtocols` must be an **array of strings**, even when `com.brother.ptcbp` is the only protocol. Earlier versions of this repository's example incorrectly used a single `<string>`, which caused Bluetooth discovery to crash with `-[__NSCFString count]: unrecognized selector`. Use the `<array>` shown above. See [Apple's type definition](https://developer.apple.com/documentation/bundleresources/information-property-list/uisupportedexternalaccessoryprotocols).
+
+The `NSBluetoothAlwaysUsageDescription` and `NSBluetoothPeripheralUsageDescription` values are **strings**, not arrays. The examples for these keys in [Brother's official iOS setup guide](https://support.brother.com/g/s/es/htmldoc/mobilesdk/guide/getting-started/getting-started-ios.html) are correct as of September 9, 2026; they were not the cause of this crash. Brother's guide separately instructs adding `com.brother.ptcbp` as an item under `UISupportedExternalAccessoryProtocols`. It requires `NSBluetoothPeripheralUsageDescription` additionally only for deployment targets earlier than iOS 13.
 
 More information is here: https://support.brother.co.jp/j/s/support/html/mobilesdk/guide/getting-started/getting-started-ios.html
