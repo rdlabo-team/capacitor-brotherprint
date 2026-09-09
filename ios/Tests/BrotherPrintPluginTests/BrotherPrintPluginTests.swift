@@ -1,15 +1,18 @@
 import XCTest
+import Capacitor
 @testable import BrotherPrintPlugin
 
-class ExampleTests: XCTestCase {
-    func testEcho() {
-        // This is an example of a functional test case for a plugin.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-
-        let implementation = BrotherPrintPlugin()
-        let value = "Hello, World!"
-        let result = implementation.echo(value)
-
-        XCTAssertEqual(value, result)
+class PrintImageValidationTests: XCTestCase {
+    func testInvalidImagesRejectBeforeOpeningPrinter() {
+        for image in ["", "A", "SGVsbG8=", "iVBORw0KGgo="] {
+            var rejected = 0
+            let call = CAPPluginCall(callbackId: "test", methodName: "printImage", options: ["encodedImage": image], success: { _, _ in
+                XCTFail("Invalid image must not resolve")
+            }, error: { _ in
+                rejected += 1
+            })!
+            BrotherPrintPlugin().printImage(call)
+            XCTAssertEqual(rejected, 1, "Input: \(image)")
+        }
     }
 }
