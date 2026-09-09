@@ -3,8 +3,16 @@
 ## Install
 
 ```
-% npm install @rdlabo/capacitor-brotherprint
+npm install @rdlabo/capacitor-brotherprint
 ```
+
+The published plugin package declares an SPM dependency on a **local** Brother kit at your app root:
+
+`ios/LocalPackages/BRLMPrinterKit`
+
+That path is relative from `node_modules/@rdlabo/capacitor-brotherprint` (`../../../ios/LocalPackages/BRLMPrinterKit`). Place the Brother iOS SDK under your Capacitor app’s `ios` tree as shown below, then run `npx cap sync`. This plugin requires **iOS 15** and **Swift Package Manager** only (no CocoaPods / Podfile steps).
+
+This plugin does not redistribute the Brother SDK. Download it from Brother’s official pages for your platform.
 
 ## Initialize the Brother SDK
 
@@ -15,54 +23,32 @@
 - `android/BrotherPrintLibrary/BrotherPrintLibrary.aar`
 - `android/BrotherPrintLibrary/build.gradle`
 
-The `BrotherPrintLibrary.aar` file is the Brother Print SDK library, which you can download from the Brother website: https://support.brother.co.jp/j/s/es/dev/ja/mobilesdk/android/index.html?c=jp&lang=ja&navi=offall&comple=on&redirect=on#ver4
+Download the Android SDK from Brother: https://support.brother.co.jp/j/s/es/dev/ja/mobilesdk/android/index.html?c=jp&lang=ja&navi=offall&comple=on&redirect=on#ver4
 
-2. In the `android/BrotherPrintLibrary/build.gradle file`, include the following content:
+2. In `android/BrotherPrintLibrary/build.gradle`, include:
 
 ```
-configurations.maybeCreate(“default”)
-artifacts.add(“default”, file('BrotherPrintLibrary.aar'))
+configurations.maybeCreate("default")
+artifacts.add("default", file('BrotherPrintLibrary.aar'))
 ```
 
-3. Open `android/settings.gradle` and add the following lines:
+3. Open `android/settings.gradle` and add:
 
 ```
 include ':BrotherPrintLibrary'
 project(':BrotherPrintLibrary').projectDir = new File('./BrotherPrintLibrary/')
 ```
 
-These steps will integrate the Brother Print SDK with your Capacitor Android project.
-
 ### iOS configuration
 
-1. Place the following files in the ios folder of your Capacitor project:
+1. Under your Capacitor app (not inside `node_modules`), place:
 
 - `ios/LocalPackages/BRLMPrinterKit/Sources/BRLMPrinterKit.xcframework`
-- `ios/LocalPackages/BRLMPrinterKit/BRLMPrinterKit.podspec`
 - `ios/LocalPackages/BRLMPrinterKit/Package.swift`
 
-The `BRLMPrinterKit.xcframework` file is the Brother Print SDK library, which you can download from the Brother website: https://support.brother.co.jp/j/s/es/dev/ja/mobilesdk/android/index.html?c=jp&lang=ja&navi=offall&comple=on&redirect=on#ver4
+Download the iOS SDK from Brother: https://support.brother.com/g/s/es/dev/en/mobilesdk/ios/index.html
 
-`BRLMPrinterKit.podspec` content is here:
-
-```podspec
-Pod::Spec.new do |s|
-  s.name             = 'BRLMPrinterKit'
-  s.version          = '4.12.0'
-  s.homepage         = 'https://support.brother.co.jp/j/s/support/html/mobilesdk/index.html'
-  s.source           = { :path => './Sources' }
-  s.summary          = "Pod for the BRLMPrinterKit / Brother's printers"
-  s.description      = "This project is only a Pod for the Brother SDK v#{s.version}"
-  s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'Masahiko Sakakibara' => 'sakakibara@rdlabo.jp' }
-  s.ios.deployment_target = '11.0'
-  s.ios.vendored_frameworks = 'Sources/BRLMPrinterKit.xcframework'
-  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
-  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
-end
-```
-
-`Package.swift` content is here:
+2. Create `ios/LocalPackages/BRLMPrinterKit/Package.swift` for that local binary package (minimum iOS 15 to match the plugin):
 
 ```swift
 // swift-tools-version: 5.9
@@ -71,7 +57,7 @@ import PackageDescription
 let package = Package(
     name: "BRLMPrinterKit",
     platforms: [
-        .iOS(.v13)
+        .iOS(.v15)
     ],
     products: [
         .library(name: "BRLMPrinterKit", targets: ["BRLMPrinterKit"])
@@ -85,17 +71,7 @@ let package = Package(
 )
 ```
 
-2. Update the `ios/App/Podfile` file at your project.
-
-```diff
-  target 'App' do
-    capacitor_pods
-    # Add your Pods here
-+   pod 'BRLMPrinterKit', :path => '../LocalPackages/BRLMPrinterKit'
-  end
-```
-
-After set, run `pod update` in the `ios` directory.
+3. After the SDK files are in place, run `npx cap sync` so the app’s iOS project picks up the plugin and the local package path.
 
 ## Permission configuration
 
@@ -123,11 +99,11 @@ Update `AndroidManifest.xml` to include the following permissions:
 +         tools:targetApi="s" />
 ```
 
-More information is here: https://support.brother.co.jp/j/s/support/html/mobilesdk/guide/getting-started/getting-started-android.html
+More information: https://support.brother.co.jp/j/s/support/html/mobilesdk/guide/getting-started/getting-started-android.html
 
 ### iOS configuration
 
-Update `Info.plist` to include the following permissions:
+Update `Info.plist` to include the following keys. `UISupportedExternalAccessoryProtocols` must be an **array of strings**.
 
 ```diff
 + <key>NSBluetoothAlwaysUsageDescription</key>
@@ -144,7 +120,7 @@ Update `Info.plist` to include the following permissions:
 + <string>【Why use WiFi for your app.】</string>
 + <key>UISupportedExternalAccessoryProtocols</key>
 + <array>
-+   <string>com.brother.ptcbp</string>
++ 	<string>com.brother.ptcbp</string>
 + </array>
 ```
 
@@ -154,4 +130,4 @@ Update `Info.plist` to include the following permissions:
 
 The `NSBluetoothAlwaysUsageDescription` and `NSBluetoothPeripheralUsageDescription` values are **strings**, not arrays. The examples for these keys in [Brother's official iOS setup guide](https://support.brother.com/g/s/es/htmldoc/mobilesdk/guide/getting-started/getting-started-ios.html) are correct as of September 9, 2026; they were not the cause of this crash. Brother's guide separately instructs adding `com.brother.ptcbp` as an item under `UISupportedExternalAccessoryProtocols`. It requires `NSBluetoothPeripheralUsageDescription` additionally only for deployment targets earlier than iOS 13.
 
-More information is here: https://support.brother.co.jp/j/s/support/html/mobilesdk/guide/getting-started/getting-started-ios.html
+More information: https://support.brother.co.jp/j/s/support/html/mobilesdk/guide/getting-started/getting-started-ios.html

@@ -24,12 +24,12 @@ export interface BrotherPrintPlugin {
   isChannelAvailable(option: BRLMChannelResult): Promise<isChannelAvailableResult>;
 
   /**
-   * Basically, it times out, so there is no need to use it. Use it when you want to run multiple connectType searches at the same time and time out any of them manually.
+   * Stop an active search before its timeout, including when leaving the screen.
    */
   cancelSearchWiFiPrinter(): Promise<void>;
 
   /**
-   * Basically, it times out, so there is no need to use it. Use it when you want to run multiple connectType searches at the same time and time out any of them manually.
+   * Stop an active search before its timeout, including when leaving the screen.
    */
   cancelSearchBluetoothPrinter(): Promise<void>;
 
