@@ -209,6 +209,21 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
                 call.reject("Error - startBluetoothSearch: " + PrinterSearchErrorModel.fetchChannelErrorCode(error: searcher.error.code))
                 return
             }
+            if searcher.channels.isEmpty {
+                DispatchQueue.main.async {
+                    BRLMPrinterSearcher.startBluetoothAccessorySearch { result in
+                        guard result.error.code == BRLMPrinterSearchErrorCode.noError else {
+                            call.reject("Error - startBluetoothAccessorySearch: " + PrinterSearchErrorModel.fetchChannelErrorCode(error: result.error.code))
+                            return
+                        }
+                        for channel in result.channels {
+                            self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetooth", channel: channel))
+                        }
+                        call.resolve()
+                    }
+                }
+                return
+            }
             for channel in searcher.channels {
                 NSLog(channel.channelInfo)
                 self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetooth", channel: channel))
@@ -216,12 +231,6 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
             call.resolve()
         }
 
-        //        BRLMPrinterSearcher.startBluetoothAccessorySearch() { searcher in
-        //            for channel in searcher.channels {
-        //                self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetooth", channel: channel))
-        //            }
-        //            call.resolve()
-        //        }
     }
 
     private func searchBLEPrinter(_ call: CAPPluginCall) {
@@ -229,13 +238,17 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
             self.cancelRoutineBluetooth = {
                 BRLMPrinterSearcher.cancelBLESearch()
             }
+            defer { self.cancelRoutineBluetooth = nil }
             let option = BRLMBLESearchOption()
             option.searchDuration = TimeInterval(call.getInt("searchDuration", 15))
             NSLog("BRLMPrinterSearcher.startBLESearch")
-            BRLMPrinterSearcher.startBLESearch(option) { channel in
+            let searcher = BRLMPrinterSearcher.startBLESearch(option) { channel in
                 self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetoothLowEnergy", channel: channel))
             }
-            self.cancelRoutineBluetooth = nil
+            guard searcher.error.code == BRLMPrinterSearchErrorCode.noError else {
+                call.reject("Error - startBLESearch: " + PrinterSearchErrorModel.fetchChannelErrorCode(error: searcher.error.code))
+                return
+            }
             call.resolve()
         }
     }
@@ -270,6 +283,7 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
         DispatchQueue.global().async {
             self.cancelRoutineBluetooth?()
             self.cancelRoutineBluetooth = nil
+            call.resolve()
         }
     }
 }

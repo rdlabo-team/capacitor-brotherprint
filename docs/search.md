@@ -17,6 +17,10 @@ await BrotherPrint.search({
 
 `searchDuration` applies to `wifi` and `bluetoothLowEnergy`. `usb` is Android only. If nothing is found, you get no error and no printers.
 
+On iOS, `bluetooth` first lists connected MFi printers. If none are connected, the app displays the system Bluetooth accessory picker so you can select and pair a printer. The search promise completes after the picker callback; picker errors reject the promise.
+
+For BLE-capable printers, use `port: BRLMPrinterPort.bluetoothLowEnergy`. On iOS this uses `startBLESearch`, without the Bluetooth accessory picker. Pass the discovered printer's `channelInfo` (BLE local name) unchanged to `isChannelAvailable` or `printImage`. BLE search errors reject the search promise. QL-820NWB/QL-820NWBc do not support BLE printing; use `bluetooth` or `wifi` for these models.
+
 <!-- !::search:: -->
 
 <!-- !::BRLMSearchOption:: -->
