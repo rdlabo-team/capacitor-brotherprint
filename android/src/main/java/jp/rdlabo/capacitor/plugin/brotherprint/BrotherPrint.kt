@@ -23,6 +23,7 @@ import com.brother.sdk.lmprinter.PrintError
 import com.brother.sdk.lmprinter.PrinterDriverGenerator
 import com.brother.sdk.lmprinter.PrinterModel
 import com.brother.sdk.lmprinter.PrinterSearcher
+import com.brother.sdk.lmprinter.PrinterSearchError
 import com.brother.sdk.lmprinter.PrinterSearcher.cancelNetworkSearch
 import com.brother.sdk.lmprinter.setting.PrintSettings
 import com.brother.sdk.lmprinter.setting.QLPrintSettings
@@ -45,8 +46,6 @@ import jp.rdlabo.capacitor.plugin.brotherprint.models.BrotherPrintSettings
         Permission(
             alias = "bluetooth",
             strings = [
-                Manifest.permission.BLUETOOTH,
-                Manifest.permission.BLUETOOTH_ADMIN,
                 Manifest.permission.BLUETOOTH_CONNECT,
                 Manifest.permission.BLUETOOTH_SCAN,
             ],
@@ -161,6 +160,10 @@ class BrotherPrint : Plugin() {
 
     @PluginMethod
     fun isChannelAvailable(call: PluginCall) {
+        if (call.getString("port") in listOf("bluetooth", "bluetoothLowEnergy") && !isBluetoothPermissionGranted()) {
+            call.resolve(JSObject().put("result", false))
+            return
+        }
         val port: String? = call.getString("port", "wifi")
         val channelInfo: String? = call.getString("channelInfo", "")
 
@@ -220,6 +223,7 @@ class BrotherPrint : Plugin() {
                 com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.InterfaceInactive,
                 com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.InterfaceUnsupported,
                 com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.AlreadySearching,
+                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.CommunicationError,
                 com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.UnknownError -> {
                 }
                 null -> {}
@@ -263,12 +267,17 @@ class BrotherPrint : Plugin() {
         } else {
             Log.d("brother", "checkBLEChannel")
             Thread {
-                for (channel in PrinterSearcher.startBluetoothSearch(bridge.context).channels){
+                val result = PrinterSearcher.startBluetoothSearch(bridge.context)
+                if (result.error.code != PrinterSearchError.ErrorCode.NoError) {
+                    call.reject("Error - startBluetoothSearch: " + result.error.code.toString())
+                    return@Thread
+                }
+                for (channel in result.channels){
                     Log.d("brother", this.chanelToPrinter("bluetooth", channel).toString())
                     this.notifyListeners(BrotherPrintEvent.onPrinterAvailable.webEventName, this.chanelToPrinter("bluetooth", channel));
                 }
+                call.resolve();
             }.start()
-            call.resolve();
         }
     }
 
@@ -276,18 +285,18 @@ class BrotherPrint : Plugin() {
         if (!isBluetoothPermissionGranted()) {
             requestPermissionForAlias("bluetooth", call, "permissionCallback");
             return;
-        } else if (!isLocationPermissionGranted()) {
-            requestPermissionForAlias("location", call, "permissionCallback");
+        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S && !isLocationPermissionGranted()) {
+            requestPermissionForAlias("location", call, "locationPermissionCallback");
             return;
         } else {
             Log.d("brother", "searchBLEPrinter")
             Thread {
                 this.cancelRoutineBluetooth = {
-                    cancelNetworkSearch()
+                    PrinterSearcher.cancelBLESearch()
                 }
                 val intDuration: Int = call.getInt("searchDuration") ?: 15 ;
                 val option = BLESearchOption(intDuration.toDouble())
-                PrinterSearcher.startBLESearch(bridge.context, option){ channel ->
+                val result = PrinterSearcher.startBLESearch(bridge.context, option){ channel ->
                     run {
                         Log.d("brother", this.chanelToPrinter("bluetoothLowEnergy", channel).toString())
                         this.notifyListeners(
@@ -297,15 +306,19 @@ class BrotherPrint : Plugin() {
                     }
                 }
                 this.cancelRoutineBluetooth = null;
+                if (result.error.code != PrinterSearchError.ErrorCode.NoError) {
+                    call.reject("Error - startBLESearch: " + result.error.code.toString())
+                    return@Thread
+                }
+                call.resolve();
             }.start()
-            call.resolve();
         }
     }
 
     private fun chanelToPrinter(port: String, channel: Channel): JSObject? {
         Log.d("brother", channel.toString());
         val modelName = channel.extraInfo[Channel.ExtraInfoKey.ModelName] ?: ""
-        val serialNumber = channel.extraInfo[Channel.ExtraInfoKey.SerialNubmer] ?: ""
+        val serialNumber = channel.extraInfo[Channel.ExtraInfoKey.SerialNumber] ?: ""
         val macAddress = channel.extraInfo[Channel.ExtraInfoKey.MACAddress] ?: ""
         val nodeName = channel.extraInfo[Channel.ExtraInfoKey.NodeName] ?: ""
         val location = channel.extraInfo[Channel.ExtraInfoKey.Location] ?: ""
@@ -346,14 +359,19 @@ class BrotherPrint : Plugin() {
             call.reject(PERMISSION_DENIED_ERROR)
             return
         }
+        when (call.methodName) {
+            "search" -> this.search(call)
+        }
+    }
+
+    @PermissionCallback
+    private fun locationPermissionCallback(call: PluginCall) {
         if (!isLocationPermissionGranted()) {
             Log.d("brother", "!isLocationPermissionGranted()")
             call.reject(PERMISSION_DENIED_ERROR)
             return
         }
-        when (call.methodName) {
-            "search" -> this.search(call)
-        }
+        this.search(call)
     }
 
     /**
@@ -406,7 +424,7 @@ class BrotherPrint : Plugin() {
     }
 
     private fun isBluetoothPermissionGranted(): Boolean {
-        return getPermissionState("bluetooth") == PermissionState.GRANTED
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.S || getPermissionState("bluetooth") == PermissionState.GRANTED
     }
 
     private fun isLocationPermissionGranted(): Boolean {

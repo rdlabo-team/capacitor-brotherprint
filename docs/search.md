@@ -21,6 +21,8 @@ On iOS, `bluetooth` first lists connected MFi printers. If none are connected, t
 
 For BLE-capable printers, use `port: BRLMPrinterPort.bluetoothLowEnergy`. On iOS this uses `startBLESearch`, without the Bluetooth accessory picker. Pass the discovered printer's `channelInfo` (BLE local name) unchanged to `isChannelAvailable` or `printImage`. BLE search errors reject the search promise. QL-820NWB/QL-820NWBc do not support BLE printing; use `bluetooth` or `wifi` for these models.
 
+On Android, pair a Bluetooth printer in the system settings before calling `search` with `bluetooth`; the SDK lists paired printers and does not provide the iOS accessory picker. Bluetooth and BLE searches resolve after the search finishes, or reject on SDK errors. Android 12 and later request Nearby devices permissions; Android 11 and earlier request location permission for BLE. `isChannelAvailable` returns `false` when Bluetooth permission is missing.
+
 <!-- !::search:: -->
 
 <!-- !::BRLMSearchOption:: -->
