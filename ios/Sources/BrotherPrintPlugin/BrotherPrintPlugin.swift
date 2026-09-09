@@ -23,6 +23,7 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
     @objc func printImage(_ call: CAPPluginCall) {
         let encodedImage: String = call.getString("encodedImage", "")
         if encodedImage == "" {
+            self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: ["code": 0, "message": "Error - Image data is not found."])
             call.reject("Error - Image data is not found.")
             return
         }
@@ -30,6 +31,7 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
         guard let newImageData = Data(base64Encoded: encodedImage, options: []),
               let decodedByte = UIImage(data: newImageData),
               let image = decodedByte.cgImage else {
+            self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: ["code": 0, "message": "Error - Create decodedByte From ImageData is failed."])
             call.reject("Error - Create decodedByte From ImageData is failed.")
             return
         }
@@ -59,6 +61,7 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
             case "bluetoothLowEnergy":
                 channel = BRLMChannel(bleLocalName: channelInfo)
             default:
+                self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: ["code": 0, "message": "Error - connection is not found."])
                 call.reject("Error - connection is not found.")
                 return
             }
@@ -82,7 +85,7 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
                     let _printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: printerModel)
                 else {
                     printerDriver.closeChannel()
-                    self.notifyListeners(BrotherPrinterEvent.onPrintFailedCommunication.rawValue, data: [
+                    self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: [
                         "code": 0,
                         "message": "Error - Create BRLMQLPrintSettings with " + modelName + " is failed."
                     ])
@@ -96,7 +99,7 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
                     let _printSettings = BRLMTDPrintSettings(defaultPrintSettingsWith: printerModel)
                 else {
                     printerDriver.closeChannel()
-                    self.notifyListeners(BrotherPrinterEvent.onPrintFailedCommunication.rawValue, data: [
+                    self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: [
                         "code": 0,
                         "message": "Error - Create BRLMTDPrintSettings with " + modelName + " is failed."
                     ])
@@ -107,6 +110,7 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
 
             } else {
                 printerDriver.closeChannel()
+                self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: ["code": 0, "message": "Error - " + modelName + " is not supported"])
                 call.reject("Error - " + modelName + " is not supported")
                 return
             }
