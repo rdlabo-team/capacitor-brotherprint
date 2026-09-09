@@ -58,6 +58,8 @@
   <key>NSLocalNetworkUsageDescription</key>
   <string>【Why use WiFi for your app.】</string>
   <key>UISupportedExternalAccessoryProtocols</key>
-  <string>com.brother.ptcbp</string>
+  <array>
+    <string>com.brother.ptcbp</string>
+  </array>
 </dict>
 </plist>

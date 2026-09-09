@@ -33,6 +33,8 @@
         <string>_ipp._tcp</string>
     </array>
     <key>UISupportedExternalAccessoryProtocols</key>
-    <string>com.brother.ptcbp</string>
+    <array>
+        <string>com.brother.ptcbp</string>
+    </array>
 </dict>
 </plist>

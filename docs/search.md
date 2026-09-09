@@ -47,6 +47,11 @@ const stopSearching = async () => {
 
 Call `searchWifiPrinters` from the search button and await `stopSearching` when leaving the screen.
 
+On iOS, `bluetooth` first lists connected MFi printers. If none are connected, the app displays the system Bluetooth accessory picker so you can select and pair a printer. The search promise completes after the picker callback; picker errors reject the promise.
+
+For BLE-capable printers, use `port: BRLMPrinterPort.bluetoothLowEnergy`. On iOS this uses `startBLESearch`, without the Bluetooth accessory picker. Pass the discovered printer's `channelInfo` (BLE local name) unchanged to `isChannelAvailable` or `printImage`. BLE search errors reject the search promise. QL-820NWB/QL-820NWBc do not support BLE printing; use `bluetooth` or `wifi` for these models.
+
+On Android, pair a Bluetooth printer in the system settings before calling `search` with `bluetooth`; the SDK lists paired printers and does not provide the iOS accessory picker. Bluetooth and BLE searches resolve after the search finishes, or reject on SDK errors. Android 12 and later request Nearby devices permissions; Android 11 and earlier request location permission for BLE. `isChannelAvailable` returns `false` when Bluetooth permission is missing.
 
 `searchDuration` applies to `wifi` and `bluetoothLowEnergy`. `usb` is Android only. If nothing is found, you get no error and no printers. Signatures are on the [API](/docs/api#brlmsearchoption) page.
 
