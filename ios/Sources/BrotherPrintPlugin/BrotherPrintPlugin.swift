@@ -28,9 +28,7 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
             return
         }
 
-        guard let newImageData = Data(base64Encoded: encodedImage, options: []),
-              let decodedByte = UIImage(data: newImageData),
-              let image = decodedByte.cgImage else {
+        guard let image = decodePrintImage(encodedImage) else {
             self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: ["code": 0, "message": "Error - Create decodedByte From ImageData is failed."])
             call.reject("Error - Create decodedByte From ImageData is failed.")
             return

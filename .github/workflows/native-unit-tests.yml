@@ -19,3 +19,10 @@ jobs:
           distribution: zulu
       - name: Test production Kotlin logic without Brother or Android SDKs
         run: bash android/gradlew -p tests/android test --console=plain
+
+  ios-sdk-free:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v5
+      - name: Test production image decoding without Brother SDK
+        run: bash tests/ios/test.sh
