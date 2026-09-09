@@ -11,11 +11,11 @@ kotlin {
     sourceSets {
         main {
             kotlin.srcDir("../../android/src/main/java")
-            kotlin.include("jp/rdlabo/capacitor/plugin/brotherprint/BluetoothPrinterFilter.kt")
+            kotlin.include("jp/rdlabo/capacitor/plugin/brotherprint/BluetoothPrinterFilter.kt", "jp/rdlabo/capacitor/plugin/brotherprint/PrinterValidation.kt", "jp/rdlabo/capacitor/plugin/brotherprint/PrinterModels.kt")
         }
         test {
             kotlin.srcDir("../../android/src/test/java")
-            kotlin.include("jp/rdlabo/capacitor/plugin/brotherprint/BluetoothPrinterClassTest.kt")
+            kotlin.include("jp/rdlabo/capacitor/plugin/brotherprint/BluetoothPrinterClassTest.kt", "jp/rdlabo/capacitor/plugin/brotherprint/PrinterValidationTest.kt")
         }
     }
 }

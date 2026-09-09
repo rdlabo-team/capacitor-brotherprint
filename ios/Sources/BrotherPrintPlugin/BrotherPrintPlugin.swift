@@ -1,11 +1,9 @@
-import Foundation
-import Capacitor
 import BRLMPrinterKit
+import Capacitor
+import Foundation
 
-/**
- * Please read the Capacitor iOS Plugin Development Guide
- * here: https://capacitorjs.com/docs/plugins/ios
- */
+/// Please read the Capacitor iOS Plugin Development Guide
+/// here: https://capacitorjs.com/docs/plugins/ios
 @objc(BrotherPrintPlugin)
 public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
     public let identifier = "BrotherPrint"
@@ -15,22 +13,63 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
         CAPPluginMethod(name: "isChannelAvailable", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "search", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "cancelSearchWiFiPrinter", returnType: CAPPluginReturnPromise),
-        CAPPluginMethod(name: "cancelSearchBluetoothPrinter", returnType: CAPPluginReturnPromise)
+        CAPPluginMethod(name: "cancelSearchBluetoothPrinter", returnType: CAPPluginReturnPromise),
     ]
-    private var cancelRoutineWiFi: (() -> Void)?
-    private var cancelRoutineBluetooth: (() -> Void)?
+    private static let sdkWorker = DispatchQueue(label: "jp.rdlabo.brotherprint.sdk")
+    private let cancellationLock = NSLock()
+    private var storedWiFiCancel: (() -> Void)?
+    private var storedBluetoothCancel: (() -> Void)?
+    private var cancelRoutineWiFi: (() -> Void)? {
+        get {
+            cancellationLock.lock()
+            defer { cancellationLock.unlock() }
+            return storedWiFiCancel
+        }
+        set {
+            cancellationLock.lock()
+            defer { cancellationLock.unlock() }
+            storedWiFiCancel = newValue
+        }
+    }
+    private var cancelRoutineBluetooth: (() -> Void)? {
+        get {
+            cancellationLock.lock()
+            defer { cancellationLock.unlock() }
+            return storedBluetoothCancel
+        }
+        set {
+            cancellationLock.lock()
+            defer { cancellationLock.unlock() }
+            storedBluetoothCancel = newValue
+        }
+    }
+
+    private func rejectPrintValidation(_ call: CAPPluginCall, message: String, category: String = "INVALID_ARGUMENT") {
+        reportPrintFailure(
+            message, category: category,
+            emit: { info in
+                self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: info)
+            }, reject: { call.reject(message, category) })
+    }
 
     @objc func printImage(_ call: CAPPluginCall) {
+        if let message = validatePrinterOptions(call.options) {
+            rejectPrintValidation(call, message: message)
+            return
+        }
         let encodedImage: String = call.getString("encodedImage", "")
         if encodedImage == "" {
-            self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: ["code": 0, "message": "Error - Image data is not found."])
-            call.reject("Error - Image data is not found.")
+            self.notifyListeners(
+                BrotherPrinterEvent.onPrintError.rawValue, data: ["code": 0, "message": "Error - Image data is not found."])
+            call.reject("Error - Image data is not found.", "INVALID_ARGUMENT")
             return
         }
 
         guard let image = decodePrintImage(encodedImage) else {
-            self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: ["code": 0, "message": "Error - Create decodedByte From ImageData is failed."])
-            call.reject("Error - Create decodedByte From ImageData is failed.")
+            self.notifyListeners(
+                BrotherPrinterEvent.onPrintError.rawValue,
+                data: ["code": 0, "message": "Error - Create decodedByte From ImageData is failed."])
+            call.reject("Error - Create decodedByte From ImageData is failed.", "INVALID_ARGUMENT")
             return
         }
 
@@ -41,14 +80,13 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
         //        let localName: String = call.getString("localName", "")
         //        let serialNumber: String = call.getString("serialNumber", "")
 
-        let modelName: String = call.getString("modelName", "QL-820NWB")
+        let modelName: String = call.getString("modelName", "QL_820NWB")
         let printerModel = BrotherModel.getModelName(from: modelName)
 
         NSLog(call.getString("modelName", "not set"))
         NSLog(call.getString("labelName", "not set"))
 
-        // メインスレッドにて処理
-        DispatchQueue.main.async {
+        Self.sdkWorker.async {
             var channel: BRLMChannel
 
             switch port {
@@ -59,34 +97,42 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
             case "bluetoothLowEnergy":
                 channel = BRLMChannel(bleLocalName: channelInfo)
             default:
-                self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: ["code": 0, "message": "Error - connection is not found."])
-                call.reject("Error - connection is not found.")
+                self.notifyListeners(
+                    BrotherPrinterEvent.onPrintError.rawValue, data: ["code": 0, "message": "Error - connection is not found."])
+                call.reject("Unsupported connection port", "UNSUPPORTED")
                 return
             }
 
             let generateResult = BRLMPrinterDriverGenerator.open(channel)
             guard generateResult.error.code == BRLMOpenChannelErrorCode.noError,
-                  let printerDriver = generateResult.driver else {
+                let printerDriver = generateResult.driver
+            else {
                 let message = OpenChannelErrorModel.fetchChannelErrorCode(error: generateResult.error.code)
-                self.notifyListeners(BrotherPrinterEvent.onPrintFailedCommunication.rawValue, data: [
-                    "message": message,
-                    "code": generateResult.error.code.rawValue
-                ])
-                call.reject("Error - Open Channel: \(message)")
+                self.notifyListeners(
+                    BrotherPrinterEvent.onPrintFailedCommunication.rawValue,
+                    data: [
+                        "message": message,
+                        "code": generateResult.error.code.rawValue, "nativeCode": generateResult.error.code.rawValue,
+                        "category": "COMMUNICATION",
+                    ])
+                call.reject("Error - Open Channel: \(message)", "COMMUNICATION", nil, ["nativeCode": generateResult.error.code.rawValue])
                 return
             }
 
+            var channelClosed = false
+            defer { if !channelClosed { printerDriver.closeChannel() } }
             var printSettings: BRLMPrintSettingsProtocol
 
             if modelName.hasPrefix("QL") {
                 guard
                     let _printSettings = BRLMQLPrintSettings(defaultPrintSettingsWith: printerModel)
                 else {
-                    printerDriver.closeChannel()
-                    self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: [
-                        "code": 0,
-                        "message": "Error - Create BRLMQLPrintSettings with " + modelName + " is failed."
-                    ])
+                    self.notifyListeners(
+                        BrotherPrinterEvent.onPrintError.rawValue,
+                        data: [
+                            "code": 0,
+                            "message": "Error - Create BRLMQLPrintSettings with " + modelName + " is failed.",
+                        ])
                     call.reject("Error - Create BRLMQLPrintSettings with " + modelName + " is failed.")
                     return
                 }
@@ -96,37 +142,39 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
                 guard
                     let _printSettings = BRLMTDPrintSettings(defaultPrintSettingsWith: printerModel)
                 else {
-                    printerDriver.closeChannel()
-                    self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: [
-                        "code": 0,
-                        "message": "Error - Create BRLMTDPrintSettings with " + modelName + " is failed."
-                    ])
+                    self.notifyListeners(
+                        BrotherPrinterEvent.onPrintError.rawValue,
+                        data: [
+                            "code": 0,
+                            "message": "Error - Create BRLMTDPrintSettings with " + modelName + " is failed.",
+                        ])
                     call.reject("Error - Create BRLMTDPrintSettings with " + modelName + " is failed.")
                     return
                 }
                 printSettings = PrinterSettingsModel.TDModelSettings(call, printSettings: _printSettings)
 
             } else {
-                printerDriver.closeChannel()
-                self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: ["code": 0, "message": "Error - " + modelName + " is not supported"])
+                self.notifyListeners(
+                    BrotherPrinterEvent.onPrintError.rawValue, data: ["code": 0, "message": "Error - " + modelName + " is not supported"])
                 call.reject("Error - " + modelName + " is not supported")
                 return
             }
 
             let printError = printerDriver.printImage(with: image, settings: printSettings)
+            printerDriver.closeChannel()
+            channelClosed = true
 
             if printError.code != BRLMPrintErrorCode.noError {
-                printerDriver.closeChannel()
                 let message = PrintErrorModel.fetchErrorCode(errorCode: Int32(printError.code.rawValue))
-                self.notifyListeners(BrotherPrinterEvent.onPrintError.rawValue, data: [
-                    "message": message,
-                    "code": printError.code.rawValue
-                ])
-                call.reject("Error - Print Image: " + message)
+                self.notifyListeners(
+                    BrotherPrinterEvent.onPrintError.rawValue,
+                    data: [
+                        "message": message,
+                        "code": printError.code.rawValue, "nativeCode": printError.code.rawValue, "category": "PRINT_FAILED",
+                    ])
+                call.reject("Error - Print Image: " + message, "PRINT_FAILED", nil, ["nativeCode": printError.code.rawValue])
                 return
             }
-
-            printerDriver.closeChannel()
 
             self.notifyListeners(BrotherPrinterEvent.onPrint.rawValue, data: [:])
             call.resolve()
@@ -134,10 +182,14 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     @objc func isChannelAvailable(_ call: CAPPluginCall) {
+        guard !call.getString("channelInfo", "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            call.reject("channelInfo is required", "INVALID_ARGUMENT")
+            return
+        }
         let port: String = call.getString("port", "wifi")
         let channelInfo: String = call.getString("channelInfo", "")
 
-        DispatchQueue.main.async {
+        Self.sdkWorker.async {
             var channel: BRLMChannel
             switch port {
             case "wifi":
@@ -147,13 +199,14 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
             case "bluetoothLowEnergy":
                 channel = BRLMChannel(bleLocalName: channelInfo)
             default:
-                call.reject("Error - connection is not found.")
+                call.reject("Unsupported connection port", "UNSUPPORTED")
                 return
             }
             let generateResult = BRLMPrinterDriverGenerator.open(channel)
 
             guard generateResult.error.code == BRLMOpenChannelErrorCode.noError,
-                  let printerDriver = generateResult.driver else {
+                let printerDriver = generateResult.driver
+            else {
                 call.resolve(["result": false])
                 return
             }
@@ -163,6 +216,11 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     @objc func search(_ call: CAPPluginCall) {
+        let duration = call.getDouble("searchDuration", 15)
+        guard duration.isFinite, duration > 0, duration.rounded(.towardZero) == duration, duration < Double(Int.max) else {
+            call.reject("searchDuration must be a positive integer", "INVALID_ARGUMENT")
+            return
+        }
         switch call.getString("port", "wifi") {
         case "wifi":
             self.searchWiFiPrinter(call)
@@ -176,13 +234,14 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     private func searchWiFiPrinter(_ call: CAPPluginCall) {
-        DispatchQueue.global().async {
+        Self.sdkWorker.async {
             self.cancelRoutineWiFi = {
                 BRLMPrinterSearcher.cancelNetworkSearch()
             }
 
+            defer { self.cancelRoutineWiFi = nil }
             let option = BRLMNetworkSearchOption()
-            option.printerList = PrinterModel.allCases.map { $0.searchModelName }
+            option.printerList = printerSearchModels
             option.searchDuration = TimeInterval(call.getInt("searchDuration", 15))
 
             NSLog("BRLMPrinterSearcher.startNetworkSearch")
@@ -192,7 +251,7 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
                 self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: printer)
             }
             if searcher.error.code != BRLMPrinterSearchErrorCode.noError {
-                call.reject("Error - startNetworkSearch: " + PrinterSearchErrorModel.fetchChannelErrorCode(error: searcher.error.code))
+                self.rejectSearch(call, operation: "startNetworkSearch", code: searcher.error.code)
                 return
             }
             print(searcher.channels.count)
@@ -202,30 +261,36 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     private func checkBLEChannel(_ call: CAPPluginCall) {
-        DispatchQueue.global().async {
+        Self.sdkWorker.async {
             let searcher = BRLMPrinterSearcher.startBluetoothSearch()
             if searcher.error.code != BRLMPrinterSearchErrorCode.noError {
-                call.reject("Error - startBluetoothSearch: " + PrinterSearchErrorModel.fetchChannelErrorCode(error: searcher.error.code))
+                self.rejectSearch(call, operation: "startBluetoothSearch", code: searcher.error.code)
                 return
             }
             if searcher.channels.isEmpty {
+                let completion = DispatchSemaphore(value: 0)
                 DispatchQueue.main.async {
                     BRLMPrinterSearcher.startBluetoothAccessorySearch { result in
+                        defer { completion.signal() }
                         guard result.error.code == BRLMPrinterSearchErrorCode.noError else {
-                            call.reject("Error - startBluetoothAccessorySearch: " + PrinterSearchErrorModel.fetchChannelErrorCode(error: result.error.code))
+                            self.rejectSearch(call, operation: "startBluetoothAccessorySearch", code: result.error.code)
                             return
                         }
                         for channel in result.channels {
-                            self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetooth", channel: channel))
+                            self.notifyListeners(
+                                BrotherPrinterEvent.onPrinterAvailable.rawValue,
+                                data: self.chanelToPrinter(port: "bluetooth", channel: channel))
                         }
                         call.resolve()
                     }
                 }
+                completion.wait()
                 return
             }
             for channel in searcher.channels {
                 NSLog(channel.channelInfo)
-                self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetooth", channel: channel))
+                self.notifyListeners(
+                    BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetooth", channel: channel))
             }
             call.resolve()
         }
@@ -233,7 +298,7 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     private func searchBLEPrinter(_ call: CAPPluginCall) {
-        DispatchQueue.global().async {
+        Self.sdkWorker.async {
             self.cancelRoutineBluetooth = {
                 BRLMPrinterSearcher.cancelBLESearch()
             }
@@ -242,14 +307,28 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
             option.searchDuration = TimeInterval(call.getInt("searchDuration", 15))
             NSLog("BRLMPrinterSearcher.startBLESearch")
             let searcher = BRLMPrinterSearcher.startBLESearch(option) { channel in
-                self.notifyListeners(BrotherPrinterEvent.onPrinterAvailable.rawValue, data: self.chanelToPrinter(port: "bluetoothLowEnergy", channel: channel))
+                self.notifyListeners(
+                    BrotherPrinterEvent.onPrinterAvailable.rawValue,
+                    data: self.chanelToPrinter(port: "bluetoothLowEnergy", channel: channel))
             }
             guard searcher.error.code == BRLMPrinterSearchErrorCode.noError else {
-                call.reject("Error - startBLESearch: " + PrinterSearchErrorModel.fetchChannelErrorCode(error: searcher.error.code))
+                self.rejectSearch(call, operation: "startBLESearch", code: searcher.error.code)
                 return
             }
             call.resolve()
         }
+    }
+
+    private func rejectSearch(_ call: CAPPluginCall, operation: String, code: BRLMPrinterSearchErrorCode) {
+        let category: String
+        switch code {
+        case .canceled: category = "CANCELLED"
+        case .alreadySearching: category = "BUSY"
+        case .unsupported: category = "UNSUPPORTED"
+        default: category = "COMMUNICATION"
+        }
+        call.reject(
+            "\(operation): \(PrinterSearchErrorModel.fetchChannelErrorCode(error: code))", category, nil, ["nativeCode": code.rawValue])
     }
 
     private func chanelToPrinter(port: String, channel: BRLMChannel) -> JSObject {
@@ -267,14 +346,13 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
             "macAddress": macAddress,
             "nodeName": nodeName,
             "location": location,
-            "channelInfo": ipaddress
+            "channelInfo": ipaddress,
         ]
     }
 
     @objc func cancelSearchWiFiPrinter(_ call: CAPPluginCall) {
         DispatchQueue.global().async {
             self.cancelRoutineWiFi?()
-            self.cancelRoutineWiFi = nil
             call.resolve()
         }
     }
@@ -282,7 +360,6 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
     @objc func cancelSearchBluetoothPrinter(_ call: CAPPluginCall) {
         DispatchQueue.global().async {
             self.cancelRoutineBluetooth?()
-            self.cancelRoutineBluetooth = nil
             call.resolve()
         }
     }

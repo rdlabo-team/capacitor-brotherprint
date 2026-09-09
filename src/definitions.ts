@@ -13,7 +13,7 @@ export interface BrotherPrintPlugin {
   printImage(options: BRLMPrintOptions): Promise<void>;
 
   /**
-   * Search for printers. If not found, it will return an empty array.(not error)
+   * Search for printers, delivered through onPrinterAvailable events. Resolves when discovery ends, including when no printers are found.
    */
   search(option: BRLMSearchOption): Promise<void>;
 

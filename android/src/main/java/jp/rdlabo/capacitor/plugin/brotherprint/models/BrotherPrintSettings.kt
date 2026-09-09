@@ -22,7 +22,7 @@ class BrotherPrintSettings {
             "mm" -> CustomPaperSize.Unit.Mm
             "inch" -> CustomPaperSize.Unit.Inch
             else -> {
-                throw RuntimeException(call.getString("paperUnit") + " is not supported.")
+                throw IllegalArgumentException(call.getString("paperUnit") + " is not supported.")
             }
         }
 
@@ -33,7 +33,7 @@ class BrotherPrintSettings {
             "markRollPaper" -> CustomPaperSize.newMarkRollPaperSize(call.getFloat("tapeWidth", 0f)!!, call.getFloat("tapeLength", 0f)!!, margins,
                 call.getFloat("paperMarkPosition", 0f)!!, call.getFloat("paperMarkLength", 0f)!!, unit)
             else -> {
-                throw RuntimeException(call.getString("paperType") + " is not supported.")
+                throw IllegalArgumentException(call.getString("paperType") + " is not supported.")
             }
         }
 
@@ -47,7 +47,7 @@ class BrotherPrintSettings {
         val baseSettings = this.baseSettings(call, settings);
 
         baseSettings.isAutoCut = call.getBoolean("autoCut", true)!!
-        baseSettings.labelSize = QLPrintSettings.LabelSize.entries.find { it.name == call.getString("labelName", "W62") }
+        baseSettings.labelSize = QLPrintSettings.LabelSize.entries.find { it.name == call.getString("labelName", "RollW62") } ?: throw IllegalArgumentException("Invalid labelName")
 
         return baseSettings;
     }

@@ -75,13 +75,8 @@ jobs:
           npm version "$VERSION" --no-git-tag-version --ignore-scripts
           echo "artifact=npm-candidate-${HEAD_SHA}" >> "$GITHUB_OUTPUT"
 
-      - name: Prepare production package
-        run: npm run prepublishOnly
-
-      - name: Pack candidate
-        run: |
-          mkdir -p "$RUNNER_TEMP/npm-candidate"
-          npm pack --ignore-scripts --pack-destination "$RUNNER_TEMP/npm-candidate"
+      - name: Build and verify production package
+        run: BROTHER_PACK_DESTINATION="$RUNNER_TEMP/npm-candidate" npm run pack:verified
 
       - name: Upload immutable package artifact
         uses: actions/upload-artifact@v7

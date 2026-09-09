@@ -12,3 +12,7 @@ export * from './events.enum';
 export * from './interfaces';
 export * from './brother-printer.enum';
 export { BrotherPrint };
+
+export * from './printer';
+
+export * from './errors';

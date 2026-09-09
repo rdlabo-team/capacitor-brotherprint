@@ -34,7 +34,7 @@ class PrinterSettingsModel {
 
     static func QLModelSettings(_ call: CAPPluginCall, printSettings: BRLMQLPrintSettings) -> BRLMQLPrintSettings {
         let baseSettings = self.BaseModelSettings(call, printSettings: printSettings)
-        baseSettings.labelSize = BrotherModel.getLabelSize(from: call.getString("labelName", "rollW62"))
+        baseSettings.labelSize = BrotherModel.getLabelSize(from: call.getString("labelName", "RollW62"))
 
         if let autoCut = call.getBool("autoCut") ?? nil {
             baseSettings.autoCut = autoCut
@@ -60,7 +60,7 @@ class PrinterSettingsModel {
                 printSettings.scaleMode = BRLMPrintSettingsScaleMode.fitPaperAspect
             case "ScaleValue":
                 printSettings.scaleMode = BRLMPrintSettingsScaleMode.scaleValue
-                if call.getInt("scaleValue") != nil {
+                if call.getDouble("scaleValue") != nil {
                     printSettings.scaleValue = CGFloat(call.getFloat("scaleValue")!)
                 }
             default: break

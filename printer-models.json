@@ -1,0 +1,8 @@
+[
+  { "name": "QL_800", "android": "QL_800", "ios": null, "product": "QL-800", "ports": ["usb"], "aliases": ["QL800"] },
+  { "name": "QL_810W", "android": "QL_810W", "ios": "QL_810W", "product": "QL-810W", "ports": ["wifi", "usb"], "aliases": ["QL810W"] },
+  { "name": "QL_820NWB", "android": "QL_820NWB", "ios": "QL_820NWB", "product": "QL-820NWB", "ports": ["wifi", "bluetooth", "usb"], "aliases": ["QL820NWB", "QL820NWBC"] },
+  { "name": "TD_2320D_203", "android": "TD_2320D_203", "ios": "TD_2320D_203", "product": "TD-2320D", "ports": ["wifi", "usb"], "aliases": ["TD2320D", "TD2320D203"] },
+  { "name": "TD_2030AD", "android": "TD_2030A", "ios": "TD_2030A", "product": "TD-2030A", "ports": ["usb"], "aliases": ["TD2030A", "TD2030AD"] },
+  { "name": "TD_2350D_300", "android": "TD_2350D_300", "ios": "TD_2350D_300", "product": "TD-2350D", "ports": ["wifi", "bluetooth", "usb", "bluetoothLowEnergy"], "aliases": ["TD2350D", "TD2350D300"] }
+]

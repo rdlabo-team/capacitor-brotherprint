@@ -5,7 +5,9 @@ Capacitor Brother Print binds the native Brother Print SDK for iOS and Android s
 **This plugin is still in the RC (release candidate) phase.** iOS requires **Swift Package Manager** and a minimum of **iOS 15**. The Brother Print SDK is not compatible with CocoaPods for this plugin.
 
 <!-- rdlabo-docs-omit -->
+
 **Documentation:** [Read the full documentation](https://docs.rdlabo.dev/projects/capacitor-brotherprint)
+
 <!-- /rdlabo-docs-omit -->
 
 ## Install
@@ -23,17 +25,39 @@ For SDK placement, SPM layout, and permissions, see [Installation](https://docs.
 3. [Print](https://docs.rdlabo.dev/projects/capacitor-brotherprint/docs/print) — print with that channel, a supported model/label, and a real base64 image you prepare.
 4. [Events](https://docs.rdlabo.dev/projects/capacitor-brotherprint/docs/events) — print success and error listeners in more detail.
 
+## Connection controller
+
+`BrotherPrinter` is an optional framework-independent controller for discovery,
+remembered channels, device selection and print completion. It has no Angular or
+Ionic dependency; existing `BrotherPrint` calls remain available.
+See [connection management](docs/connection-management.md) for a complete example,
+UI/state adapters and lifecycle requirements.
+
 ## Supported models
 
 Each product link is an Amazon affiliate link. Purchases through these links help support development costs.
 
-| Product                               | Model        | iOS/WiFi | iOS/BT | iOS/BLE | Android/USB | Android/WiFi | Android/BT | Android/BLE |
-| ------------------------------------- | ------------ | -------- | ------ | ------- | ----------- | ------------ | ---------- | ----------- |
-| QL-810W                               | QL_810W      | ❌       | ❌     | ❌      | ✅          | ❌           | ❌         | ❌          |
-| [QL-820NWB](https://amzn.to/3BXQ1aj)  | QL_820NWB    | ✅       | ※1     | ❌      | △           | ✅           | △          | ❌          |
-| [QL-820NWBc](https://amzn.to/4fjhUIe) | QL_820NWB    | ✅       | ✅     | ❌      | ❌          | ✅           | ✅         | ❌          |
-| [TD-2320D](https://amzn.to/48EFCN3)   | TD_2320D_203 | ❌       | ❌     | ❌      | △           | ❌           | ❌         | ❌          |
-| [TD-2350D](https://amzn.to/48ma6TK)   | TD_2350D_300 | ✅       | △      | △       | ✅          | ✅           | ✅         | △           |
+| Product                               | Model        | iOS/Network | iOS/BT | iOS/BLE | Android/USB | Android/Network | Android/BT | Android/BLE |
+| ------------------------------------- | ------------ | ----------- | ------ | ------- | ----------- | --------------- | ---------- | ----------- |
+| QL-800                                | QL_800       | ❌          | ❌     | ❌      | △           | ❌              | ❌         | ❌          |
+| QL-810W                               | QL_810W      | △           | ❌     | ❌      | ✅          | △               | ❌         | ❌          |
+| [QL-820NWB](https://amzn.to/3BXQ1aj)  | QL_820NWB    | ✅          | ※1     | ❌      | △           | ✅              | △          | ❌          |
+| [QL-820NWBc](https://amzn.to/4fjhUIe) | QL_820NWB    | ✅          | ✅     | ❌      | △           | ✅              | ✅         | ❌          |
+| [TD-2320D](https://amzn.to/48EFCN3)   | TD_2320D_203 | △           | ❌     | ❌      | △           | △               | ❌         | ❌          |
+| TD-2030A                              | TD_2030AD    | ❌          | ❌     | ❌      | △           | ❌              | ❌         | ❌          |
+| [TD-2350D](https://amzn.to/48ma6TK)   | TD_2350D_300 | ✅          | △      | △       | ✅          | ✅              | ✅         | △           |
+
+Network uses `BRLMPrinterPort.wifi`: Wi-Fi or wired Ethernet, depending on the device.
+TD-2320D supports wired Ethernet, not Wi-Fi. USB is Android-only in this plugin.
+QL-820NWB and QL-820NWBc share the `QL_820NWB` SDK model. The existing
+`TD_2030AD` API spelling maps to the SDK's `TD_2030A` model.
+
+The connection controller covers every row above. A supported transport does not
+imply hardware verification: new paths remain marked △ until tested on a device.
+Sources: [QL-810W interfaces](https://origin.supportbrothercom.brother.co.jp/g/b/spec.aspx?c=us_ot&lang=en&prod=lpql810weus),
+[QL-820NWBc interfaces](https://www.brother-usa.com/p/thermal-printers-labelers/QL820NWBC),
+[TD-2320D/2350D interfaces](https://support.brother.co.jp/j/s/support/html/td2320d_jp/html/GUID-86558F68-0131-4849-8951-4B36D3BF185A_1.html),
+[TD-2030A SDK transport](https://support.brother.co.jp/j/s/support/html/mobilesdk/reference/appendix/printer-configurations.html#td-2030a).
 
 Amazon Affiliate Links: **https://amzn.to/3AiiOFT**
 
@@ -49,6 +73,11 @@ Amazon Affiliate Links: **https://amzn.to/3AiiOFT**
 | BLE | Bluetooth Low Energy       |
 
 ※1 Due to low Bluetooth version, connection is not possible with iOS. Ref: https://okbizcs.okwave.jp/brother/qa/q9932082.html
+
+
+See [connection lifecycle](docs/connection-management.md), [migration](docs/migration.md), and
+[verification baseline and limitations](docs/verification.md). Android USB accepts
+exactly one connected Brother device; multiple Brother USB devices are rejected.
 
 ## API
 
@@ -91,7 +120,7 @@ printImage(options: BRLMPrintOptions) => Promise<void>
 search(option: BRLMSearchOption) => Promise<void>
 ```
 
-Search for printers. If not found, it will return an empty array.(not error)
+Search for printers, delivered through onPrinterAvailable events. Resolves when discovery ends, including when no printers are found.
 
 | Param        | Type                                                          |
 | ------------ | ------------------------------------------------------------- |
@@ -228,7 +257,30 @@ Failed to print.
 
 #### BRLMPrintOptions
 
-<code>{ encodedImage: string; /** * Should use enum <a href="#brlmprintermodelname">BRLMPrinterModelName</a> */ modelName: <a href="#brlmprintermodelname">BRLMPrinterModelName</a>; } & <a href="#partial">Partial</a>&lt;<a href="#brlmchannelresult">BRLMChannelResult</a>&gt; & (<a href="#brlmprinterqlmodelsettings">BRLMPrinterQLModelSettings</a> | <a href="#brlmprintertdmodelsettings">BRLMPrinterTDModelSettings</a>)</code>
+Model-specific settings. The native bridge also validates calls from untyped JavaScript.
+
+<code>{ encodedImage: string } & <a href="#omit">Omit</a>&lt;<a href="#partial">Partial</a>&lt;<a href="#brlmchannelresult">BRLMChannelResult</a>&gt;, 'modelName'&gt; & ( | ({ modelName: <a href="#brlmprintermodelname">BRLMPrinterModelName.QL_800</a> | <a href="#brlmprintermodelname">BRLMPrinterModelName.QL_810W</a> | <a href="#brlmprintermodelname">BRLMPrinterModelName.QL_820NWB</a>; } & <a href="#brlmprinterqlmodelsettings">BRLMPrinterQLModelSettings</a>) | ({ modelName: | <a href="#brlmprintermodelname">BRLMPrinterModelName.TD_2320D_203</a> | <a href="#brlmprintermodelname">BRLMPrinterModelName.TD_2030AD</a> | <a href="#brlmprintermodelname">BRLMPrinterModelName.TD_2350D_300</a>; } & <a href="#brlmprintertdmodelsettings">BRLMPrinterTDModelSettings</a>) )</code>
+
+
+#### Omit
+
+Construct a type with the properties of T except for those in type K.
+
+<code><a href="#pick">Pick</a>&lt;T, <a href="#exclude">Exclude</a>&lt;keyof T, K&gt;&gt;</code>
+
+
+#### Pick
+
+From T, pick a set of properties whose keys are in the union K
+
+<code>{ [P in K]: T[P]; }</code>
+
+
+#### Exclude
+
+<a href="#exclude">Exclude</a> from T those types that are assignable to U
+
+<code>T extends U ? never : T</code>
 
 
 #### Partial
@@ -240,7 +292,7 @@ Make all properties in T optional
 
 #### BRLMChannelResult
 
-<code>{ port: <a href="#brlmprinterport">BRLMPrinterPort</a>; modelName: string; serialNumber: string; macAddress: string; nodeName: string; location: string; /** * This need to connect to the printer. * wifi: IP Address * bluetooth: macAddress * bluetoothLowEnergy: modelName for bluetoothLowEnergy */ channelInfo: string; }</code>
+<code>{ port: <a href="#brlmprinterport">BRLMPrinterPort</a>; modelName: string; serialNumber: string; macAddress: string; nodeName: string; location: string; /** * This need to connect to the printer. * wifi: IP Address * bluetooth: Android MAC address; iOS serial number * bluetoothLowEnergy: SDK local name; usb: opaque discovery token */ channelInfo: string; }</code>
 
 
 #### BRLMPrinterQLModelSettings
@@ -277,7 +329,7 @@ These are optional. If these are not set, default values are assigned by the pri
 
 #### BRLMPrinterTDModelSettings
 
-<code>{ /** * Should use enum BRKMPrinterCustomPaperType */ paperType: <a href="#brlmprintercustompapertype">BRLMPrinterCustomPaperType</a>; /** * The width of the label. For example, the RD-U04J1 is 60.0 wide. */ tapeWidth: number; /** * The length of the label. For example, the RD-U04J1 is 60.0 wide. */ tapeLength: number; /** * It is the difference between a sticker and a mount. * For example, the RD-U04J1 is `1.0, 2.0, 1.0, 2.0` */ marginTop: number; marginRight: number; marginBottom: number; marginLeft: number; /** * The spacing between seals. For example, the RD-U04J1 is 0.2. */ gapLength: number; paperMarkPosition: number; paperMarkLength: number; /** * Should use enum BRKMPrinterCustomPaperUnit. * For example, the RD-U04J1 is mm. */ paperUnit: <a href="#brlmprintercustompaperunit">BRLMPrinterCustomPaperUnit</a>; }</code>
+<code>{ /** * Should use enum BRKMPrinterCustomPaperType */ paperType: <a href="#brlmprintercustompapertype">BRLMPrinterCustomPaperType</a>; /** * The width of the label. For example, the RD-U04J1 is 60.0 wide. */ tapeWidth: number; /** * The length of the label. For example, the RD-U04J1 is 60.0 wide. */ tapeLength: number; /** * It is the difference between a sticker and a mount. * For example, the RD-U04J1 is `1.0, 2.0, 1.0, 2.0` */ marginTop: number; marginRight: number; marginBottom: number; marginLeft: number; /** * The spacing between seals. For example, the RD-U04J1 is 0.2. */ gapLength: number; paperMarkPosition: number; paperMarkLength: number; /** * Should use enum BRKMPrinterCustomPaperUnit. * For example, the RD-U04J1 is mm. */ paperUnit: <a href="#brlmprintercustompaperunit">BRLMPrinterCustomPaperUnit</a>; } & <a href="#brlmprintersettings">BRLMPrinterSettings</a></code>
 
 
 #### BRLMSearchOption
@@ -292,10 +344,27 @@ These are optional. If these are not set, default values are assigned by the pri
 
 #### ErrorInfo
 
-<code>{ message: string; code: number; }</code>
+<code>{ message: string; /** Legacy platform-specific numeric SDK code. Prefer category for branching. */ code: number; category?: <a href="#brotherprintererrorcode">BrotherPrinterErrorCode</a>; nativeCode?: string | number; }</code>
+
+
+#### BrotherPrinterErrorCode
+
+Stable application-level error categories; native SDK values remain available separately.
+
+<code>'INVALID_ARGUMENT' | 'PERMISSION_DENIED' | 'NOT_FOUND' | 'UNSUPPORTED' | 'CANCELLED' | 'BUSY' | 'COMMUNICATION' | 'PRINT_FAILED'</code>
 
 
 ### Enums
+
+
+#### BRLMPrinterPort
+
+| Members                  | Value                             |
+| ------------------------ | --------------------------------- |
+| **`usb`**                | <code>'usb'</code>                |
+| **`wifi`**               | <code>'wifi'</code>               |
+| **`bluetooth`**          | <code>'bluetooth'</code>          |
+| **`bluetoothLowEnergy`** | <code>'bluetoothLowEnergy'</code> |
 
 
 #### BRLMPrinterModelName
@@ -308,16 +377,6 @@ These are optional. If these are not set, default values are assigned by the pri
 | **`TD_2320D_203`** | <code>'TD_2320D_203'</code> |
 | **`TD_2030AD`**    | <code>'TD_2030AD'</code>    |
 | **`TD_2350D_300`** | <code>'TD_2350D_300'</code> |
-
-
-#### BRLMPrinterPort
-
-| Members                  | Value                             |
-| ------------------------ | --------------------------------- |
-| **`usb`**                | <code>'usb'</code>                |
-| **`wifi`**               | <code>'wifi'</code>               |
-| **`bluetooth`**          | <code>'bluetooth'</code>          |
-| **`bluetoothLowEnergy`** | <code>'bluetoothLowEnergy'</code> |
 
 
 #### BRLMPrinterLabelName
@@ -461,6 +520,7 @@ These are optional. If these are not set, default values are assigned by the pri
 </docgen-api>
 
 <!-- rdlabo-docs-omit -->
+
 ## Prerelease channels
 
 An open, non-draft pull request can be published to the npm `beta` dist-tag after its `Validation` and `Package Candidate` workflows pass. A repository owner or maintainer must add a comment whose entire body is:
@@ -483,7 +543,9 @@ Only `npm run release` creates a release tag. Stable `vX.Y.Z` tags publish to np
 <!-- /rdlabo-docs-omit -->
 
 <!-- rdlabo-docs-omit -->
+
 ## License
 
 MIT
+
 <!-- /rdlabo-docs-omit -->

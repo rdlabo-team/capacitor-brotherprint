@@ -4,7 +4,7 @@ cd "$(dirname "$0")"
 
 # Compile the actual production source without the plugin's Brother SDK dependency.
 mkdir -p Sources
-cp ../../ios/Sources/BrotherPrintPlugin/PrintImageDecoder.swift Sources/
+cp ../../ios/Sources/BrotherPrintPlugin/PrintImageDecoder.swift ../../ios/Sources/BrotherPrintPlugin/PrinterValidation.swift ../../ios/Sources/BrotherPrintPlugin/PrinterModelCatalog.swift Sources/
 
 simulator_id=$(xcrun simctl list devices available -j | python3 -c '
 import json, sys
