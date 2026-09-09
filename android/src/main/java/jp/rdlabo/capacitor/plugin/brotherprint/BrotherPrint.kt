@@ -74,6 +74,9 @@ class BrotherPrint : Plugin() {
     fun printImage(call: PluginCall) {
         val encodedImage = call.getString("encodedImage", "")
         if (encodedImage == "") {
+            notifyListeners(BrotherPrintEvent.onPrintError.webEventName,
+                JSObject().put("code", 0).put("message", "Error - Image data is not found.")
+            )
             call.reject("Error - Image data is not found.")
             return
         }
@@ -81,11 +84,17 @@ class BrotherPrint : Plugin() {
         val decodedString = try {
             Base64.decode(encodedImage, Base64.DEFAULT)
         } catch (error: IllegalArgumentException) {
+            notifyListeners(BrotherPrintEvent.onPrintError.webEventName,
+                JSObject().put("code", 0).put("message", "Error - Invalid Base64 image data")
+            )
             call.reject("Error - Invalid Base64 image data")
             return
         }
         val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
         if (decodedByte == null) {
+            notifyListeners(BrotherPrintEvent.onPrintError.webEventName,
+                JSObject().put("code", 0).put("message", "Error - Create decodedByte From ImageData is failed.")
+            )
             call.reject("Error - Create decodedByte From ImageData is failed.")
             return
         }
@@ -109,6 +118,9 @@ class BrotherPrint : Plugin() {
             settings = BrotherPrintSettings().modelTDSettings(call, settings)
             settings.workPath = bridge.context.cacheDir.path;
         } else {
+            notifyListeners(BrotherPrintEvent.onPrintError.webEventName,
+                JSObject().put("code", 0).put("message", "Error - modelName:$modelName is not supported")
+            )
             call.reject("Error - modelName:$modelName is not supported")
             return;
         }
@@ -122,6 +134,9 @@ class BrotherPrint : Plugin() {
                     channelInfo, bridge.context, getBluetoothAdapter(bridge.context)
                 )
                 else -> {
+                    notifyListeners(BrotherPrintEvent.onPrintError.webEventName,
+                        JSObject().put("code", 0).put("message", "Error - port:$port is not supported")
+                    )
                     call.reject("Error - port:$port is not supported")
                     return@Thread
                 }
