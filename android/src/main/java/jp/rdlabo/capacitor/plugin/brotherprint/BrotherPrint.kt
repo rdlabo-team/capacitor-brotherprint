@@ -213,20 +213,9 @@ class BrotherPrint : Plugin() {
         Thread {
             val result = PrinterSearcher.startUSBSearch(bridge.context)
 
-            when (result.error.code) {
-                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.NoError -> {
-                }
-                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.NotPermitted -> {
-                    // TODO: has error
-                }
-                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.Canceled,
-                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.InterfaceInactive,
-                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.InterfaceUnsupported,
-                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.AlreadySearching,
-                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.CommunicationError,
-                com.brother.sdk.lmprinter.PrinterSearchError.ErrorCode.UnknownError -> {
-                }
-                null -> {}
+            if (result.error.code != PrinterSearchError.ErrorCode.NoError) {
+                call.reject("Error - startUSBSearch: " + result.error.code.toString())
+                return@Thread
             }
 
             for (channel in result.channels){
@@ -235,8 +224,8 @@ class BrotherPrint : Plugin() {
                     this.chanelToPrinter("usb", channel)
                 );
             }
+            call.resolve();
         }.start()
-        call.resolve();
     }
 
     private fun searchWiFiPrinter(call: PluginCall) {
@@ -247,7 +236,7 @@ class BrotherPrint : Plugin() {
             }
             val intDuration: Int = call.getInt("searchDuration") ?: 15 ;
             val option = NetworkSearchOption(intDuration.toDouble(), false);
-            PrinterSearcher.startNetworkSearch(bridge.context, option){ channel ->
+            val result = PrinterSearcher.startNetworkSearch(bridge.context, option){ channel ->
                 run {
                     Log.d("brother", this.chanelToPrinter("wifi", channel).toString())
                     this.notifyListeners(
@@ -257,8 +246,12 @@ class BrotherPrint : Plugin() {
                 }
             }
             this.cancelRoutineWiFi = null
+            if (result.error.code != PrinterSearchError.ErrorCode.NoError) {
+                call.reject("Error - startNetworkSearch: " + result.error.code.toString())
+                return@Thread
+            }
+            call.resolve();
         }.start()
-        call.resolve();
     }
 
     private fun checkBLEChannel(call: PluginCall) {
