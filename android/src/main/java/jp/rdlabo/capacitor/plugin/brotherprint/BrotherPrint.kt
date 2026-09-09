@@ -68,6 +68,7 @@ class BrotherPrint : Plugin() {
         "Unable to do call operation, user denied permission request"
 
     private var storeCall: PluginCall? = null
+    private var usbReceiverRegistered = false
 
     @PluginMethod
     fun printImage(call: PluginCall) {
@@ -203,12 +204,15 @@ class BrotherPrint : Plugin() {
         }
     }
 
+    @Synchronized
     private fun searchUsbPrinter(call: PluginCall) {
-        if (!this.requestUsbPermission(call)) {
-            this.storeCall = call;
+        if (this.storeCall != null) {
+            call.reject("Error - USB permission request is already pending")
             return
         }
-        this.storeCall = null
+        if (!this.requestUsbPermission(call)) {
+            return
+        }
 
         Thread {
             val result = PrinterSearcher.startUSBSearch(bridge.context)
@@ -374,39 +378,22 @@ class BrotherPrint : Plugin() {
         this.search(call)
     }
 
-    /**
-     * TODO: This is not called for in spite of registration.
-     * Therefore, it is now necessary for the user to run it again after permission is granted.
-     */
     private val usbReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            if (intent?.action == ActionUSBPermission && intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
-                storeCall?.let { searchUsbPrinter(it) }
-            } else {
-                storeCall?.reject("Error - usbReceiver can't current receiver");
+            synchronized(this@BrotherPrint) {
+                if (intent?.action != ActionUSBPermission) return
+                val call = storeCall ?: return
+                storeCall = null
+                if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
+                    searchUsbPrinter(call)
+                } else {
+                    call.reject("Error - usbReceiver can't current receiver");
+                }
             }
         }
     }
 
     private fun requestUsbPermission(call: PluginCall): Boolean {
-        val permissionIntent = PendingIntent.getBroadcast(
-            bridge.context, 0, Intent(ActionUSBPermission), PendingIntent.FLAG_IMMUTABLE
-        )
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            bridge.context.registerReceiver(
-                usbReceiver, IntentFilter(ActionUSBPermission),
-                Context.RECEIVER_NOT_EXPORTED
-            )
-        } else {
-            ContextCompat.registerReceiver(
-                bridge.context,
-                usbReceiver,
-                IntentFilter(ActionUSBPermission),
-                ContextCompat.RECEIVER_NOT_EXPORTED
-            )
-        }
-
         var connectDevice: UsbDevice? = null
         val usbManager = bridge.context.getSystemService(Context.USB_SERVICE) as UsbManager
         for (device in usbManager.deviceList.values) {
@@ -417,10 +404,44 @@ class BrotherPrint : Plugin() {
             call.reject("Error - connection failed: device not found")
             return false
         }
+        if (usbManager.hasPermission(connectDevice)) return true
 
+        val permissionIntent = PendingIntent.getBroadcast(
+            bridge.context, 0, Intent(ActionUSBPermission), PendingIntent.FLAG_IMMUTABLE
+        )
+
+        if (!usbReceiverRegistered) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bridge.context.registerReceiver(
+                    usbReceiver, IntentFilter(ActionUSBPermission),
+                    Context.RECEIVER_NOT_EXPORTED
+                )
+            } else {
+                ContextCompat.registerReceiver(
+                    bridge.context,
+                    usbReceiver,
+                    IntentFilter(ActionUSBPermission),
+                    ContextCompat.RECEIVER_NOT_EXPORTED
+                )
+            }
+            usbReceiverRegistered = true
+        }
+
+        storeCall = call
         usbManager.requestPermission(connectDevice, permissionIntent)
+        return false
+    }
 
-        return usbManager.hasPermission(connectDevice)
+    @Synchronized
+    override fun handleOnDestroy() {
+        val call = storeCall
+        storeCall = null
+        call?.reject("Error - plugin destroyed while waiting for USB permission")
+        if (usbReceiverRegistered) {
+            bridge.context.unregisterReceiver(usbReceiver)
+            usbReceiverRegistered = false
+        }
+        super.handleOnDestroy()
     }
 
     private fun isBluetoothPermissionGranted(): Boolean {
