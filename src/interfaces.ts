@@ -168,6 +168,12 @@ export type BRLMSearchOption = {
    * use only port is 'wifi' or 'bluetoothLowEnergy'.
    */
   searchDuration: number;
+  /**
+   * Android Bluetooth Classic only. Include only devices whose Bluetooth class
+   * reports a printer. Defaults to false; ignored for other ports and on iOS.
+   * This does not identify Brother devices. Devices with an unknown class are excluded when true.
+   */
+  bluetoothPrintersOnly?: boolean;
 };
 
 export type ErrorInfo = {
