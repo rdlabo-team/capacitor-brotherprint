@@ -23,16 +23,16 @@ if (!environment.includes((process.argv as string[])[process.argv.length - 1])) 
 }
 
 const currentEnv = process.argv[process.argv.length - 1] as Env;
-const oppositeEnv: Env = environment.find((env) => env !== currentEnv)!;
+const oppositeEnv: Env = currentEnv === 'production' ? 'development' : 'production';
 
 (() => {
   const content = readFileSync(modulePath, 'utf-8');
-  const updated = content.replace(new RegExp(headerPath[oppositeEnv], 'g'), headerPath[currentEnv]);
+  const updated = content.split(headerPath[oppositeEnv]).join(headerPath[currentEnv]);
   writeFileSync(modulePath, updated);
 })();
 
 (() => {
   const content = readFileSync(packagePath, 'utf-8');
-  const updated = content.replace(new RegExp(packagePathMap[oppositeEnv], 'g'), packagePathMap[currentEnv]);
+  const updated = content.split(packagePathMap[oppositeEnv]).join(packagePathMap[currentEnv]);
   writeFileSync(packagePath, updated);
 })();

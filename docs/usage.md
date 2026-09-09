@@ -1,76 +1,54 @@
 # Usage
 
-The following Angular component shows how to set up listeners, search for printers, and print a base64-encoded image.
+Install the native SDK and permissions using [installation](installation.md).
+`BrotherPrinter` works with plain TypeScript, Angular, Ionic and React; framework
+state, dialogs and label layout remain in the application.
 
 ```typescript
-@Component({
-  selector: 'brother-print',
-  templateUrl: 'brother.component.html',
-  styleUrls: ['brother.component.scss'],
-})
-export class BrotherComponent implements OnInit, OnDestroy {
-  readonly #listenerHandlers: PluginListenerHandle[] = [];
-  readonly printers = signal<BRLMChannelResult[]>([]);
+import {
+  BrotherPrint,
+  BrotherPrinter,
+  BrotherPrinterError,
+  BRLMPrinterLabelName,
+  BRLMPrinterModelName,
+  BRLMPrinterPort,
+  type BRLMChannelResult,
+} from '@rdlabo/capacitor-brotherprint';
 
-  async ngOnInit() {
-    this.#listenerHandlers.push(
-      await BrotherPrint.addListener(BrotherPrintEventsEnum.onPrint, () => {
-        console.log('onPrint');
-      }),
-    );
-    this.#listenerHandlers.push(
-      await BrotherPrint.addListener(BrotherPrintEventsEnum.onPrintError, (info) => {
-        console.log('onPrintError');
-      }),
-    );
-    this.#listenerHandlers.push(
-      await BrotherPrint.addListener(BrotherPrintEventsEnum.onPrintFailedCommunication, (info) => {
-        console.log('onPrintFailedCommunication');
-      }),
-    );
-    this.#listenerHandlers.push(
-      await BrotherPrint.addListener(BrotherPrintEventsEnum.onPrinterAvailable, (printer) => {
-        this.printers.update((prev) => [...prev, printer]);
-      }),
-    );
-  }
-
-  async ngOnDestroy() {
-    this.#listenerHandlers.forEach((handler) => handler.remove());
-  }
-
-  async searchPrinter(port: BRKMPrinterPort) {
-    // This method return void. Get the printer list by listening to the event.
-    await BrotherPrint.search({
-      port,
-      searchDuration: 15, // seconds
-    });
-  }
-
-  print() {
-    if (this.printers().length === 0) {
-      console.error('No printer found');
-      return;
-    }
-
-    const defaultPrintSettings: BRLMPrintOptions = {
+export async function printLabel(
+  encodedImage: string,
+  choose: (channels: readonly BRLMChannelResult[]) => Promise<BRLMChannelResult | null>,
+): Promise<void> {
+  const printer = new BrotherPrinter({ plugin: BrotherPrint });
+  try {
+    await printer.listen();
+    await printer.prepare(BRLMPrinterModelName.QL_820NWB, BRLMPrinterPort.wifi);
+    const channel = await printer.selectChannel(choose);
+    if (!channel) return; // The user cancelled, or discovery produced no channel.
+    await printer.print({
       modelName: BRLMPrinterModelName.QL_820NWB,
       labelName: BRLMPrinterLabelName.RollW62,
-      encodedImage: 'base64 removed mime-type', // base64
-      numberOfCopies: 1, // default 1
-      autoCut: true, // default true
-    };
-
-    BrotherPrint.printImage({
-      ...defaultPrintSettings,
-      ...{
-        port: this.printers()[0].port,
-        channelInfo: this.printers()[0].channelInfo,
-      },
-    });
+      encodedImage, // PNG/JPEG Base64 without the data URL prefix.
+      numberOfCopies: 1,
+    }, channel);
+  } catch (error) {
+    if (error instanceof BrotherPrinterError && error.code === 'CANCELLED') return;
+    throw error; // Let the caller show a localized error; do not automatically retry.
+  } finally {
+    await printer.dispose();
   }
 }
 ```
 
-See demo for complete code:
-https://github.com/rdlabo-dev/capacitor-brotherprint/blob/main/demo/src/app/home/home.page.ts
+The application supplies `choose`, including its own cancel behavior. A sole printer
+is selected automatically; multiple matching printers are passed to the picker.
+For a reusable screen, keep the controller in a service or stable ref and use
+`listen()`/`removeListeners()` on entry/exit. See
+[connection management](connection-management.md) for caching, manual destinations,
+React lifecycle, cancellation and diagnostics.
+
+The [plain TypeScript example](../examples/plain-typescript.ts) is typechecked by CI.
+The [Angular demo](https://github.com/rdlabo-dev/capacitor-brotherprint/tree/main/demo)
+shows the lower-level native bridge. Raw bridge methods are described in
+[search](search.md), [print](print.md) and [events](events.md).
+Existing applications should read [migration](migration.md) before upgrading.

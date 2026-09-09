@@ -4,7 +4,7 @@
   "version": "8.2.0",
   "description": "Capacitor plugin for Brother Print SDK",
   "main": "dist/plugin.cjs.js",
-  "module": "dist/esm/index.js",
+  "module": "dist/plugin.mjs",
   "types": "dist/esm/index.d.ts",
   "unpkg": "dist/plugin.js",
   "engines": {
@@ -28,7 +28,11 @@
     "release": "np --no-tests --no-publish",
     "replace:production": "ts-node -P scripts/tsconfig.json scripts/release -- production",
     "replace:development": "ts-node -P scripts/tsconfig.json scripts/release -- development",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test:types": "tsc -p tsconfig.test.json",
+    "test": "node scripts/generate-models.mjs --check && npm run test:types && vitest run tests/*.spec.ts",
+    "pack:verified": "npm run build && npm test && node scripts/verify-package.mjs",
+    "generate:models": "node scripts/generate-models.mjs"
   },
   "author": "Masahiko Sakakibara<sakakibara@rdlabo.jp>",
   "license": "MIT",
@@ -50,7 +54,8 @@
     "rollup": "^4.53.2",
     "swiftlint": "^2.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
   },
   "peerDependencies": {
     "@capacitor/core": ">=8.0.0"
@@ -73,7 +78,8 @@
     "ios/Sources",
     "ios/Tests",
     "Package.swift",
-    "RdlaboCapacitorBrotherprint.podspec"
+    "RdlaboCapacitorBrotherprint.podspec",
+    "examples/"
   ],
   "keywords": [
     "capacitor",
@@ -100,5 +106,22 @@
   "bugs": {
     "url": "git@github.com:rdlabo-dev/capacitor-brotherprint.git/issues"
   },
-  "homepage": "https://docs.rdlabo.dev/projects/capacitor-brotherprint"
+  "homepage": "https://docs.rdlabo.dev/projects/capacitor-brotherprint",
+  "exports": {
+    ".": {
+      "types": "./dist/esm/index.d.ts",
+      "import": "./dist/plugin.mjs",
+      "require": "./dist/plugin.cjs.js"
+    },
+    "./package.json": "./package.json",
+    "./dist/esm/*": {
+      "types": "./dist/esm/*.d.ts",
+      "default": "./dist/esm/*.js"
+    },
+    "./dist/esm/*.js": {
+      "types": "./dist/esm/*.d.ts",
+      "default": "./dist/esm/*.js"
+    },
+    "./dist/*": "./dist/*"
+  }
 }

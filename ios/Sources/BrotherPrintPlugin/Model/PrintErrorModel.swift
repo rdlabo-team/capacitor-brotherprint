@@ -19,6 +19,8 @@ class PrinterSearchErrorModel {
             return "alreadySearching"
         case .unsupported:
             return "unsupported"
+        case .communicationError:
+            return "communicationError"
         case .unknownError:
             return "unknownError"
         @unknown default:

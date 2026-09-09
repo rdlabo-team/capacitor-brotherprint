@@ -16,6 +16,7 @@ import type {
   BRLMPrinterCustomPaperUnit,
   BRLMPrinterPort,
 } from './brother-printer.enum';
+import type { BrotherPrinterErrorCode } from './errors';
 
 export type BRLMChannelResult = {
   port: BRLMPrinterPort;
@@ -28,21 +29,25 @@ export type BRLMChannelResult = {
   /**
    * This need to connect to the printer.
    * wifi: IP Address
-   * bluetooth: macAddress
-   * bluetoothLowEnergy: modelName for bluetoothLowEnergy
+   * bluetooth: Android MAC address; iOS serial number
+   * bluetoothLowEnergy: SDK local name; usb: opaque discovery token
    */
   channelInfo: string;
 };
 
-export type BRLMPrintOptions = {
-  encodedImage: string;
-
-  /**
-   * Should use enum BRLMPrinterModelName
-   */
-  modelName: BRLMPrinterModelName;
-} & Partial<BRLMChannelResult> &
-  (BRLMPrinterQLModelSettings | BRLMPrinterTDModelSettings);
+/** Model-specific settings. The native bridge also validates calls from untyped JavaScript. */
+export type BRLMPrintOptions = { encodedImage: string } & Omit<Partial<BRLMChannelResult>, 'modelName'> &
+  (
+    | ({
+        modelName: BRLMPrinterModelName.QL_800 | BRLMPrinterModelName.QL_810W | BRLMPrinterModelName.QL_820NWB;
+      } & BRLMPrinterQLModelSettings)
+    | ({
+        modelName:
+          | BRLMPrinterModelName.TD_2320D_203
+          | BRLMPrinterModelName.TD_2030AD
+          | BRLMPrinterModelName.TD_2350D_300;
+      } & BRLMPrinterTDModelSettings)
+  );
 
 export type isChannelAvailableResult = {
   result: boolean;
@@ -86,7 +91,7 @@ export type BRLMPrinterTDModelSettings = {
    * For example, the RD-U04J1 is mm.
    */
   paperUnit: BRLMPrinterCustomPaperUnit;
-};
+} & BRLMPrinterSettings;
 
 export type BRLMPrinterQLModelSettings = {
   /**
@@ -178,5 +183,8 @@ export type BRLMSearchOption = {
 
 export type ErrorInfo = {
   message: string;
+  /** Legacy platform-specific numeric SDK code. Prefer category for branching. */
   code: number;
+  category?: BrotherPrinterErrorCode;
+  nativeCode?: string | number;
 };

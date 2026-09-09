@@ -131,3 +131,21 @@ Update `Info.plist` to include the following keys. `UISupportedExternalAccessory
 The `NSBluetoothAlwaysUsageDescription` and `NSBluetoothPeripheralUsageDescription` values are **strings**, not arrays. The examples for these keys in [Brother's official iOS setup guide](https://support.brother.com/g/s/es/htmldoc/mobilesdk/guide/getting-started/getting-started-ios.html) are correct as of September 9, 2026; they were not the cause of this crash. Brother's guide separately instructs adding `com.brother.ptcbp` as an item under `UISupportedExternalAccessoryProtocols`. It requires `NSBluetoothPeripheralUsageDescription` additionally only for deployment targets earlier than iOS 13.
 
 More information: https://support.brother.co.jp/j/s/support/html/mobilesdk/guide/getting-started/getting-started-ios.html
+
+## Build and verification baseline
+
+This plugin targets Capacitor 8, Node.js 22+, Android API 24+ (compile/target SDK 36,
+JDK 21), and iOS 15+ with Swift Package Manager. iOS compilation was verified with
+Brother SDK **4.13.2**. Older Brother SDK releases have not been qualified for this
+model catalog, particularly TD-2320D/TD-2350D; use the verified baseline instead of
+assuming any SDK v4 release provides these models.
+
+The Android SDK v4 AAR used for the current compilation exposes `TD_2030A`,
+`TD_2320D_203`, and `TD_2350D_300`. Its manifest does not include a version number;
+the tested artifact's SHA-256 is
+`def6bccc7415da38b771186d571757c0a44add5358b6dc7a1855fff77bced64e`.
+A numeric minimum Android Brother SDK version is not yet established. Confirm the
+archive version and model constants when supplying a different AAR. The proprietary
+SDK is not included in the npm package.
+
+See [verification](verification.md) for automated checks and hardware limitations.

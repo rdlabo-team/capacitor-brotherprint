@@ -1,6 +1,7 @@
 export default {
   input: 'dist/esm/index.js',
   output: [
+    { file: 'dist/plugin.mjs', format: 'es', sourcemap: true, inlineDynamicImports: true },
     {
       file: 'dist/plugin.js',
       format: 'iife',

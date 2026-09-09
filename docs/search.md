@@ -4,7 +4,7 @@ Search finds nearby Brother printers. Results arrive on `onPrinterAvailable`. Ca
 
 ## search
 
-Register `onPrinterAvailable`, retain the channel, then start a Wi-Fi search. The `search` call itself returns `void`.
+Register `onPrinterAvailable`, retain the channel, then start a Wi-Fi search. The `search` call returns `Promise<void>` and resolves when discovery finishes.
 
 ```typescript
 import type { PluginListenerHandle } from '@capacitor/core';
@@ -51,7 +51,7 @@ On iOS, `bluetooth` first lists connected MFi printers. If none are connected, t
 
 For BLE-capable printers, use `port: BRLMPrinterPort.bluetoothLowEnergy`. On iOS this uses `startBLESearch`, without the Bluetooth accessory picker. Pass the discovered printer's `channelInfo` (BLE local name) unchanged to `isChannelAvailable` or `printImage`. BLE search errors reject the search promise. QL-820NWB/QL-820NWBc do not support BLE printing; use `bluetooth` or `wifi` for these models.
 
-On Android, pair a Bluetooth printer in the system settings before calling `search` with `bluetooth`; the SDK lists paired printers and does not provide the iOS accessory picker. Bluetooth and BLE searches resolve after the search finishes, or reject on SDK errors. Android 12 and later request Nearby devices permissions; Android 11 and earlier request location permission for BLE. `isChannelAvailable` returns `false` when Bluetooth permission is missing.
+On Android, pair a Bluetooth printer in the system settings before calling `search` with `bluetooth`; the SDK lists paired printers and does not provide the iOS accessory picker. Bluetooth and BLE searches resolve after the search finishes, or reject on SDK errors. Android 12 and later request Nearby devices permissions; Android 11 and earlier request location permission for BLE. `isChannelAvailable` rejects with `PERMISSION_DENIED` when Android Bluetooth permission is missing; handle this separately from an unreachable printer (`result: false`).
 
 `searchDuration` applies to `wifi` and `bluetoothLowEnergy`. `usb` is Android only. If nothing is found, you get no error and no printers. Signatures are on the [API](/docs/api#brlmsearchoption) page.
 
@@ -94,7 +94,7 @@ const checkChannel = async (lastPrinter: BRLMChannelResult) => {
 
 ## cancelSearchWiFiPrinter / cancelSearchBluetoothPrinter
 
-Use these to stop an active search before its timeout, including when leaving the screen.
+These request best-effort cancellation of Wi-Fi and BLE discovery. Await the original search promise to know when native work has finished. They do not dismiss USB permission dialogs or the iOS Bluetooth accessory picker.
 
 ```typescript
 import { BrotherPrint } from '@rdlabo/capacitor-brotherprint';
