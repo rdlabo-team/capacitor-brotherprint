@@ -276,6 +276,7 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
         DispatchQueue.global().async {
             self.cancelRoutineWiFi?()
             self.cancelRoutineWiFi = nil
+            call.resolve()
         }
     }
 
