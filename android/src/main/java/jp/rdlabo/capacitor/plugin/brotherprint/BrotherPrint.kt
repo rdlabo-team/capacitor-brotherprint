@@ -428,12 +428,7 @@ class BrotherPrint : Plugin() {
         }
 
         storeCall = call
-        try {
-            usbManager.requestPermission(connectDevice, permissionIntent)
-        } catch (error: RuntimeException) {
-            storeCall = null
-            call.reject("Error - requestUsbPermission: " + error.message)
-        }
+        usbManager.requestPermission(connectDevice, permissionIntent)
         return false
     }
 
