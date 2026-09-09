@@ -506,3 +506,68 @@ describe('picker cancellation', () => {
     expect(native.printImage).not.toHaveBeenCalled();
   });
 });
+
+describe('revalidating in-memory discovery', () => {
+  it('checks each prepare and rediscovers a printer disconnected since the last flow', async () => {
+    const { printer, native, emit, cache } = await setup();
+    native.search.mockImplementation(async () => emit([channel]));
+    await printer.prepare(Model.QL_820NWB, Port.wifi);
+    await printer.prepare(Model.QL_820NWB, Port.wifi);
+    expect(native.isChannelAvailable).toHaveBeenCalledWith(channel);
+    expect(native.search).toHaveBeenCalledOnce();
+    native.isChannelAvailable.mockResolvedValue({ result: false });
+    native.search.mockImplementation(async () => undefined);
+    await expect(printer.prepare(Model.QL_820NWB, Port.wifi)).rejects.toMatchObject({ code: 'NOT_FOUND' });
+    expect(printer.printers).toEqual([]);
+    expect(native.search).toHaveBeenCalledTimes(2);
+    expect(cache.read).toHaveBeenCalledOnce();
+  });
+
+  it('keeps only reachable candidates and checks them sequentially', async () => {
+    const { printer, native, emit } = await setup();
+    const other = { ...channel, channelInfo: '192.0.2.2' };
+    native.search.mockImplementation(async () => emit([channel, other]));
+    await printer.prepare(Model.QL_820NWB, Port.wifi);
+    const pending = deferred<{ result: boolean }>();
+    native.isChannelAvailable.mockReturnValueOnce(pending.promise).mockResolvedValueOnce({ result: true });
+    const prepare = printer.prepare(Model.QL_820NWB, Port.wifi);
+    await vi.waitFor(() => expect(native.isChannelAvailable).toHaveBeenCalledOnce());
+    expect(printer.printers).toEqual([]);
+    pending.resolve({ result: false });
+    await prepare;
+    expect(native.isChannelAvailable.mock.calls.map(([value]) => value)).toEqual([channel, other]);
+    expect(printer.printers).toEqual([other]);
+  });
+
+  it('preserves permission failures while clearing stale results', async () => {
+    const { printer, native, emit } = await setup();
+    native.search.mockImplementation(async () => emit([channel]));
+    await printer.prepare(Model.QL_820NWB, Port.wifi);
+    const cause = { code: 'PERMISSION_DENIED', message: 'Denied' };
+    native.isChannelAvailable.mockRejectedValue(cause);
+    await expect(printer.prepare(Model.QL_820NWB, Port.wifi)).rejects.toMatchObject({
+      code: 'PERMISSION_DENIED',
+      cause,
+    });
+    expect(printer.printers).toEqual([]);
+    expect(native.search).toHaveBeenCalledOnce();
+  });
+
+  it('does not restore stale results when cancelled during availability checks', async () => {
+    const { printer, native, emit } = await setup();
+    native.search.mockImplementation(async () => emit([channel]));
+    await printer.prepare(Model.QL_820NWB, Port.wifi);
+    const pending = deferred<{ result: boolean }>();
+    native.isChannelAvailable.mockReturnValueOnce(pending.promise);
+    const prepare = printer.prepare(Model.QL_820NWB, Port.wifi);
+    const settled = Promise.allSettled([prepare]);
+    await vi.waitFor(() => expect(native.isChannelAvailable).toHaveBeenCalledOnce());
+    printer.cancelPending();
+    pending.resolve({ result: true });
+    expect(await settled).toEqual([
+      expect.objectContaining({ status: 'rejected', reason: expect.objectContaining({ code: 'CANCELLED' }) }),
+    ]);
+    expect(printer.printers).toEqual([]);
+    expect(native.search).toHaveBeenCalledOnce();
+  });
+});

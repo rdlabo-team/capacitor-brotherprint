@@ -71,7 +71,8 @@ try {
   `PrinterNotFoundError` (`NOT_FOUND`); `PrinterSearchTimeoutError` is a deprecated alias.
 - `prepare(model, port)` waits for discovery. USB always rediscovers to reacquire
   access after unplugging. A stored channel is reused only for the same model and
-  port, after native availability validation; otherwise discovery runs again.
+  port, after native availability validation; otherwise discovery runs again. In-memory
+  results are also revalidated on every prepare call, and disconnected candidates are removed.
 - `printers` exposes a readonly snapshot. `onPrintersChanged` supplies updates:
   Angular can call `signal.set([...channels])`, React can call its state setter.
 - `selectChannel(present)` returns undefined when there are no results, selects a

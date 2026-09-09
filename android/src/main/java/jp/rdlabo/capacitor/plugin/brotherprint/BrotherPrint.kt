@@ -67,18 +67,39 @@ class BrotherPrint : Plugin() {
         // One SDK worker across plugin instances. Cancellation uses a separate thread.
         private val sdkWorker = Executors.newSingleThreadExecutor()
     }
+    private val lifecycle = PrinterLifecycle<PluginCall>()
+
     private fun runNative(call: PluginCall, operation: () -> Unit) {
         sdkWorker.execute {
-            try { operation() }
+            try {
+                if (!lifecycle.begin(call, call.methodName == "printImage")) { rejectCall(call, "Plugin destroyed", "CANCELLED"); return@execute }
+                operation()
+            }
             catch (error: NativePrinterException) { rejectOperation(call, error.message ?: "Printer operation failed", error.category, error) }
             catch (error: SecurityException) { rejectOperation(call, error.message ?: "Permission denied", "PERMISSION_DENIED", error) }
             catch (error: IllegalArgumentException) { rejectOperation(call, error.message ?: "Invalid argument", "INVALID_ARGUMENT", error) }
             catch (error: Exception) { rejectOperation(call, error.message ?: "SDK operation failed", "COMMUNICATION", error) }
-            finally { if (call.methodName == "search") { cancelRoutineWiFi = null; cancelRoutineBluetooth = null } }
+            finally { lifecycle.clearCancellation() }
         }
     }
-    @Volatile private var cancelRoutineWiFi: (() -> Unit)? = null
-    @Volatile private var cancelRoutineBluetooth: (() -> Unit)? = null
+    private fun resolveCall(call: PluginCall, data: JSObject? = null) {
+        lifecycle.settle(call) { destroyed ->
+            if (destroyed) call.reject("Plugin destroyed", "CANCELLED")
+            else if (data == null) call.resolve() else call.resolve(data)
+        }
+    }
+
+    private fun rejectCall(call: PluginCall, message: String, code: String? = null, error: Exception? = null, data: JSObject? = null) {
+        lifecycle.settle(call) { destroyed ->
+            if (destroyed) call.reject("Plugin destroyed", "CANCELLED")
+            else call.reject(message, code, error, data)
+        }
+    }
+
+    private fun emit(event: String, data: JSObject?) {
+        lifecycle.deliver { notifyListeners(event, data) }
+    }
+
 
     private val ActionUSBPermission = "jp.rdlabo.capacitor.plugin.brotherprint.USB_PERMISSION"
     private val PERMISSION_DENIED_ERROR =
@@ -93,28 +114,28 @@ class BrotherPrint : Plugin() {
             validatePrintOptions(call)
             val encodedImage = call.getString("encodedImage", "")
             if (encodedImage == "") {
-                notifyListeners(BrotherPrintEvent.onPrintError.webEventName,
+                emit(BrotherPrintEvent.onPrintError.webEventName,
                     JSObject().put("code", 0).put("message", "Error - Image data is not found.")
                 )
-                call.reject("Error - Image data is not found.", "INVALID_ARGUMENT")
+                rejectCall(call, "Error - Image data is not found.", "INVALID_ARGUMENT")
                 return@runNative
             }
 
             val decodedString = try {
                 Base64.decode(encodedImage, Base64.DEFAULT)
             } catch (error: IllegalArgumentException) {
-                notifyListeners(BrotherPrintEvent.onPrintError.webEventName,
+                emit(BrotherPrintEvent.onPrintError.webEventName,
                     JSObject().put("code", 0).put("message", "Error - Invalid Base64 image data")
                 )
-                call.reject("Error - Invalid Base64 image data", "INVALID_ARGUMENT")
+                rejectCall(call, "Error - Invalid Base64 image data", "INVALID_ARGUMENT")
                 return@runNative
             }
             val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
             if (decodedByte == null) {
-                notifyListeners(BrotherPrintEvent.onPrintError.webEventName,
+                emit(BrotherPrintEvent.onPrintError.webEventName,
                     JSObject().put("code", 0).put("message", "Error - Create decodedByte From ImageData is failed.")
                 )
-                call.reject("Error - Create decodedByte From ImageData is failed.", "INVALID_ARGUMENT")
+                rejectCall(call, "Error - Create decodedByte From ImageData is failed.", "INVALID_ARGUMENT")
                 return@runNative
             }
 
@@ -139,10 +160,10 @@ class BrotherPrint : Plugin() {
                 settings = BrotherPrintSettings().modelTDSettings(call, settings)
                 settings.workPath = bridge.context.cacheDir.path;
             } else {
-                notifyListeners(BrotherPrintEvent.onPrintError.webEventName,
+                emit(BrotherPrintEvent.onPrintError.webEventName,
                     JSObject().put("code", 0).put("message", "Error - modelName:$modelName is not supported")
                 )
-                call.reject("Error - modelName:$modelName is not supported")
+                rejectCall(call, "Error - modelName:$modelName is not supported")
                 return@runNative;
             }
 
@@ -154,21 +175,21 @@ class BrotherPrint : Plugin() {
                     channelInfo, bridge.context, getBluetoothAdapter(bridge.context)
                 )
                 else -> {
-                    notifyListeners(BrotherPrintEvent.onPrintError.webEventName,
+                    emit(BrotherPrintEvent.onPrintError.webEventName,
                         JSObject().put("code", 0).put("message", "Error - port:$port is not supported")
                     )
-                    call.reject("Error - port:$port is not supported")
+                    rejectCall(call, "Error - port:$port is not supported")
                     return@runNative
                 }
             }
 
             val result = PrinterDriverGenerator.openChannel(channel)
             if (result.error.code != OpenChannelError.ErrorCode.NoError) {
-                this.notifyListeners(BrotherPrintEvent.onPrintFailedCommunication.webEventName,
+                this.emit(BrotherPrintEvent.onPrintFailedCommunication.webEventName,
                     JSObject().put("code", result.error.code.ordinal).put("nativeCode", result.error.code.name).put("category", "COMMUNICATION")
                         .put("message", result.error.code.toString())
                 )
-                call.reject("Error - openChannel: " + result.error.code.toString(), "COMMUNICATION", null, JSObject().put("nativeCode", result.error.code.name))
+                rejectCall(call, "Error - openChannel: " + result.error.code.toString(), "COMMUNICATION", null, JSObject().put("nativeCode", result.error.code.name))
                 return@runNative
             }
 
@@ -179,21 +200,21 @@ class BrotherPrint : Plugin() {
             } finally { printerDriver.closeChannel() }
 
             if (printError.code != PrintError.ErrorCode.NoError) {
-                notifyListeners(
+                emit(
                     BrotherPrintEvent.onPrintError.webEventName,
                     JSObject().put("code", printError.code.ordinal).put("nativeCode", printError.code.name).put("category", "PRINT_FAILED")
                         .put("message", printError.code.toString())
                 )
-                call.reject("Error - Print Image: " + printError.code.toString(), "PRINT_FAILED", null, JSObject().put("nativeCode", printError.code.name))
+                rejectCall(call, "Error - Print Image: " + printError.code.toString(), "PRINT_FAILED", null, JSObject().put("nativeCode", printError.code.name))
                 return@runNative
             }
 
 
-            notifyListeners(
+            emit(
                 BrotherPrintEvent.onPrint.webEventName,
                 JSObject()
             )
-            call.resolve()
+            resolveCall(call)
         }
     }
 
@@ -201,8 +222,8 @@ class BrotherPrint : Plugin() {
         reportPrinterFailure(call.methodName, message, category, { info ->
             val payload = JSObject()
             info.forEach { (key, value) -> payload.put(key, value) }
-            notifyListeners(BrotherPrintEvent.onPrintError.webEventName, payload)
-        }, { call.reject(message, category, error) })
+            emit(BrotherPrintEvent.onPrintError.webEventName, payload)
+        }, { rejectCall(call, message, category, error) })
     }
 
     private fun soleUsbDevice(): UsbDevice {
@@ -249,7 +270,7 @@ class BrotherPrint : Plugin() {
             PrinterSearchError.ErrorCode.AlreadySearching -> "BUSY"
             else -> "COMMUNICATION"
         }
-        call.reject("$operation: ${code.name}", category, null, JSObject().put("nativeCode", code.name))
+        rejectCall(call, "$operation: ${code.name}", category, null, JSObject().put("nativeCode", code.name))
     }
 
     private fun getBluetoothAdapter(context: Context): BluetoothAdapter? {
@@ -261,7 +282,7 @@ class BrotherPrint : Plugin() {
     @PluginMethod
     fun isChannelAvailable(call: PluginCall) {
         if (call.getString("port") in listOf("bluetooth", "bluetoothLowEnergy") && !isBluetoothPermissionGranted()) {
-            call.reject("Bluetooth permission denied", "PERMISSION_DENIED")
+            rejectCall(call, "Bluetooth permission denied", "PERMISSION_DENIED")
             return
         }
         val port: String? = call.getString("port", "wifi")
@@ -277,27 +298,28 @@ class BrotherPrint : Plugin() {
                     channelInfo, bridge.context, getBluetoothAdapter(bridge.context)
                 )
                 else -> {
-                    call.reject("Error - port:$port is not supported")
+                    rejectCall(call, "Error - port:$port is not supported")
                     return@runNative
                 }
             }
 
             val result = PrinterDriverGenerator.openChannel(channel)
             if (result.error.code != OpenChannelError.ErrorCode.NoError) {
-                call.resolve(JSObject().put("result", false))
+                resolveCall(call, JSObject().put("result", false))
                 return@runNative
             }
             val printerDriver = result.driver
             printerDriver.closeChannel()
-            call.resolve(JSObject().put("result", true))
+            resolveCall(call, JSObject().put("result", true))
         }
     }
 
     @PluginMethod
     fun search(call: PluginCall) {
+        if (lifecycle.isDestroyed) { rejectCall(call, "Plugin destroyed", "CANCELLED"); return }
         val duration = call.getDouble("searchDuration", 15.0) ?: 0.0
         if (!duration.isFinite() || duration <= 0 || duration % 1 != 0.0 || duration > Int.MAX_VALUE) {
-            call.reject("searchDuration must be a positive integer", "INVALID_ARGUMENT")
+            rejectCall(call, "searchDuration must be a positive integer", "INVALID_ARGUMENT")
             return
         }
         when(call.getString("port", "wifi")) {
@@ -305,14 +327,15 @@ class BrotherPrint : Plugin() {
             "wifi" -> this.searchWiFiPrinter(call)
             "bluetooth" -> this.checkBLEChannel(call)
             "bluetoothLowEnergy" -> this.searchBLEPrinter(call)
-            else -> call.reject("port is not 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'")
+            else -> rejectCall(call, "port is not 'wifi' | 'bluetooth' | 'bluetoothLowEnergy'")
         }
     }
 
     @Synchronized
     private fun searchUsbPrinter(call: PluginCall) {
+        if (lifecycle.isDestroyed) { rejectCall(call, "Plugin destroyed", "CANCELLED"); return }
         if (this.storeCall != null) {
-            call.reject("Error - USB permission request is already pending", "BUSY")
+            rejectCall(call, "Error - USB permission request is already pending", "BUSY")
             return
         }
         if (!this.requestUsbPermission(call)) {
@@ -330,38 +353,38 @@ class BrotherPrint : Plugin() {
 
             require(currentUsbToken() == token) { "USB destination changed during discovery; search again" }
             for (channel in result.channels){
-                this.notifyListeners(
+                this.emit(
                     BrotherPrintEvent.onPrinterAvailable.webEventName,
                     this.chanelToPrinter("usb", channel, token)
                 );
             }
-            call.resolve();
+            resolveCall(call);
         }
     }
 
     private fun searchWiFiPrinter(call: PluginCall) {
         Log.d("brother", "searchWiFiPrinter")
         runNative(call) {
-            this.cancelRoutineWiFi = {
-                cancelNetworkSearch()
+            if (!lifecycle.registerCancellation("wifi") { cancelNetworkSearch() }) {
+                rejectCall(call, "Plugin destroyed", "CANCELLED"); return@runNative
             }
             val intDuration: Int = call.getInt("searchDuration") ?: 15 ;
             val option = NetworkSearchOption(intDuration.toDouble(), false);
             val result = PrinterSearcher.startNetworkSearch(bridge.context, option){ channel ->
                 run {
                     Log.d("brother", this.chanelToPrinter("wifi", channel).toString())
-                    this.notifyListeners(
+                    this.emit(
                         BrotherPrintEvent.onPrinterAvailable.webEventName,
                         this.chanelToPrinter("wifi", channel)
                     );
                 }
             }
-            this.cancelRoutineWiFi = null
+            lifecycle.clearCancellation()
             if (result.error.code != PrinterSearchError.ErrorCode.NoError) {
                 rejectSearch(call, "startNetworkSearch", result.error.code)
                 return@runNative
             }
-            call.resolve();
+            resolveCall(call);
         }
     }
 
@@ -382,9 +405,9 @@ class BrotherPrint : Plugin() {
                         device?.bluetoothClass?.deviceClass
                     }) continue
                     Log.d("brother", this.chanelToPrinter("bluetooth", channel).toString())
-                    this.notifyListeners(BrotherPrintEvent.onPrinterAvailable.webEventName, this.chanelToPrinter("bluetooth", channel));
+                    this.emit(BrotherPrintEvent.onPrinterAvailable.webEventName, this.chanelToPrinter("bluetooth", channel));
                 }
-                call.resolve();
+                resolveCall(call);
             }
         }
     }
@@ -399,26 +422,26 @@ class BrotherPrint : Plugin() {
         } else {
             Log.d("brother", "searchBLEPrinter")
             runNative(call) {
-                this.cancelRoutineBluetooth = {
-                    PrinterSearcher.cancelBLESearch()
+                if (!lifecycle.registerCancellation("bluetooth") { PrinterSearcher.cancelBLESearch() }) {
+                    rejectCall(call, "Plugin destroyed", "CANCELLED"); return@runNative
                 }
                 val intDuration: Int = call.getInt("searchDuration") ?: 15 ;
                 val option = BLESearchOption(intDuration.toDouble())
                 val result = PrinterSearcher.startBLESearch(bridge.context, option){ channel ->
                     run {
                         Log.d("brother", this.chanelToPrinter("bluetoothLowEnergy", channel).toString())
-                        this.notifyListeners(
+                        this.emit(
                             BrotherPrintEvent.onPrinterAvailable.webEventName,
                             this.chanelToPrinter("bluetoothLowEnergy", channel)
                         );
                     }
                 }
-                this.cancelRoutineBluetooth = null;
+                lifecycle.clearCancellation();
                 if (result.error.code != PrinterSearchError.ErrorCode.NoError) {
                     rejectSearch(call, "startBLESearch", result.error.code)
                     return@runNative
                 }
-                call.resolve();
+                resolveCall(call);
             }
         }
     }
@@ -445,16 +468,16 @@ class BrotherPrint : Plugin() {
     @PluginMethod
     fun cancelSearchWiFiPrinter(call: PluginCall) {
         Thread {
-            this.cancelRoutineWiFi?.invoke()
-            call.resolve()
+            lifecycle.cancel("wifi")
+            resolveCall(call)
         }.start()
     }
 
     @PluginMethod
     fun cancelSearchBluetoothPrinter(call: PluginCall) {
         Thread {
-            this.cancelRoutineBluetooth?.invoke()
-            call.resolve()
+            lifecycle.cancel("bluetooth")
+            resolveCall(call)
         }.start()
     }
 
@@ -462,7 +485,7 @@ class BrotherPrint : Plugin() {
     private fun permissionCallback(call: PluginCall) {
         if (!isBluetoothPermissionGranted()) {
             Log.d("brother", "!isBluetoothPermissionGranted()")
-            call.reject(PERMISSION_DENIED_ERROR, "PERMISSION_DENIED")
+            rejectCall(call, PERMISSION_DENIED_ERROR, "PERMISSION_DENIED")
             return
         }
         when (call.methodName) {
@@ -474,7 +497,7 @@ class BrotherPrint : Plugin() {
     private fun locationPermissionCallback(call: PluginCall) {
         if (!isLocationPermissionGranted()) {
             Log.d("brother", "!isLocationPermissionGranted()")
-            call.reject(PERMISSION_DENIED_ERROR, "PERMISSION_DENIED")
+            rejectCall(call, PERMISSION_DENIED_ERROR, "PERMISSION_DENIED")
             return
         }
         this.search(call)
@@ -489,7 +512,7 @@ class BrotherPrint : Plugin() {
                 if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                     searchUsbPrinter(call)
                 } else {
-                    call.reject("USB permission denied", "PERMISSION_DENIED");
+                    rejectCall(call, "USB permission denied", "PERMISSION_DENIED");
                 }
             }
         }
@@ -499,7 +522,7 @@ class BrotherPrint : Plugin() {
         val usbManager = bridge.context.getSystemService(Context.USB_SERVICE) as UsbManager
         val devices = usbManager.deviceList.values.filter { it.vendorId == 0x04f9 }
         if (devices.size != 1) {
-            call.reject(if (devices.isEmpty()) "No Brother USB printer connected" else "Multiple Brother USB devices are unsupported", if (devices.isEmpty()) "NOT_FOUND" else "UNSUPPORTED")
+            rejectCall(call, if (devices.isEmpty()) "No Brother USB printer connected" else "Multiple Brother USB devices are unsupported", if (devices.isEmpty()) "NOT_FOUND" else "UNSUPPORTED")
             return false
         }
         val connectDevice = devices.single()
@@ -533,9 +556,12 @@ class BrotherPrint : Plugin() {
 
     @Synchronized
     override fun handleOnDestroy() {
+        lifecycle.destroy()
+        // Never queue cancellation behind the blocking SDK search itself.
+        Thread { lifecycle.cancel() }.start()
         val call = storeCall
         storeCall = null
-        call?.reject("Plugin destroyed while waiting for USB permission", "CANCELLED")
+        if (call != null) rejectCall(call, "Plugin destroyed while waiting for USB permission", "CANCELLED")
         if (usbReceiverRegistered) {
             bridge.context.unregisterReceiver(usbReceiver)
             usbReceiverRegistered = false

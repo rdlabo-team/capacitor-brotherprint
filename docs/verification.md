@@ -7,7 +7,7 @@ USB ambiguity handling has been retested on every physical printer.
 - `npm test`: controller regression tests, Web unsupported behavior, public API
   typechecking and generated model table consistency.
 - `bash android/gradlew -p tests/android test`: production Bluetooth filtering,
-  input validation and single-Brother-USB policy without proprietary SDKs.
+  input validation, single-Brother-USB policy and plugin destruction without proprietary SDKs.
 - `bash tests/ios/test.sh`: production image decoding and input validation on the
   iOS simulator, without the Brother SDK.
 - Native compilation: Android SDK v4 AAR described in installation.md; iOS SDK
@@ -39,3 +39,18 @@ hardening work.
 `prepublishOnly` retains the legacy in-place path replacement for direct npm publish.
 Use `pack:verified` for a reviewable staged artifact; if running `prepublishOnly`
 manually, restore development paths with `npm run replace:development` afterward.
+
+## Physical lifecycle scenarios still to verify
+
+These remain open device checks, not results inferred from unit tests:
+
+- Android lifecycle: destroy and recreate the WebView during Wi-Fi/BLE discovery and
+  printing. Confirm cancellation reaches the SDK, queued work is skipped, old events
+  stop, and an already-started print retains its actual result.
+- Android USB: unplug and reconnect the same printer, replace it with another printer,
+  connect multiple Brother devices, revoke permission, and start a new print after each
+  case. Check identity-token invalidation and permission reacquisition.
+- iOS Bluetooth accessory picker: confirm, cancel, close the application view, move the
+  app to the background, then return. Confirm the SDK callback eventually completes and
+  a following search/print can run. The worker intentionally remains locked until the
+  callback; a timeout must not allow concurrent SDK access while the picker is active.

@@ -368,7 +368,24 @@ export class BrotherPrinter {
     return this.queueConnection(async () => {
       const generation = this.operationGeneration;
       if (port !== BRLMPrinterPort.usb) {
-        if (this.searchModel === model && this.searchPort === port && this.printers.length > 0) return;
+        if (this.searchModel === model && this.searchPort === port && this.printers.length > 0) {
+          const remembered = this.printers;
+          this.setPrinters([]);
+          const available: BRLMChannelResult[] = [];
+          for (const channel of remembered) {
+            const result = await this.options.plugin.isChannelAvailable(channel).catch((error: unknown) => {
+              throw printerError(error, 'COMMUNICATION');
+            });
+            this.checkGeneration(generation);
+            if (result.result) available.push(channel);
+          }
+          if (available.length > 0) {
+            this.setPrinters(available);
+            return;
+          }
+          await this.discover({ port, silent: false }, model);
+          return;
+        }
         this.setPrinters([]);
         const cached = await this.adapter(() => this.options.cache?.read());
         this.checkGeneration(generation);
