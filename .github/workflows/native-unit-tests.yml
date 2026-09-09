@@ -1,0 +1,28 @@
+name: Native Unit Tests
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  android-sdk-free:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: zulu
+      - name: Test production Kotlin logic without Brother or Android SDKs
+        run: bash android/gradlew -p tests/android test --console=plain
+
+  ios-sdk-free:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v5
+      - name: Test production image decoding without Brother SDK
+        run: bash tests/ios/test.sh
