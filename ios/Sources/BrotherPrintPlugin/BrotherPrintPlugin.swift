@@ -27,7 +27,12 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
             return
         }
 
-        let newImageData = Data(base64Encoded: encodedImage, options: [])
+        guard let newImageData = Data(base64Encoded: encodedImage, options: []),
+              let decodedByte = UIImage(data: newImageData),
+              let image = decodedByte.cgImage else {
+            call.reject("Error - Create decodedByte From ImageData is failed.")
+            return
+        }
 
         // 検索からデバイス情報が得られた場合
         let port: String = call.getString("port", "wifi")
@@ -70,14 +75,6 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
                 return
             }
 
-            guard
-                let decodedByte = UIImage(data: newImageData! as Data)
-            else {
-                printerDriver.closeChannel()
-                call.reject("Error - Create decodedByte From ImageData is failed.")
-                return
-            }
-
             var printSettings: BRLMPrintSettingsProtocol
 
             if modelName.hasPrefix("QL") {
@@ -114,7 +111,7 @@ public class BrotherPrintPlugin: CAPPlugin, CAPBridgedPlugin {
                 return
             }
 
-            let printError = printerDriver.printImage(with: decodedByte.cgImage!, settings: printSettings)
+            let printError = printerDriver.printImage(with: image, settings: printSettings)
 
             if printError.code != BRLMPrintErrorCode.noError {
                 printerDriver.closeChannel()

@@ -77,8 +77,17 @@ class BrotherPrint : Plugin() {
             return
         }
 
-        val decodedString = Base64.decode(encodedImage, Base64.DEFAULT)
+        val decodedString = try {
+            Base64.decode(encodedImage, Base64.DEFAULT)
+        } catch (error: IllegalArgumentException) {
+            call.reject("Error - Invalid Base64 image data")
+            return
+        }
         val decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+        if (decodedByte == null) {
+            call.reject("Error - Create decodedByte From ImageData is failed.")
+            return
+        }
 
         val port: String? = call.getString("port", "wifi")
         val channelInfo: String? = call.getString("channelInfo", "")
